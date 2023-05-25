@@ -1,0 +1,223 @@
+/* Manrope font */
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap");
+/* Inter font */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* inter var - latin */
+  @font-face {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: optional;
+    src: url("/fonts/inter-var-latin.woff2") format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+      U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212,
+      U+2215, U+FEFF, U+FFFD;
+  }
+
+  body {
+    font-family: "Manrope", sans-serif;
+    @apply antialiased;
+  }
+
+  .layout {
+    /* 1100px */
+    max-width: 68.75rem;
+    @apply mx-auto w-11/12;
+  }
+}
+
+@layer utilities {
+  .display-lg {
+    font-size: 6rem;
+    line-height: 120%;
+    font-weight: 800;
+  }
+  .display-md {
+    font-size: 5.334rem;
+    line-height: 120%;
+    font-weight: 800;
+  }
+  .display-sm {
+    font-size: 4.5rem;
+    line-height: 120%;
+    font-weight: 800;
+  }
+
+  /* Md */
+  .display-lg-light {
+    font-size: 6rem;
+    line-height: 120%;
+    font-weight: 600;
+  }
+  .display-md-light {
+    font-size: 5.334rem;
+    line-height: 120%;
+    font-weight: 600;
+  }
+  .display-sm-light {
+    font-size: 4.5rem;
+    line-height: 120%;
+    font-weight: 600;
+  }
+
+  /* Headings */
+  .h1 {
+    font-size: 3.5rem;
+    line-height: 120%;
+    font-weight: 800;
+  }
+  .h1-light {
+    font-size: 3.5rem;
+    line-height: 120%;
+    font-weight: 600;
+  }
+
+  .h2 {
+    font-size: 3rem;
+    line-height: 120%;
+    font-weight: 800;
+  }
+  .h2-light {
+    font-size: 3rem;
+    line-height: 120%;
+    font-weight: 600;
+  }
+
+  .h3 {
+    font-size: 2.3331rem;
+    line-height: 120%;
+    font-weight: 800;
+  }
+  .h3-light {
+    font-size: 2.3331rem;
+    line-height: 120%;
+    font-weight: 600;
+  }
+
+  .h4 {
+    font-size: 2rem;
+    line-height: 150%;
+    font-weight: 800;
+  }
+  .h4-light {
+    font-size: 2rem;
+    line-height: 150%;
+    font-weight: 600;
+  }
+
+  .h5 {
+    font-size: 1.5rem;
+    line-height: 150%;
+    font-weight: 800;
+  }
+  .h5-light {
+    font-size: 1.5rem;
+    line-height: 150%;
+    font-weight: 600;
+  }
+
+  .h6 {
+    font-size: 1.3331rem;
+    line-height: 150%;
+    font-weight: 800;
+  }
+  .h6-light {
+    font-size: 1.3331rem;
+    line-height: 150%;
+    font-weight: 600;
+  }
+
+  /* Body/Paragraph */
+  .body-lg {
+    font-size: 1.3331rem;
+    line-height: 150%;
+  }
+
+  .body-md {
+    font-size: 1.1669rem;
+    line-height: 150%;
+  }
+
+  .body-sm {
+    font-size: 1rem;
+    line-height: 150%;
+  }
+
+  /* Caption/Label Text */
+
+  .label-lg {
+    font-size: 1.3331rem;
+    line-height: 100%;
+    font-weight: 600;
+  }
+
+  .label-md {
+    font-size: 1.1669rem;
+    line-height: 100%;
+    font-weight: 600;
+  }
+
+  .label-sm {
+    font-size: 1rem;
+    line-height: 100%;
+    font-weight: 600;
+  }
+
+  /* Block Quote */
+  .block-quote {
+    font-size: 1.5rem;
+    line-height: 150%;
+    font-weight: 600;
+  }
+  ,
+  .animated-underline {
+    background-image: linear-gradient(#33333300, #33333300),
+      linear-gradient(
+        to right,
+        var(--color-primary-400),
+        var(--color-primary-500)
+      );
+    background-size: 100% 2px, 0 2px;
+    background-position: 100% 100%, 0 100%;
+    background-repeat: no-repeat;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .animated-underline {
+      transition: 0.3s ease;
+      transition-property: background-size, color, background-color,
+        border-color;
+    }
+  }
+  .animated-underline:hover,
+  .animated-underline:focus-visible {
+    background-size: 0 2px, 100% 2px;
+  }
+}
+
+/* text select color */
+::-moz-selection {
+  /* Code for Firefox */
+  @apply bg-primary text-white;
+}
+
+::selection {
+  @apply bg-primary text-white;
+}
+
+.input {
+  @apply label-sm w-full rounded-lg border-[1px] border-primary-100 bg-transparent bg-white px-2 py-1.5 text-gray-800 placeholder-gray-400 outline-none transition duration-200 hover:bg-gray-50 focus:border-primary focus:bg-white focus:outline-none md:px-3 md:py-2;
+}
+
+.input-2 {
+  @apply label-sm w-full rounded-lg border-2 border-primary-100/30 bg-primary-100/30 px-2 py-1.5 text-gray-800 placeholder-gray-400 outline-none transition duration-200 hover:bg-gray-100/50 focus:border-transparent focus:bg-gray-50 focus:outline-none md:px-3 md:py-2;
+}
+
+.input-3 {
+  @apply w-full rounded-lg border-2 border-gray-200 bg-white px-2 py-2 font-medium text-gray-800 outline-none placeholder:text-gray-500 hover:placeholder:text-gray-700 focus:border-primary-100 focus:bg-primary-50/70 focus:outline-transparent md:px-3;
+}

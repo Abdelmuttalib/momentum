@@ -1,0 +1,49 @@
+{
+  "app": {
+    "name": "InSpect"
+  },
+  "buttons": {
+    "signIn": "Sign In",
+    "signOut": "Sign Out",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "createAccount": "Create Account",
+    "createAnAccount": "Create an account",
+    "printFullReport": "Print Full Report",
+    "reset": "reset"
+  },
+  "headings": {
+    "signIn": "Sign In",
+    "createAccount": "Create Account",
+    "getStarted": "Get Started",
+    "information": "Information",
+    "defectInformation": "Defect Information"
+  },
+  "paragraphs": {
+    "signinDescription": "enter your credentials to access your account",
+    "createAccountDescription": "get started by creating your account",
+    "dontHaveAnAccount": "Don't have an account?",
+    "alreadyHaveAnAccount": "Already have an account?",
+    "createAccount": "Create Account"
+  },
+  "labels": {
+    "phoneNumber": "Phone Number",
+    "email": "Email",
+    "password": "Password",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "confirmPassword": "Confirm Password",
+    "defectID": "Defect ID",
+    "imageType": "Image Type",
+    "visibleImageID": "Visible Image ID",
+    "buildingNumber": "Building Number",
+    "specificLocation": "Specific Location",
+    "defectType": "Defect Type",
+    "description": "Description"
+  },
+  "validations": {
+    "phoneNumber": "Please enter a valid 10-digit phone number starting with 1 and the second digit between 3 and 9",
+    "password": "password must be at least 8 characters"
+  }
+}

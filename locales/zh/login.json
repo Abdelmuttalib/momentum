@@ -1,0 +1,34 @@
+{
+  "buttons": {
+    "signIn": "登入",
+    "createAccount": "创建账户",
+    "createAnAccount": "创建一个帐户"
+  },
+  "headings": {
+    "signIn": "登入",
+    "createAccount": "创建账户",
+    "getStarted": "开始"
+  },
+  "paragraphs": {
+    "signinDescription": "输入您的凭证以访问您的帐户",
+    "createAccountDescription": "通过创建您的帐户开始",
+    "dontHaveAnAccount": "还没有账户吗？",
+    "alreadyHaveAnAccount": "已经有一个账户了吗？",
+    "createAccount": "创建账户"
+  },
+  "labels": {
+    "phoneNumber": "电话号码",
+    "name": "名称",
+    "email": "电子邮件",
+    "password": "密码",
+    "confirmPassword": "确认密码"
+  },
+  "validations": {
+    "phoneNumber": "请输入以1开头的10位有效电话号码，第二位数字在3到9之间",
+    "name": "名称必须至少有2个字符",
+    "email": "请输入有效的电子邮件地址",
+    "password": "密码必须至少有8个字符",
+    "confirmPassword": "密码必须至少有8个字符",
+    "passwordsDoNotMatch": "密码不匹配"
+  }
+}

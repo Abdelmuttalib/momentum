@@ -1,0 +1,10 @@
+{
+  "locales": ["en", "zh"],
+  "defaultLocale": "en",
+  "pages": {
+    "*": ["common"],
+    "/login": ["login"],
+    "/team-management": ["home", "team"],
+    "/user-management": ["home", "user"]
+  }
+}
