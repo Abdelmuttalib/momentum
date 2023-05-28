@@ -41,6 +41,7 @@ const LoginBackground: FC<{ children: ReactNode }> = ({ children }) => {
           </div>
         </div> */}
       </div>
+      
       {children}
     </div>
   );

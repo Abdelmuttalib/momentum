@@ -7,6 +7,7 @@ import { api } from "@/utils/api";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import cn from "@/utils/cn";
+import type { User } from "@prisma/client";
 
 const teamFormSchema = z.object({
   name: z.string().min(1, "Please enter a team name").nonempty(),
@@ -14,13 +15,17 @@ const teamFormSchema = z.object({
 
 type TTeamForm = z.infer<typeof teamFormSchema>;
 
+interface CreateTeamFormProps {
+  onSuccess: () => void;
+  onCancel: () => void;
+  organizationId: User["organizationId"];
+}
+
 export default function CreateTeamForm({
   onSuccess,
   onCancel,
-}: {
-  onSuccess: () => void;
-  onCancel: () => void;
-}) {
+  organizationId,
+}: CreateTeamFormProps) {
   const {
     register,
     handleSubmit,
@@ -30,7 +35,7 @@ export default function CreateTeamForm({
     resolver: zodResolver(teamFormSchema),
   });
 
-  const createTeamMutation = api.team.createTeam.useMutation({
+  const createTeamMutation = api.team.admin.createTeam.useMutation({
     onSuccess: () => {
       // Handle the new team. For example, you could redirect to the team's page
       onSuccess();
@@ -45,6 +50,7 @@ export default function CreateTeamForm({
   async function onCreateTeam(data: TTeamForm): Promise<void> {
     await createTeamMutation.mutateAsync({
       name: data.name,
+      organizationId
     });
     // Handle the new team. For example, you could redirect to the team's page
   }

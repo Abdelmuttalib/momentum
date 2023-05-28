@@ -4,12 +4,7 @@ import Badge, {
   getTaskStatusBadgeColor,
 } from "@/components/ui/badge";
 import { prisma } from "@/server/db";
-import {
-  TaskStatus,
-  type Project,
-  Priority,
-  Task,
-} from "@prisma/client";
+import { TaskStatus, type Project, Priority, Task, Team } from "@prisma/client";
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useState, type FC } from "react";
 import {
@@ -39,6 +34,8 @@ import { api } from "@/utils/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { IconButton } from "@/components/ui/icon-button";
+import { getServerAuthSession } from "@/server/auth";
+import ProjectSwitcher from "@/components/project-switcher";
 
 export function UpdateTaskForm({
   onSuccess,
@@ -49,7 +46,8 @@ export function UpdateTaskForm({
   onCancel: () => void;
   task: Task;
 }) {
-  console.log(task)
+  console.log(task);
+  const apiContext = api.useContext();
   const {
     register,
     control,
@@ -59,16 +57,17 @@ export function UpdateTaskForm({
     resolver: zodResolver(taskFormSchema),
     defaultValues: {
       title: task.title,
-      ...(task.description ? {description: task.description} : {}),
+      ...(task.description ? { description: task.description } : {}),
       status: task.status,
-      priority: task.priority      
-    }
+      priority: task.priority,
+    },
   });
 
   const updateTaskMutation = api.task.updateTask.useMutation({
-    onSuccess: () => {
+    onSuccess: async () => {
       // Handle the new team. For example, you could redirect to the team's page
       onSuccess();
+      await apiContext.task.getAllProjectTasks.invalidate();
       // reset();
       toast.success("Task updated successfully");
     },
@@ -81,7 +80,7 @@ export function UpdateTaskForm({
     console.log(data);
     await updateTaskMutation.mutateAsync({
       ...data,
-      id: task.id
+      id: task.id,
     });
   }
 
@@ -217,7 +216,11 @@ const TaskDialog = ({
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <IconButton size='sm' variant='outline' className="ml-2 inline-flex gap-1 p-0.5">
+        <IconButton
+          size="sm"
+          variant="outline"
+          className="ml-2 inline-flex gap-1 p-0.5"
+        >
           <EllipsisHorizontalIcon className="w-5" />
         </IconButton>
       </DialogTrigger>
@@ -260,14 +263,14 @@ const TaskDialog = ({
 };
 
 const Task: FC<{ task: Task }> = ({ task }) => {
-  const { refetch } = api.task.allProjectTasks.useQuery({
-    id: task.projectId,
-  });
+
+
+  
   return (
     <div className="mb-4 rounded-lg border bg-white p-4">
       <div className="flex justify-between">
         <h3 className="mb-2 text-lg font-bold">{task.title}</h3>
-        <TaskDialog onSuccess={refetch as () => void}  task={task} />
+        <TaskDialog onSuccess={refetch as () => void} task={task} />
       </div>
       <p className="text-gray-700">{task.description}</p>
       <div className="mt-4 flex items-center justify-between gap-2">
@@ -284,8 +287,15 @@ const Task: FC<{ task: Task }> = ({ task }) => {
 
 const TaskColumn: FC<{ tasks: Task[]; title: string }> = ({ tasks, title }) => {
   return (
-    <div className="w-full bg-slate-100 p-4 lg:w-1/3">
-      <h2 className="mb-4 text-lg font-bold">{title}</h2>
+    <div className="w-full space-y-3 bg-slate-100 p-4 lg:w-1/3">
+      <div className="flex items-center gap-3">
+        <h2 className="text-lg font-bold capitalize">
+          {title.replace("_", " ").toLocaleLowerCase()}
+        </h2>
+        <span className="rounded-full bg-white px-2.5 py-0.5 font-semibold">
+          {tasks.length}
+        </span>
+      </div>
       <div className="space-y-4">
         {tasks.map((task) => (
           <Task key={task.id} task={task} />
@@ -295,7 +305,13 @@ const TaskColumn: FC<{ tasks: Task[]; title: string }> = ({ tasks, title }) => {
   );
 };
 
-const TaskBoard = ({ taskStatuses, tasks }: {taskStatuses: TaskStatus[], tasks: Task[]}) => {
+const TaskBoard = ({
+  taskStatuses,
+  tasks,
+}: {
+  taskStatuses: TaskStatus[];
+  tasks: Task[];
+}) => {
   // <div key={status} className="w-1/4 p-2">
   //   <h2 className="mb-2 font-bold">{status}</h2>
   //   <div className="space-y-2">
@@ -310,7 +326,7 @@ const TaskBoard = ({ taskStatuses, tasks }: {taskStatuses: TaskStatus[], tasks: 
   //   </div>
   // </div>
   return (
-    <div className="flex flex-wrap 2xl:flex-nowrap justify-between">
+    <div className="flex flex-wrap justify-between 2xl:flex-nowrap">
       {taskStatuses.map((status) => {
         const tasksForStatus = tasks.filter((task) => task.status === status);
         return (
@@ -340,6 +356,7 @@ export function CreateTaskForm({
   onCancel: () => void;
   project: Project;
 }) {
+  const trpc = api.useContext();
   const {
     register,
     control,
@@ -351,9 +368,10 @@ export function CreateTaskForm({
   });
 
   const createTaskMutation = api.task.createTask.useMutation({
-    onSuccess: () => {
+    onSuccess: async () => {
       // Handle the new team. For example, you could redirect to the team's page
       onSuccess();
+      await trpc.task.getAllProjectTasks.invalidate();
       reset();
       toast.success("New project created!");
     },
@@ -474,7 +492,7 @@ export function CreateTaskForm({
         )}
       </div>
 
-      <div className="flex flex-col-reverse md:flex-row md:gap-2">
+      <div className="flex flex-col-reverse md:flex-row md:gap-2 lg:justify-end">
         <Button
           type="button"
           variant="outline"
@@ -483,7 +501,7 @@ export function CreateTaskForm({
         >
           Cancel
         </Button>
-        <Button type="submit" className="mt-2 flex-1">
+        <Button type="submit" className="mt-2 flex-1 lg:flex-initial">
           Create Task
         </Button>
       </div>
@@ -507,7 +525,7 @@ const CreateNewTaskDialog = ({
         </Button>
       </DialogTrigger>
       {isOpen && (
-        <DialogContent className="mt-10 bg-white sm:max-w-sm">
+        <DialogContent className="mt-10 bg-white sm:max-w-lg">
           <DialogHeader className="space-y-0">
             <DialogTitle>
               <h2 className="h5 inline">Create a new Task</h2>
@@ -533,7 +551,7 @@ const CreateNewTaskDialog = ({
           <CreateTaskForm
             project={project}
             onSuccess={() => {
-              onSuccess();
+              // onSuccess();
               setIsOpen(false);
             }}
             onCancel={() => setIsOpen(false)}
@@ -546,24 +564,32 @@ const CreateNewTaskDialog = ({
 
 type ProjectPageProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 
-const ProjectPage = ({ project }: ProjectPageProps) => {
-  const { data: tasks, refetch } = api.task.allProjectTasks.useQuery({
-    id: project.id,
+const ProjectPage = ({ userSession, project, teamId }: ProjectPageProps) => {
+  const { data: tasks, refetch } = api.task.getAllProjectTasks.useQuery({
+    projectId: project?.id,
   });
   console.log(tasks);
 
   return (
-    <Layout pageTitle={`Project: ${project.name}`}>
-      <div className="flex flex-col gap-8">
-        <div className="flex w-full items-center justify-between">
-          <h1 className="h3">Project: {project.name}</h1>
+    <Layout
+      pageTitle={
+        <>
+          Project <ProjectSwitcher currentProject={project} teamId={teamId} />
+        </>
+      }
+    >
+      <div className="flex flex-col gap-4">
+        <div className="flex w-full items-center justify-end">
           <CreateNewTaskDialog
             onSuccess={refetch as () => void}
             project={project}
           />
         </div>
         {tasks && (
-          <TaskBoard taskStatuses={Object.keys(TaskStatus) as TaskStatus[]} tasks={tasks} />
+          <TaskBoard
+            taskStatuses={Object.keys(TaskStatus) as TaskStatus[]}
+            tasks={tasks}
+          />
         )}
       </div>
     </Layout>
@@ -574,7 +600,20 @@ export default ProjectPage;
 
 export const getServerSideProps: GetServerSideProps<{
   project: Project;
-}> = async ({ params }) => {
+  teamId: Team["id"];
+}> = async ({ req, res, params }) => {
+  const userSession = await getServerAuthSession({ req, res });
+
+  if (!userSession) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
+
+  const teamId = params?.teamId as string;
   const projectId = params?.projectId as string;
   const project = await prisma.project.findUnique({
     where: {
@@ -587,7 +626,10 @@ export const getServerSideProps: GetServerSideProps<{
   return {
     props: {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      userSession: JSON.parse(JSON.stringify(userSession)),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       project: JSON.parse(JSON.stringify(project)),
+      teamId,
     },
   };
 };

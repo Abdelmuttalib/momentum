@@ -8,26 +8,38 @@ import {
   publicProcedure,
   protectedProcedure,
 } from "@/server/api/trpc";
-import { ProjectStatus, type Project } from "@prisma/client";
+import { ProjectStatus, type Project, Role } from "@prisma/client";
+import { createOrgWithAdminAccountFormSchema } from "@/components/auth/schema";
+import { hashPassword } from "@/utils/bcrypt";
 
-export const projectRouter = createTRPCRouter({
-  createProject: protectedProcedure
-    .input(
-      z.object({
-        name: z.string(),
-        status: z.nativeEnum(ProjectStatus),
-        teamId: z.string(),
-      })
-    )
+export const organizationRouter = createTRPCRouter({
+  createOrganizationWithAdminAccount: publicProcedure
+    .input(createOrgWithAdminAccountFormSchema)
     .mutation(async ({ input, ctx }) => {
-      const newProject = await ctx.prisma.project.create({
+      const newOrganization = await ctx.prisma.organization.create({
         data: {
-          name: input.name,
-          status: input.status,
-          teamId: input.teamId,
+          name: input.organization,
         },
       });
-      return newProject;
+
+      const hashedPassword = hashPassword(input.password);
+
+      const newAdminUser = await ctx.prisma.user.create({
+        data: {
+          firstName: input.firstName,
+          lastName: input.lastName,
+          email: input.email,
+          phoneNumber: input.phoneNumber,
+          password: hashedPassword,
+          organization: {
+            connect: {
+              id: newOrganization.id,
+            },
+          },
+          role: Role.ADMIN,
+        },
+      });
+      return { newOrganization, newAdminUser };
     }),
 
   deleteProject: protectedProcedure
@@ -36,22 +48,6 @@ export const projectRouter = createTRPCRouter({
       await ctx.prisma.project.delete({
         where: { id: input.id },
       });
-    }),
-
-  getAllProjectsByTeam: protectedProcedure
-    .input(
-      z.object({
-        teamId: z.string(),
-      })
-    )
-    .query(async ({ input, ctx }) => {
-      const projects: Project[] = await ctx.prisma.project.findMany({
-        where: { teamId: input.teamId },
-        include: {
-          tasks: true, // include tasks in the project
-        },
-      });
-      return projects;
     }),
 
   allProjects: publicProcedure

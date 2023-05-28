@@ -15,11 +15,7 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Example {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-}
+
 
 // Necessary for Next auth
 model Account {
@@ -50,23 +46,26 @@ model Session {
 
 model User {
     id            String    @id @default(cuid())
-    name          String?
-    phoneNumber         String?   @unique
+    firstName          String?
+    lastName          String?
+    phoneNumber         String   @unique
     email         String?   @unique
     emailVerified DateTime?
     image         String?
     accounts      Account[]
     sessions      Session[]
     password      String
-    role  Role    @default(Member)
+    role  Role    @default(MEMBER)
     teams Team[]
     tasks     Task[]
     comments  Comment[]
+    organizationId String
+    organization   Organization  @relation(fields: [organizationId], references: [id])
 }
 
 enum Role {
-  Admin
-  Member
+  ADMIN
+  MEMBER
 }
 
 model VerificationToken {
@@ -77,11 +76,23 @@ model VerificationToken {
     @@unique([identifier, token])
 }
 
+
+model Organization {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+  users     User[]
+  teams     Team[]
+  invitations Invitation[]
+}
+
 model Team {
   id     String     @id @default(cuid())
   name   String
   users  User[]
   projects Project[]
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id])
 }
 
 
@@ -121,6 +132,7 @@ model Task {
 
 enum TaskStatus {
   BACKLOG
+  TO_DO
   IN_PROGRESS
   IN_REVIEW
   REVISION
@@ -143,4 +155,18 @@ model Comment {
   author    User     @relation(fields: [authorId], references: [id])
   taskId    String?
   task      Task?    @relation(fields: [taskId], references: [id])
+}
+
+model Invitation {
+  id              String       @id @default(cuid())
+  phoneNumber     String
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id])
+  status          InvitationStatus @default(INVITED)
+  createdAt       DateTime  @default(now())
+}
+
+enum InvitationStatus {
+  INVITED
+  REGISTERED
 }

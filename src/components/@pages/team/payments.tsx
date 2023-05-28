@@ -16,18 +16,22 @@ import { type FC, useState } from "react";
 import { PlusIcon } from "lucide-react";
 import { IconLink } from "@/components/ui/icon-button";
 
-const AddUserDialog: FC<{ users: User[]; team: any, refetch: () => void }> = ({ users, team, refetch }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  // const { refetch: refetchUsers } = api.team.getAllUsers.useQuery();
+type TTeam = Team & {
+  users: User[];
+};
 
+const AddUserDialog: FC<{ team: TTeam }> = ({ team }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const { data: users, refetch: refetchUsers } =
+    api.team.admin.getAllUsers.useQuery();
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
   const teamUserIds = new Set(team.users.map((user: User) => user.id));
 
-  const addUserToTeamMutation = api.team.addUserToTeam.useMutation({
-    onSuccess:  () => {
+  const addUserToTeamMutation = api.team.admin.addUserToTeam.useMutation({
+    onSuccess: async () => {
       // Handle the new team. For example, you could redirect to the team's page
-      refetch();
       // onSuccess();
+      await refetchUsers();
       // reset();
       toast.success("User added to team successfully");
     },
@@ -36,11 +40,12 @@ const AddUserDialog: FC<{ users: User[]; team: any, refetch: () => void }> = ({ 
     },
   });
 
-  const removeUserFromTeam = api.team.removeUserFromTeam.useMutation({
-    onSuccess: () => {
+  const removeUserFromTeam = api.team.admin.removeUserFromTeam.useMutation({
+    onSuccess: async () => {
       // Handle the new team. For example, you could redirect to the team's page
       // onSuccess();
-      refetch();
+      await refetchUsers();
+      console.log(users);
       // reset();
       toast.success("User removed from team successfully");
     },
@@ -49,13 +54,17 @@ const AddUserDialog: FC<{ users: User[]; team: any, refetch: () => void }> = ({ 
     },
   });
 
+  const checkIfUserIsInTeam = (userId: User["id"]) => {
+    return teamUserIds.has(userId);
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button
           type="button"
           size="sm"
-          variant="secondary"
+          variant="outline"
           className="ml-2 inline-flex gap-1 whitespace-nowrap"
         >
           <PlusIcon className="w-5" /> Add Members
@@ -74,7 +83,7 @@ const AddUserDialog: FC<{ users: User[]; team: any, refetch: () => void }> = ({ 
           <div>
             <h2 className="h6">All Users</h2>
             <div className="grid gap-4">
-              {users.map((user) => (
+              {users?.map((user) => (
                 <div
                   key={user.id}
                   className="flex flex-col gap-2 rounded-lg border border-gray-200 p-4"
@@ -87,7 +96,7 @@ const AddUserDialog: FC<{ users: User[]; team: any, refetch: () => void }> = ({ 
                       </div>
                     </div>
                     <div>
-                      {teamUserIds.has(user.id) ? (
+                      {checkIfUserIsInTeam(user.id) ? (
                         <div className="flex gap-2">
                           <Button
                             type="button"
@@ -156,17 +165,18 @@ export const columns: ColumnDef<Team>[] = [
     cell: ({ row: { original } }) => {
       console.log("row: ", original);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const orig: any = original;
+      const teamRow: TTeam = original as TTeam;
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-      return orig.users.map((user: User) => <p key={user.id}>{user.email},</p>);
+      return teamRow.users.map((user: User) => (
+        <p key={user.id}>{user.email},</p>
+      ));
     },
   },
   {
     accessorKey: "actions",
     header: "actions",
     cell: ({ row: { original } }) => {
-      const { data: users, refetch } = api.team.getAllUsers.useQuery();
-      const deleteTeamMutation = api.team.deleteTeam.useMutation({
+      const deleteTeamMutation = api.team.admin.deleteTeam.useMutation({
         onSuccess: () => {
           toast.success("Team deleted");
           // api.team.allTeams.refetch(); // if you have getTeams query
@@ -182,8 +192,14 @@ export const columns: ColumnDef<Team>[] = [
       return (
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         <div className="flex gap-3">
-          <IconLink href={`/team-management/${original.id}`} variant="secondary" className="h-full py-3">View</IconLink>
-          <AddUserDialog users={users as User[]} team={original} refetch={refetch as () => void} />
+          <IconLink
+            href={`/team/${original.id}`}
+            variant="outline"
+            className="h-full py-3"
+          >
+            View
+          </IconLink>
+          <AddUserDialog team={original as TTeam} />
           <Button
             type="button"
             size="sm"

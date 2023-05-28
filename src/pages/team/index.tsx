@@ -1,5 +1,9 @@
 import { PlusIcon } from "@heroicons/react/20/solid";
-import type { GetServerSideProps, NextPage } from "next";
+import type {
+  GetServerSideProps,
+  InferGetServerSidePropsType,
+  NextPage,
+} from "next";
 import { useState } from "react";
 import { Layout } from "@/components/layout";
 import { Button } from "@/components/ui/button";
@@ -11,11 +15,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { DataTable } from "@/components/@pages/team-management/data-table";
-import { columns } from "@/components/@pages/team-management/payments";
+import { DataTable } from "@/components/@pages/team/data-table";
+import { columns } from "@/components/@pages/team/payments";
 import { api } from "@/utils/api";
-import CreateTeamForm from "@/components/@pages/team-management/CreateTeamForm";
+import CreateTeamForm from "@/components/@pages/team/CreateTeamForm";
 import { getServerAuthSession } from "@/server/auth";
+import type { Session } from "next-auth";
+import type { User } from "@prisma/client";
 
 // const InviteUserForm: FC<{
 //   onSuccess: () => void;
@@ -43,7 +49,7 @@ import { getServerAuthSession } from "@/server/auth";
 //   });
 
 //   const onInviteUser: SubmitHandler<TInviteUserFormFields> = () => {
-   
+
 //   };
 
 //   return (
@@ -90,7 +96,15 @@ import { getServerAuthSession } from "@/server/auth";
 //   );
 // };
 
-const CreateNewTeamDialog = ({ onSuccess }: { onSuccess: () => void }) => {
+interface CreateNewTeamDialogProps {
+  onSuccess: () => void;
+  organizationId: User["organizationId"];
+}
+
+function CreateNewTeamDialog({
+  onSuccess,
+  organizationId,
+}: CreateNewTeamDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -127,6 +141,7 @@ const CreateNewTeamDialog = ({ onSuccess }: { onSuccess: () => void }) => {
           </div>
         </div> */}
           <CreateTeamForm
+            organizationId={organizationId}
             onSuccess={() => {
               onSuccess();
               setIsOpen(false);
@@ -137,21 +152,38 @@ const CreateNewTeamDialog = ({ onSuccess }: { onSuccess: () => void }) => {
       )}
     </Dialog>
   );
-};
+}
 
-const UserManagementPage: NextPage = () => {
-  const { data: allTeams, refetch } = api.team.allTeams.useQuery();
+type UserManagementPageProps = InferGetServerSidePropsType<
+  typeof getServerSideProps
+>;
 
+const UserManagementPage: NextPage<UserManagementPageProps> = ({
+  userSession,
+}) => {
+  const organizationId = userSession?.user?.organizationId as string;
 
+  const { data: allOrganizationTeams, refetch: refetchOrganizationTeams } =
+    api.team.admin.getAllTeamsByOrganization.useQuery({
+      organizationId,
+    });
+
+  console.log("t: ", allOrganizationTeams);
   return (
     <Layout pageTitle="Team Management">
       {/* <UserManagementTable /> */}
-      <div className="flex flex-col gap-7">
-        <div className="flex w-full items-center justify-between">
-          <h1 className="h2">Team Management</h1>
-          <CreateNewTeamDialog onSuccess={refetch as () => void} />
+      <div className="flex flex-col gap-4">
+        <div className="flex w-full items-center justify-end">
+          <CreateNewTeamDialog
+            onSuccess={refetchOrganizationTeams as () => void}
+            organizationId={organizationId}
+          />
         </div>
-        <div>{allTeams && <DataTable columns={columns} data={allTeams} />}</div>
+        <div>
+          {allOrganizationTeams && (
+            <DataTable columns={columns} data={allOrganizationTeams} />
+          )}
+        </div>
       </div>
     </Layout>
   );
@@ -159,7 +191,9 @@ const UserManagementPage: NextPage = () => {
 
 export default UserManagementPage;
 
-export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+export const getServerSideProps: GetServerSideProps<{
+  userSession: Session | null;
+}> = async ({ req, res }) => {
   const session = await getServerAuthSession({ req, res });
 
   if (!session) {
@@ -173,7 +207,8 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
 
   return {
     props: {
-      session,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      userSession: JSON.parse(JSON.stringify(session)),
     },
   };
 };

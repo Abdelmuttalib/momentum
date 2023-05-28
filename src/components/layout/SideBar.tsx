@@ -2,28 +2,31 @@ import { XMarkIcon } from "@heroicons/react/20/solid";
 import { Squares2X2Icon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 
 import cn from "@/utils/cn";
 
 import { IconButton } from "@/components/ui/icon-button";
+import Image from "next/image";
+import LanguageSwitcher from "../language-switcher";
+import { UsersIcon } from "lucide-react";
 
-type DashboardLinkT = {
-  text: string;
+type DashboardLink = {
+  label: string;
   icon: React.ReactNode;
   href: string;
 };
 
-export const dashboardLinks: DashboardLinkT[] = [
+export const dashboardLinks: DashboardLink[] = [
   // {
   //   text: "Home",
   //   icon: <Squares2X2Icon className="mx-2 my-1.5 w-5 text-current" />,
   //   href: "/",
   // },
   {
-    text: "Team Management",
-    icon: <Squares2X2Icon className="mx-2 my-1.5 w-5 text-current" />,
-    href: "/team-management",
+    label: "Teams",
+    icon: <UsersIcon className="w-6 text-current" />,
+    href: "/team",
   },
   // {
   //   text: "Project Management",
@@ -48,14 +51,122 @@ export const dashboardLinks: DashboardLinkT[] = [
   // },
 ];
 
-const SideBar = ({
-  mode = "normal",
-  setShowSidebarMenu,
-}: {
-  mode: "mobile" | "normal";
-  setShowSidebarMenu?: (show: boolean) => void;
-}) => {
+type SideBarLink = DashboardLink & {
+  isCurrentPath: boolean;
+};
+
+export function SideBarLink({ href, icon, label, isCurrentPath }: SideBarLink) {
+  return (
+    <Link
+      href={href}
+      className={cn(
+        "label-sm group flex w-full items-center border-r-4 border-transparent py-4 pl-4 hover:border-transparent hover:bg-gray-900 focus:border-gray-900 focus:bg-gray-900/80 focus:text-primary-50 focus:outline-transparent xl:gap-3",
+        {
+          "border-r-primary-400 bg-gray-800/50 text-primary dark:bg-gray-800/40":
+            isCurrentPath,
+          "text-gray-100": !isCurrentPath,
+        }
+      )}
+    >
+      {icon}
+      <span className="ml-1 text-gray-100 first-letter:uppercase">
+        {/* {t(`pages.${text}.title`)} */}
+        {label}
+      </span>
+    </Link>
+  );
+}
+export function SideBarSubLink({
+  href,
+  icon,
+  label,
+  isCurrentPath,
+}: SideBarLink) {
+  return (
+    <Link
+      href={href}
+      className={cn(
+        "text-md group flex w-full items-center rounded-lg border-l-4 border-transparent py-2.5 pl-4 font-semibold hover:bg-gray-900 focus:border-gray-900 focus:bg-gray-900/80 focus:text-primary-50 focus:outline-transparent xl:gap-3",
+        {
+          "rounded-l-sm border-l-primary-400 bg-gray-800/50 text-primary dark:bg-gray-800/40":
+            isCurrentPath,
+          "text-gray-100": !isCurrentPath,
+        }
+      )}
+    >
+      {/* {icon} */}
+      <span className="ml-1 text-gray-100 first-letter:uppercase">
+        {/* {t(`pages.${text}.title`)} */}
+        {label}
+      </span>
+    </Link>
+  );
+}
+
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import type { Team } from "@prisma/client";
+import { useSession } from "next-auth/react";
+import { api } from "@/utils/api";
+
+export function AccordionDemo({ subLinks }: { subLinks: Team[] }) {
+  const { pathname, asPath } = useRouter();
+  console.log("asPath: ", asPath);
+  return (
+    <Accordion type="single" collapsible className="w-full">
+      <AccordionItem value="item-1" className="border-none">
+        <AccordionTrigger
+          className={cn(
+            "label-sm group flex w-full items-center border-r-4 border-transparent px-4 py-4 text-gray-100 hover:border-transparent hover:bg-gray-900 hover:no-underline focus:border-gray-900 focus:bg-gray-900/80 focus:text-primary-50 focus:outline-transparent xl:gap-3"
+          )}
+        >
+          <span className="flex items-center gap-4">
+            {/* <Squares2X2Icon className="w-6 text-current" /> */}
+            <UsersIcon className="w-6 text-current" />
+            <span className="">Teams</span>
+          </span>
+        </AccordionTrigger>
+        <AccordionContent className="no-scrollbar overflow-y-auto">
+          <div className="flex h-full flex-col gap-1 px-4 pt-1 text-gray-100">
+            {subLinks &&
+              [...subLinks].map((team) => (
+                <SideBarSubLink
+                  key={team.id}
+                  href={`/team/${team.id}`}
+                  label={team.name}
+                  icon={<UsersIcon className="w-6 text-current" />}
+                  isCurrentPath={asPath === `/team/${team.id}`}
+                />
+              ))}
+          </div>
+          {/* <SideBarSubLink
+            href=""
+            label="Projects"
+            icon={<Squares2X2Icon className="w-6 text-current" />}
+            isCurrentPath
+          /> */}
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
+  );
+}
+
+interface SideBarProps {
+  mode?: "mobile" | "normal";
+  setShowSidebarMenu?: Dispatch<SetStateAction<boolean>>;
+}
+
+const SideBar = ({ mode = "normal", setShowSidebarMenu }: SideBarProps) => {
   const { pathname } = useRouter();
+  const { data: session } = useSession();
+
+  const { data: teams } = api.team.admin.getAllTeamsByOrganization.useQuery({
+    organizationId: session?.user?.organizationId,
+  });
 
   // className={cn('relative border-r bg-gray-900', {
   //   'hidden h-full min-h-screen w-full flex-col lg:flex lg:w-72':
@@ -64,10 +175,13 @@ const SideBar = ({
   //     mode === 'mobile',
   // })}
 
+  console.log(pathname);
+
   return (
     <div
       className={cn("relative border-r bg-gray-900", {
-        "hidden h-full min-h-screen w-full flex-col": mode === "normal",
+        "hidden h-full min-h-screen w-full flex-col xl:block xl:w-64":
+          mode === "normal",
         "fixed inset-0 z-50 flex h-[100svh] w-full flex-col border-r-0 backdrop-blur-md backdrop-filter transition-colors duration-300 lg:w-80":
           mode === "mobile",
       })}
@@ -83,100 +197,33 @@ const SideBar = ({
             <XMarkIcon className="w-6" aria-hidden="true" />
           </IconButton>
         )}
-        <div className="text-center text-gray-200">
-          <h5 className="h5">
+        <div className="flex justify-center text-center text-gray-200">
+          <Image
+            src="/images/invix-logo.png"
+            alt="invix logo"
+            width="60"
+            height="60"
+            // objectFit="contain"
+          />
+          {/* <h5 className="h5">
             InSpect
-            {/* {t('app.name')} */}
             <span className="ml-0.5 text-3xl text-primary">.</span>
           </h5>
-          <p className="label-sm block text-center text-gray-600">
-            2.0
-            {/* {t('app.description')} */}
-          </p>
+          <p className="label-sm block text-center text-gray-600">2.0</p> */}
         </div>
+
         <ul className="mt-10 flex flex-col gap-1 md:mb-44">
           {dashboardLinks.map((link) => (
-            <li key={link.text}>
-              <Link
-                href={link.href}
-                className={cn(
-                  "label-md group flex w-full items-center border-r-4 border-transparent py-3 pl-4 hover:border-transparent hover:bg-gray-900 focus:border-gray-900 focus:bg-gray-900/80 focus:text-primary-50 focus:outline-transparent xl:gap-3",
-                  {
-                    "border-r-primary-400 bg-gray-800/50 text-primary dark:bg-gray-800/40":
-                      pathname === link.href,
-                    "text-gray-100": pathname !== link.href,
-                  }
-                )}
-              >
-                {link.icon}
-                <span className="ml-2 text-gray-100 first-letter:uppercase">
-                  {/* {t(`pages.${link.text}.title`)} */}
-                  {link.text}
-                </span>
-              </Link>
+            <li key={link.label}>
+              <SideBarLink {...link} isCurrentPath={pathname === link.href} />
             </li>
           ))}
-          {/* {user && user.admin && (
-            <li>
-              <Link
-                href='/dashboard/user-management'
-                className={cn(
-                  'label-md group flex w-full items-center border-r-4 border-transparent py-3 pl-4 hover:border-transparent hover:bg-gray-900 focus:border-gray-900 focus:bg-gray-900/80 focus:text-primary-50 focus:outline-transparent xl:gap-3',
-                  {
-                    'border-r-primary-400 bg-gray-800/50 text-primary dark:bg-gray-800/40':
-                      pathname === '/dashboard/user-management',
-                    'text-gray-100': pathname !== '/dashboard/user-management',
-                  }
-                )}
-              >
-                <UsersIcon className='mx-2 my-1.5 w-5 text-current' />
-                <span className='ml-2 text-gray-100 first-letter:uppercase'>
-                  User Management
-                </span>
-              </Link>
-            </li>
-          )} */}
-          {/* <Link
-            href='/login'
-            className={cn(
-              'label-md group absolute bottom-5 flex w-full items-center border-r-4 border-transparent py-3 pl-4 hover:border-transparent hover:bg-gray-900 focus:border-gray-900 focus:bg-gray-900/80 focus:text-primary-50 focus:outline-transparent xl:gap-3'
-            )}
-          >
-            <ArrowRightOnRectangleIcon className='w-7 text-gray-200' />
-            <span className='ml-2 text-gray-100 first-letter:uppercase'>
-              Sign in
-            </span>
-          </Link> */}
-          {/* {isMounted && user && (
-            <Button
-              size='sm'
-              variant='link'
-              className='absolute bottom-5 mx-6 mt-auto flex w-full max-w-[83%] items-center no-underline hover:border-primary hover:bg-primary hover:no-underline focus:ring-offset-gray-900'
-              onClick={() => {
-                logOut();
-                push('/login');
-              }}
-            >
-              <ArrowLeftOnRectangleIcon className='w-7 text-gray-200' />
-              <span className='ml-2 text-gray-100 first-letter:uppercase'>
-                Sign out
-              </span>
-            </Button>
-          )} */}
+          <li>
+            <AccordionDemo subLinks={teams} />
+          </li>
         </ul>
         <div className="mt-10 flex w-full justify-center gap-3 px-5 sm:hidden">
-          {/* <IconLink
-            href={
-              pathname === '/notifications/[id]'
-                ? `/notifications/${query.id}`
-                : pathname
-            }
-            locale={locale === 'en' ? 'zh' : 'en'}
-            variant='outline'
-            size='lg'
-          >
-            {locale}
-          </IconLink> */}
+          <LanguageSwitcher />
 
           {/* Theme Toggle */}
           {/* <IconButton

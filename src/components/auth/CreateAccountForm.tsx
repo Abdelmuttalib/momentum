@@ -71,7 +71,7 @@ const CreateAccountForm: FC<{
       }),
     };
 
-    fetch("/api/register", requestOptions)
+    fetch("/api/user/register", requestOptions)
       .then((response) => {
         if (response.ok) {
           // toast.success('Account created successfully');

@@ -4,7 +4,7 @@
   "pages": {
     "*": ["common"],
     "/login": ["login"],
-    "/team-management": ["home", "team"],
+    "/team": ["home", "team"],
     "/user-management": ["home", "user"]
   }
 }

@@ -71,13 +71,13 @@ export const taskRouter = createTRPCRouter({
     return tasks;
   }),
 
-  allProjectTasks: protectedProcedure
-    .input(z.object({ id: z.string() }))
+  getAllProjectTasks: protectedProcedure
+    .input(z.object({ projectId: z.string() }))
     .query(async ({ input, ctx }) => {
-      const tasks: Task[] = await ctx.prisma.task.findMany({
-        where: { projectId: input.id },
+      const projectTasks: Task[] = await ctx.prisma.task.findMany({
+        where: { projectId: input.projectId },
       });
-      return tasks;
+      return projectTasks;
     }),
 
   getTask: protectedProcedure

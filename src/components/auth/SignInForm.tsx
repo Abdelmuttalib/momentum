@@ -64,16 +64,6 @@ const SignInForm: FC<{
       .catch(() => {
         toast.error("Something went wrong, kindly try again");
       });
-    // logIn(data.phoneNumber, data.password)
-    //   .then((response) => {
-    //     toast.success('Signed in successfully');
-    //     const userSignedInData = response.data;
-    //     localStorage.setItem('user', JSON.stringify(userSignedInData));
-    //     push('/dashboard/projects');
-    //   })
-    //   .catch((error) => {
-    //     toast.error(error.response.data.message);
-    //   });
   };
 
   console.log(session);

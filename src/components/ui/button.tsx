@@ -7,7 +7,7 @@ import cn from "@/utils/cn";
 // text-primary-900 bg-primary-100/70 hover:bg-primary-100 focus:bg-primary-100/70
 
 const buttonVariants = cva(
-  "relative inline-flex items-center outline-none transition duration-200 justify-center rounded-lg border-2 border-transparent focus:outline-transparent disabled:opacity-50 disabled:pointer-events-none disabled:opacity-40 disabled:hover:opacity-40 disabled:cursor-not-allowed disabled:shadow-none",
+  "relative inline-flex items-center outline-none transition duration-200 justify-center rounded-primary border-2 border-transparent focus:outline-transparent disabled:opacity-50 disabled:pointer-events-none disabled:opacity-40 disabled:hover:opacity-40 disabled:cursor-not-allowed disabled:shadow-none",
   {
     variants: {
       variant: {

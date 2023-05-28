@@ -9,15 +9,18 @@ import {
   publicProcedure,
   protectedProcedure,
 } from "@/server/api/trpc";
-import type { Team } from "@prisma/client";
+import { Role, type Team } from "@prisma/client";
 
-export const teamRouter = createTRPCRouter({
+const teamAdminRouter = createTRPCRouter({
   createTeam: protectedProcedure
-    .input(z.object({ name: z.string() }))
+    .input(z.object({ name: z.string(), organizationId: z.string() }))
     .mutation(async ({ input, ctx }) => {
       const newTeam = await ctx.prisma.team.create({
         data: {
           name: input.name,
+          organization: {
+            connect: { id: input.organizationId },
+          },
         },
       });
       return newTeam;
@@ -31,30 +34,82 @@ export const teamRouter = createTRPCRouter({
       });
     }),
 
-  allTeams: publicProcedure.query(async ({ ctx }) => {
-    const teams: Team[] = await ctx.prisma.team.findMany({
-      include: {
-        users: {
-          select: {
-            id: true,
-            phoneNumber: true,
-            name: true,
-            email: true,
-            emailVerified: true,
-            image: true,
-            role: true,
+  getAllTeamsByOrganization: protectedProcedure
+    .input(
+      z.object({
+        organizationId: z.string(),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      const organizationsTeams = await ctx.prisma.team.findMany({
+        where: {
+          organizationId: input.organizationId,
+        },
+        include: {
+          users: {
+            select: {
+              id: true,
+              phoneNumber: true,
+              firstName: true,
+              lastName: true,
+              email: true,
+              emailVerified: true,
+              image: true,
+              role: true,
+            },
           },
         },
-      },
-    });
-    return teams;
-  }),
+      });
+      return organizationsTeams;
+    }),
+
+  getTeamByTeamId: protectedProcedure
+    .input(z.object({ teamId: z.string() }))
+    .query(async ({ input, ctx }) => {
+      const team = await ctx.prisma.team.findUnique({
+        where: {
+          id: input.teamId,
+        },
+        include: {
+          users: {
+            select: {
+              id: true,
+              phoneNumber: true,
+              firstName: true,
+              lastName: true,
+              email: true,
+              role: true,
+            },
+          },
+        },
+      });
+      return team;
+    }),
+  // allTeams: publicProcedure.query(async ({ ctx }) => {
+  //   const teams: Team[] = await ctx.prisma.team.findMany({
+  //     include: {
+  //       users: {
+  //         select: {
+  //           id: true,
+  //           phoneNumber: true,
+  //           firstName: true,
+  //           lastName: true,
+  //           email: true,
+  //           emailVerified: true,
+  //           image: true,
+  //           role: true,
+  //         },
+  //       },
+  //     },
+  //   });
+  //   return teams;
+  // }),
 
   getAllUsers: protectedProcedure.query(async ({ ctx }) => {
     const users = await ctx.prisma.user.findMany({
       where: {
         role: {
-          not: "Admin",
+          not: Role.ADMIN,
         },
       },
       include: { teams: true },
@@ -98,4 +153,35 @@ export const teamRouter = createTRPCRouter({
       });
       return team;
     }),
+});
+
+const userAdminRouter = createTRPCRouter({
+  getUserTeams: protectedProcedure
+    .input(
+      z.object({
+        userId: z.string(),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      const user = await ctx.prisma.user.findUnique({
+        where: { id: input.userId },
+        include: { teams: true },
+      });
+      return user?.teams;
+    }),
+
+  getTeamUsers: protectedProcedure
+    .input(z.object({ teamId: z.string() }))
+    .query(async ({ input, ctx }) => {
+      const team = await ctx.prisma.team.findUnique({
+        where: { id: input.teamId },
+        include: { users: true },
+      });
+      return team?.users;
+    }),
+});
+
+export const teamRouter = createTRPCRouter({
+  admin: teamAdminRouter,
+  user: userAdminRouter,
 });

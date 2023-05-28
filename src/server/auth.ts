@@ -1,6 +1,6 @@
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-nocheck
-  
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+
 import { type GetServerSidePropsContext } from "next";
 import {
   getServerSession,
@@ -13,8 +13,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 
 import bcrypt from "bcryptjs";
 import type { User } from "@prisma/client";
-
-const saltRounds = 10;
+import { hashPassword } from "@/utils/bcrypt";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -47,7 +46,7 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   callbacks: {
-    jwt({ token, user }: {token: any, user: User}) {
+    jwt({ token, user }: { token: any; user: User }) {
       // if (user && user.phoneNumber) {
       //   token.phoneNumber = user.phoneNumber;
       // }
@@ -62,6 +61,9 @@ export const authOptions: NextAuthOptions = {
         ...(user && user.id ? { id: user.id } : {}),
         ...(user && user.phoneNumber ? { phoneNumber: user.phoneNumber } : {}),
         ...(user && user.role ? { role: user.role } : {}),
+        ...(user && user.organizationId
+          ? { organizationId: user.organizationId }
+          : {}),
       };
     },
     session: ({ session, token }) => {
@@ -74,6 +76,9 @@ export const authOptions: NextAuthOptions = {
             ? { phoneNumber: token.phoneNumber }
             : {}),
           ...(token && token.role ? { role: token.role } : {}),
+          ...(token && token.organizationId
+            ? { organizationId: token.organizationId }
+            : {}),
         },
       };
     },
@@ -98,10 +103,7 @@ export const authOptions: NextAuthOptions = {
           return Promise.resolve(null);
         }
 
-        const hashedPassword = await bcrypt.hash(
-          credentials?.password,
-          saltRounds
-        );
+        const hashedPassword = hashPassword(credentials?.password);
 
         console.log("user: ", user);
         if (user && credentials) {

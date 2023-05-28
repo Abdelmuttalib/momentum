@@ -21,7 +21,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   if (session?.user) {
     return {
       redirect: {
-        destination: "/team-management",
+        destination: "/team",
         permanent: false,
       },
     };
