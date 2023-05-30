@@ -234,20 +234,7 @@ const TaskDialog = ({
               <p>Update Task information.</p>
             </DialogDescription>
           </DialogHeader>
-          {/* <div className='grid gap-4 py-4'>
-          <div className='grid grid-cols-4 items-center gap-4'>
-            <label htmlFor='name' className='text-right'>
-              Name
-            </label>
-            <Input id='name' value='Pedro Duarte' className='col-span-3' />
-          </div>
-          <div className='grid grid-cols-4 items-center gap-4'>
-            <label htmlFor='username' className='text-right'>
-              Username
-            </label>
-            <Input id='username' value='@peduarte' className='col-span-3' />
-          </div>
-        </div> */}
+
           <UpdateTaskForm
             task={task}
             onSuccess={() => {
@@ -263,9 +250,6 @@ const TaskDialog = ({
 };
 
 const Task: FC<{ task: Task }> = ({ task }) => {
-
-
-  
   return (
     <div className="mb-4 rounded-lg border bg-white p-4">
       <div className="flex justify-between">
