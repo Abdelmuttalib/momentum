@@ -221,22 +221,21 @@ export const organizationTeamsColumns: ColumnDef<Team>[] = [
     accessorKey: "actions",
     header: "Actions",
     cell: ({ row: { original } }) => {
-      const apiContext = api.useContext();
-      const deleteTeamMutation = api.team.admin.deleteTeam.useMutation({
-        onSuccess: async () => {
-          await apiContext.team.admin.getAllTeamsByOrganization.invalidate();
-          toast.success("Team deleted");
-          // api.team.allTeams.refetch(); // if you have getTeams query
-        },
-        onError: (error) => {
-          toast.error(error.message);
-        },
-      });
-      async function onDeleteClick(teamId: string) {
-        console.log("her; ", teamId);
-        await deleteTeamMutation.mutateAsync({ id: teamId });
-      }
-      console.log("v: ", original);
+      // const apiContext = api.useContext();
+      // const deleteTeamMutation = api.team.admin.deleteTeam.useMutation({
+      //   onSuccess: async () => {
+      //     await apiContext.team.admin.getAllTeamsByOrganization.invalidate();
+      //     toast.success("Team deleted");
+      //     // api.team.allTeams.refetch(); // if you have getTeams query
+      //   },
+      //   onError: (error) => {
+      //     toast.error(error.message);
+      //   },
+      // });
+      // async function onDeleteClick(teamId: string) {
+      //   console.log("her; ", teamId);
+      //   await deleteTeamMutation.mutateAsync({ id: teamId });
+      // }
       return (
         <div className="flex items-center gap-2">
           <IconLink
@@ -248,7 +247,7 @@ export const organizationTeamsColumns: ColumnDef<Team>[] = [
             View
           </IconLink>
           <AddUserDialog team={original as TTeam} />
-          <Button
+          {/* <Button
             type="button"
             size="sm"
             variant="outline-destructive"
@@ -259,7 +258,7 @@ export const organizationTeamsColumns: ColumnDef<Team>[] = [
             onClick={() => onDeleteClick(original.id)}
           >
             {deleteTeamMutation.isLoading ? "Deleting team" : "Delete team"}
-          </Button>
+          </Button> */}
         </div>
       );
     },
