@@ -672,7 +672,7 @@ const CreateNewTaskDialog = ({ project }: { project: Project }) => {
 
 type ProjectPageProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 
-const ProjectPage = ({ userSession, project, teamId }: ProjectPageProps) => {
+const ProjectPage = ({ project, teamId }: ProjectPageProps) => {
   const { data: tasks } = api.task.getAllProjectTasks.useQuery({
     projectId: project?.id,
   });

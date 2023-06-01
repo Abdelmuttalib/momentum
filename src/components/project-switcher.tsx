@@ -1,23 +1,10 @@
-"use client";
-
 import * as React from "react";
-import { Check, ChevronsUpDown, PlusCircle } from "lucide-react";
+import { Check, ChevronsUpDown } from "lucide-react";
 
 import cn from "@/utils/cn";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useSession } from "next-auth/react";
+
 import { api } from "@/utils/api";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -29,31 +16,6 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import type { Project, Team } from "@prisma/client";
-
-const groups = [
-  // {
-  //   label: "Personal Account",
-  //   teams: [
-  //     {
-  //       label: "Alicia Koch",
-  //       value: "personal",
-  //     },
-  //   ],
-  // },
-  {
-    label: "Teams",
-    teams: [
-      {
-        label: "Acme Inc.",
-        value: "acme-inc",
-      },
-      {
-        label: "Monsters Inc.",
-        value: "monsters",
-      },
-    ],
-  },
-];
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface ProjectSwitcherProps {
@@ -71,10 +33,10 @@ export default function ProjectSwitcher({
     teamId: teamId,
   });
 
-  const { asPath, push } = useRouter();
+  const { asPath } = useRouter();
 
   const [open, setOpen] = React.useState(false);
-  const [showNewTeamDialog, setShowNewTeamDialog] = React.useState(false);
+  // const [showNewTeamDialog, setShowNewTeamDialog] = React.useState(false);
   // const [selectedTeam, setSelectedTeam] = React.useState<Team>(
   //   groups[0].teams[0] as Team
   // );
@@ -118,7 +80,7 @@ export default function ProjectSwitcher({
               >
                 <Avatar className="mr-2 h-6 w-6">
                   <AvatarImage
-                    src={`https://avatar.vercel.sh/${currentProject}.png`}
+                    src={`https://avatar.vercel.sh/${project.name}.png`}
                     alt={project.name}
                   />
                   <AvatarFallback className="mr-2 h-6 w-6 rounded-full bg-gradient-to-br from-primary-700 to-primary-500"></AvatarFallback>

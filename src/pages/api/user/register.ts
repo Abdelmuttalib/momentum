@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 // api/user/register.js
 
 import bcrypt from "bcryptjs";
@@ -12,7 +13,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   // Destructure the phoneNumber and password from the request body
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const { phone_number, name, email, password } = req.body;
+  const { phone_number, first_name, last_name, organization, email, password } =
+    req.body;
 
   // Check if the phoneNumber and password are provided
   if (!phone_number || !password) {
@@ -25,7 +27,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const existingUser = await prisma.user.findUnique({
     where: {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      phone_number: phone_number,
+      phoneNumber: phone_number,
     },
   });
 
@@ -44,9 +46,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const prismaUser = await prisma.user.create({
       data: {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        phone_number: phone_number,
+        phoneNumber: phone_number,
+        firstName: first_name,
+        lastName: last_name,
+        organization,
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        name: name,
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         email: email,
         password: hashedPassword,

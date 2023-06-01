@@ -19,7 +19,6 @@ const SignInForm: FC<{
   setAuthType: Dispatch<SetStateAction<TAuthType>>;
 }> = ({ setAuthType }) => {
   const { t } = useTranslation("login");
-  const { data: session } = useSession();
   const { push, locale, asPath } = useRouter();
   const signInValidationSchema = z.object({
     phoneNumber: z

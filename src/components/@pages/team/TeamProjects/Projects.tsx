@@ -6,7 +6,7 @@ interface ProjectsProps {
   projects: ProjectType[] | undefined;
 }
 
-export default function Projects({ team, projects }: ProjectsProps) {
+export default function Projects({ projects }: ProjectsProps) {
   return (
     <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
       {projects?.map((project) => (

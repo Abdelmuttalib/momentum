@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import {
   Check,
@@ -35,8 +33,6 @@ import {
   // PopoverContent,
   type PopoverTrigger,
 } from "@/components/ui/popover";
-import { useSession } from "next-auth/react";
-import { api } from "@/utils/api";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import {
@@ -72,7 +68,7 @@ export default function TeamSwitcher({
   //   groups[0].teams[0] as Team
   // );
 
-  const selectedTeam = teams?.find((team) => `/team/${team.id}` === asPath);
+  // const selectedTeam = teams?.find((team) => `/team/${team.id}` === asPath);
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>

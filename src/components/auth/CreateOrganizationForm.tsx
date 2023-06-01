@@ -1,6 +1,6 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/router";
-import { type FC, useState, Dispatch, SetStateAction } from "react";
+import { type FC, type Dispatch, type SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -19,7 +19,6 @@ export const CreateOrganizationForm: FC<{
   setRegisterStep: (step: TRegisterStep) => void;
   setOrganizationName: (name: string) => void;
 }> = ({ setRegisterStep, setOrganizationName }) => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const organizationNameFormSchema = z.object({
     name: z.string().min(3, { message: "Organization name is too short" }),
   });
@@ -31,12 +30,7 @@ export const CreateOrganizationForm: FC<{
     resolver: zodResolver(organizationNameFormSchema),
   });
 
-  async function onCreateOrganization(data: OrganizationFormData) {
-    if (isSubmitting) {
-      return;
-    }
-
-    setIsSubmitting(true);
+  function onCreateOrganization(data: OrganizationFormData) {
     toast.success("Organization created successfully");
     setOrganizationName(data.name);
     setRegisterStep("user");
@@ -50,8 +44,6 @@ export const CreateOrganizationForm: FC<{
     //   .catch(() => {
     //     toast.error("Couldn't create organization");
     //   });
-
-    setIsSubmitting(false);
   }
 
   return (
@@ -76,9 +68,7 @@ export const CreateOrganizationForm: FC<{
             <p className="mt-0.5 text-sm text-red-500">{errors.name.message}</p>
           )}
         </div>
-        <Button disabled={isSubmitting} isLoading={isSubmitting}>
-          Create Organization
-        </Button>
+        <Button>Create Organization</Button>
       </form>
     </div>
   );
@@ -88,9 +78,6 @@ export const CreateAdminAccountForm: FC<{
   organizationName: string;
   setRegisterStep: Dispatch<SetStateAction<TRegisterStep>>;
 }> = ({ organizationName, setRegisterStep }) => {
-  const { push } = useRouter();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
   const adminAccountFormSchema = z
     .object({
       firstName: z
@@ -137,7 +124,6 @@ export const CreateAdminAccountForm: FC<{
     register,
     handleSubmit,
     formState: { errors },
-    reset,
   } = useForm<TAdminAccountFormData>({
     resolver: zodResolver(adminAccountFormSchema),
     defaultValues: {
@@ -147,7 +133,7 @@ export const CreateAdminAccountForm: FC<{
 
   const createOrganizationWithAdminAccountMutation =
     api.organization.createOrganizationWithAdminAccount.useMutation({
-      onSuccess: (data) => {
+      onSuccess: () => {
         // Handle the new team. For example, you could redirect to the team's page
         // onSuccess();
         // reset();
@@ -309,8 +295,6 @@ export const CreateAdminAccountForm: FC<{
         <div className="flex justify-between">
           <Button
             type="button"
-            disabled={isSubmitting}
-            isLoading={isSubmitting}
             variant="secondary"
             onClick={() => setRegisterStep("organization")}
           >

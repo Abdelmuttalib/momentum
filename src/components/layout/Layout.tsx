@@ -1,6 +1,4 @@
-import Image from "next/image";
 import { useRouter } from "next/router";
-import { signOut, useSession } from "next-auth/react";
 import { type ReactNode, useState } from "react";
 
 import cn from "@/utils/cn";
@@ -12,7 +10,6 @@ import SideBar from "./SideBar";
 import { Bars3Icon } from "@heroicons/react/20/solid";
 import LanguageSwitcher from "../language-switcher";
 import UserAccountMenu from "../user/UserAccountMenu";
-import { api } from "@/utils/api";
 
 interface HeaderProps {
   pageTitle: string | ReactNode;

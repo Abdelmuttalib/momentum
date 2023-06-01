@@ -16,7 +16,6 @@ import {
 } from "@prisma/client";
 import { createOrgWithAdminAccountFormSchema } from "@/components/auth/schema";
 import { hashPassword } from "@/utils/bcrypt";
-import { inviteUserToOrganizationFormSchema } from "@/pages/organization";
 
 export const organizationRouter = createTRPCRouter({
   createOrganizationWithAdminAccount: publicProcedure

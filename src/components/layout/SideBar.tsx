@@ -1,7 +1,7 @@
 import { BuildingOfficeIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { Dispatch, SetStateAction } from "react";
+import type { Dispatch, ReactNode, SetStateAction } from "react";
 
 import cn from "@/utils/cn";
 
@@ -12,7 +12,7 @@ import { UsersIcon } from "lucide-react";
 
 type DashboardLink = {
   label: string;
-  icon: React.ReactNode;
+  icon: ReactNode;
   href: string;
 };
 
@@ -70,12 +70,7 @@ export function SideBarLink({ href, icon, label, isCurrentPath }: SideBarLink) {
     </Link>
   );
 }
-export function SideBarSubLink({
-  href,
-  icon,
-  label,
-  isCurrentPath,
-}: SideBarLink) {
+export function SideBarSubLink({ href, label, isCurrentPath }: SideBarLink) {
   return (
     <Link
       href={href}
@@ -107,8 +102,8 @@ import type { Team } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { api } from "@/utils/api";
 
-export function AccordionDemo({ subLinks }: { subLinks: Team[] }) {
-  const { pathname, asPath } = useRouter();
+export function AccordionDemo({ subLinks }: { subLinks: Team[] | undefined }) {
+  const { asPath } = useRouter();
   return (
     <Accordion type="single" collapsible className="w-full">
       <AccordionItem value="item-1" className="border-none">

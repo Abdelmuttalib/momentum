@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-import Badge from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getUserRoleBadgeColor } from "@/utils/getBadgeColor";
-import type { Invitation, Team } from "@prisma/client";
+import type { TTeam } from "./organization-teams";
 
 function OrganizationTeamLoader() {
   return (
@@ -20,7 +18,7 @@ function OrganizationTeamLoader() {
   );
 }
 
-function OrganizationTeam({ id, name, users }: Team) {
+function OrganizationTeam({ id, name, users }: TTeam) {
   return (
     <div
       key={id}
@@ -36,7 +34,7 @@ function OrganizationTeam({ id, name, users }: Team) {
 }
 
 interface OrganizationTeamsProps {
-  teams: Team[] | undefined;
+  teams: TTeam[] | undefined;
   isLoading: boolean;
 }
 

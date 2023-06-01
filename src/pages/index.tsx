@@ -10,9 +10,6 @@ import { inspections } from "@/components/@pages/home/data";
 import Seo from "@/components/Seo";
 
 const Home: NextPage = () => {
-  const { data: sessionData } = useSession();
-
-
   const onPrintReportData = () => {
     window.print();
   };

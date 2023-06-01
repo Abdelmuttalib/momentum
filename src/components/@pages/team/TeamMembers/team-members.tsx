@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/dialog";
 import { type FC, useState, useEffect } from "react";
 import { PlusIcon } from "lucide-react";
-import { IconLink } from "@/components/ui/icon-button";
 import Badge from "@/components/ui/badge";
 import { getUserRoleBadgeColor } from "@/utils/getBadgeColor";
 
@@ -26,7 +25,6 @@ export const AddUserDialog: FC<{ team: TTeam }> = ({ team }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [render, toggleRender] = useState(1);
   const apiContext = api.useContext();
-  console.log("team here: ", team);
   const { data: users, refetch: refetchUsers } =
     api.team.admin.getAllUsers.useQuery();
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call

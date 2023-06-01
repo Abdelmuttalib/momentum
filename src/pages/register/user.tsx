@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { type SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 import useTranslation from "next-translate/useTranslation";
-import { IconLink } from "@/components/ui/icon-button";
 import { useRouter } from "next/router";
 import { ArrowLeftIcon } from "@heroicons/react/20/solid";
 import { api } from "@/utils/api";
@@ -17,7 +16,7 @@ import { LoginBackground } from "@/components/layout";
 
 function CreateUserAccountForm() {
   const { t } = useTranslation("login");
-  const { locale, asPath, back, push } = useRouter();
+  const { back, push } = useRouter();
   const signUpValidationSchema = z
     .object({
       phoneNumber: z

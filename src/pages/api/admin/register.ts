@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 // api/admin/register.js
 
 import bcrypt from "bcryptjs";
@@ -47,7 +48,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         phoneNumber: phoneNumber,
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        name: name,
+        firstName: first_name,
+        lastName: last_name,
+        organization,
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         email: email,
         password: hashedPassword,
