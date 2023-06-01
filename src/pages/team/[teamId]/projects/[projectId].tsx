@@ -1,10 +1,15 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Layout } from "@/components/layout";
-import Badge, {
-  getTaskPriorityBadgeColor,
-  getTaskStatusBadgeColor,
-} from "@/components/ui/badge";
 import { prisma } from "@/server/db";
-import { TaskStatus, type Project, Priority, Task, Team } from "@prisma/client";
+import {
+  TaskStatus,
+  type Project,
+  Priority,
+  type Task,
+  type Team,
+} from "@prisma/client";
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useState, type FC } from "react";
 import {
@@ -36,6 +41,19 @@ import { toast } from "sonner";
 import { IconButton } from "@/components/ui/icon-button";
 import { getServerAuthSession } from "@/server/auth";
 import ProjectSwitcher from "@/components/project-switcher";
+import {
+  getTaskPriorityBadgeColor,
+  getTaskStatusBadgeColor,
+} from "@/utils/getBadgeColor";
+import Badge from "@/components/ui/badge";
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  type DraggableProvidedDraggableProps,
+  type DraggableProvidedDragHandleProps,
+  type DropResult,
+} from "react-beautiful-dnd";
 
 export function UpdateTaskForm({
   onSuccess,
@@ -46,7 +64,6 @@ export function UpdateTaskForm({
   onCancel: () => void;
   task: Task;
 }) {
-  console.log(task);
   const apiContext = api.useContext();
   const {
     register,
@@ -77,7 +94,6 @@ export function UpdateTaskForm({
   });
 
   async function onUpdateTask(data: TTaskForm): Promise<void> {
-    console.log(data);
     await updateTaskMutation.mutateAsync({
       ...data,
       id: task.id,
@@ -205,13 +221,7 @@ export function UpdateTaskForm({
   );
 }
 
-const TaskDialog = ({
-  onSuccess,
-  task,
-}: {
-  onSuccess: () => void;
-  task: Task;
-}) => {
+const TaskDialog = ({ task }: { task: Task }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -238,7 +248,6 @@ const TaskDialog = ({
           <UpdateTaskForm
             task={task}
             onSuccess={() => {
-              onSuccess();
               setIsOpen(false);
             }}
             onCancel={() => setIsOpen(false)}
@@ -249,12 +258,33 @@ const TaskDialog = ({
   );
 };
 
-const Task: FC<{ task: Task }> = ({ task }) => {
+interface TaskProps {
+  task: Task;
+  index: number;
+  id: string;
+  innerRef: (element: HTMLElement | null) => void;
+  draggableProps: DraggableProvidedDraggableProps;
+  dragHandleProps: DraggableProvidedDragHandleProps | null | undefined;
+}
+
+function Task({
+  task,
+  id,
+  innerRef,
+  draggableProps,
+  dragHandleProps,
+}: TaskProps) {
   return (
-    <div className="mb-4 rounded-lg border bg-white p-4">
+    <div
+      {...draggableProps}
+      {...dragHandleProps}
+      ref={innerRef}
+      id={id}
+      className="mb-4 rounded-lg border bg-white p-4"
+    >
       <div className="flex justify-between">
         <h3 className="mb-2 text-lg font-bold">{task.title}</h3>
-        <TaskDialog onSuccess={refetch as () => void} task={task} />
+        <TaskDialog task={task} />
       </div>
       <p className="text-gray-700">{task.description}</p>
       <div className="mt-4 flex items-center justify-between gap-2">
@@ -267,12 +297,12 @@ const Task: FC<{ task: Task }> = ({ task }) => {
       </div>
     </div>
   );
-};
+}
 
 const TaskColumn: FC<{ tasks: Task[]; title: string }> = ({ tasks, title }) => {
   return (
-    <div className="w-full space-y-3 bg-slate-100 p-4 lg:w-1/3">
-      <div className="flex items-center gap-3">
+    <>
+      <div className="flex items-center gap-3 bg-primary-50 px-4 py-3">
         <h2 className="text-lg font-bold capitalize">
           {title.replace("_", " ").toLocaleLowerCase()}
         </h2>
@@ -280,12 +310,23 @@ const TaskColumn: FC<{ tasks: Task[]; title: string }> = ({ tasks, title }) => {
           {tasks.length}
         </span>
       </div>
-      <div className="space-y-4">
-        {tasks.map((task) => (
-          <Task key={task.id} task={task} />
+      <div className="space-y-4 p-4">
+        {tasks.map((task, index) => (
+          <Draggable key={task.id} draggableId={task.id} index={index}>
+            {(provided) => (
+              <Task
+                id={task.id}
+                index={index}
+                innerRef={provided.innerRef}
+                draggableProps={provided.draggableProps}
+                dragHandleProps={provided.dragHandleProps}
+                task={task}
+              />
+            )}
+          </Draggable>
         ))}
       </div>
-    </div>
+    </>
   );
 };
 
@@ -309,15 +350,98 @@ const TaskBoard = ({
   //       ))}
   //   </div>
   // </div>
+
+  const apiContext = api.useContext();
+
+  const updateTaskStatusMutation = api.task.updateTaskStatus.useMutation({
+    onSuccess: async () => {
+      await apiContext.task.getAllProjectTasks.invalidate();
+      toast.success("Task status updated successfully.");
+    },
+
+    onError: () => {
+      toast.error("Something went wrong. Please try again later.");
+    },
+  });
+
+  async function handleOnDragEnd(result: DropResult) {
+    console.log("result: ", result);
+    const { destination, source, draggableId: taskId } = result;
+
+    if (!destination) return;
+
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    )
+      return;
+
+    await updateTaskStatusMutation.mutateAsync({
+      taskId,
+      status: destination.droppableId as TaskStatus,
+    });
+  }
+
   return (
-    <div className="flex flex-wrap justify-between 2xl:flex-nowrap">
-      {taskStatuses.map((status) => {
-        const tasksForStatus = tasks.filter((task) => task.status === status);
-        return (
-          <TaskColumn key={status} title={status} tasks={tasksForStatus} />
-        );
-      })}
-    </div>
+    <DragDropContext onDragEnd={handleOnDragEnd}>
+      <div className="flex h-full min-h-[75svh] flex-wrap justify-between gap-4 2xl:flex-nowrap">
+        {taskStatuses.map((status) => {
+          const tasksForStatus = tasks.filter((task) => task.status === status);
+          return (
+            <Droppable
+              droppableId={status}
+              direction="horizontal"
+              type="task"
+              key={status}
+            >
+              {(provided, snapshot) => (
+                <div
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                  className={cn(
+                    "h-full min-h-[75svh] w-full space-y-3 rounded-primary bg-white shadow-md lg:w-1/3",
+                    {
+                      "bg-primary-50/20": snapshot.isDraggingOver,
+                    }
+                  )}
+                >
+                  <TaskColumn title={status} tasks={tasksForStatus} />
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          );
+        })}
+      </div>
+    </DragDropContext>
+    // <DragDropContext onDragEnd={handleOnDragEnd}>
+
+    //       <div
+
+    //         className="flex flex-wrap justify-between 2xl:flex-nowrap"
+    //       >
+    //         {taskStatuses.map((status) => {
+    //           const tasksForStatus = tasks.filter(
+    //             (task) => task.status === status
+    //           );
+    //           return (
+    //             <Droppable droppableId="board" direction="horizontal" type="task">
+    //                {(provided) => (
+    //             <TaskColumn
+    //             {...provided.droppableProps}
+    //             ref={provided.innerRef}
+    //               key={status}
+    //               title={status}
+    //               tasks={tasksForStatus}
+    //             />
+    //             </Droppable>)}
+    //             )
+    //             }
+    //             )
+    //             }
+
+    //       </div>
+    // </DragDropContext>
   );
 };
 
@@ -365,7 +489,6 @@ export function CreateTaskForm({
   });
 
   async function onCreateProject(data: TTaskForm): Promise<void> {
-    console.log(data);
     await createTaskMutation.mutateAsync({
       ...data,
       projectId: project.id,
@@ -482,10 +605,17 @@ export function CreateTaskForm({
           variant="outline"
           className="mt-2"
           onClick={onCancel}
+          disabled={createTaskMutation.isLoading}
         >
           Cancel
         </Button>
-        <Button type="submit" className="mt-2 flex-1 lg:flex-initial">
+        <Button
+          size="sm"
+          type="submit"
+          className="mt-2 flex-1 lg:flex-initial"
+          disabled={createTaskMutation.isLoading}
+          isLoading={createTaskMutation.isLoading}
+        >
           Create Task
         </Button>
       </div>
@@ -493,13 +623,7 @@ export function CreateTaskForm({
   );
 }
 
-const CreateNewTaskDialog = ({
-  onSuccess,
-  project,
-}: {
-  onSuccess: () => void;
-  project: Project;
-}) => {
+const CreateNewTaskDialog = ({ project }: { project: Project }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -549,10 +673,9 @@ const CreateNewTaskDialog = ({
 type ProjectPageProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 
 const ProjectPage = ({ userSession, project, teamId }: ProjectPageProps) => {
-  const { data: tasks, refetch } = api.task.getAllProjectTasks.useQuery({
+  const { data: tasks } = api.task.getAllProjectTasks.useQuery({
     projectId: project?.id,
   });
-  console.log(tasks);
 
   return (
     <Layout
@@ -561,13 +684,11 @@ const ProjectPage = ({ userSession, project, teamId }: ProjectPageProps) => {
           Project <ProjectSwitcher currentProject={project} teamId={teamId} />
         </>
       }
+      className="bg-gray-50"
     >
       <div className="flex flex-col gap-4">
         <div className="flex w-full items-center justify-end">
-          <CreateNewTaskDialog
-            onSuccess={refetch as () => void}
-            project={project}
-          />
+          <CreateNewTaskDialog project={project} />
         </div>
         {tasks && (
           <TaskBoard
@@ -604,8 +725,6 @@ export const getServerSideProps: GetServerSideProps<{
       id: projectId,
     },
   });
-
-  console.log("projects: ", project);
 
   return {
     props: {

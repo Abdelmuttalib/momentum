@@ -2,65 +2,64 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-    provider = "prisma-client-js"
-    previewFeatures = ["jsonProtocol"]
+  provider        = "prisma-client-js"
+  previewFeatures = ["jsonProtocol"]
 }
 
 datasource db {
-    provider = "postgresql"
-    // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
-    // Further reading:
-    // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
-    // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
+  // Further reading:
+  // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
+  // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
+  url      = env("DATABASE_URL")
 }
-
-
 
 // Necessary for Next auth
 model Account {
-    id                String  @id @default(cuid())
-    userId            String
-    type              String
-    provider          String
-    providerAccountId String
-    refresh_token     String? // @db.Text
-    access_token      String? // @db.Text
-    expires_at        Int?
-    token_type        String?
-    scope             String?
-    id_token          String? // @db.Text
-    session_state     String?
-    user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? // @db.Text
+  access_token      String? // @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? // @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    @@unique([provider, providerAccountId])
+  @@unique([provider, providerAccountId])
 }
 
 model Session {
-    id           String   @id @default(cuid())
-    sessionToken String   @unique
-    userId       String
-    expires      DateTime
-    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
-    id            String    @id @default(cuid())
-    firstName          String?
-    lastName          String?
-    phoneNumber         String   @unique
-    email         String?   @unique
-    emailVerified DateTime?
-    image         String?
-    accounts      Account[]
-    sessions      Session[]
-    password      String
-    role  Role    @default(MEMBER)
-    teams Team[]
-    tasks     Task[]
-    comments  Comment[]
-    organizationId String
-    organization   Organization  @relation(fields: [organizationId], references: [id])
+  id              String       @id @default(cuid())
+  firstName       String?
+  lastName        String?
+  phoneNumber     String       @unique
+  email           String?      @unique
+  emailVerified   DateTime?
+  image           String?
+  accounts        Account[]
+  sessions        Session[]
+  password        String
+  role            Role         @default(MEMBER)
+  teams           Team[]
+  tasks           Task[]
+  comments        Comment[]
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id])
+  sentInvitations Invitation[] // This field represents all invitations sent by the user
 }
 
 enum Role {
@@ -69,42 +68,40 @@ enum Role {
 }
 
 model VerificationToken {
-    identifier String
-    token      String   @unique
-    expires    DateTime
+  identifier String
+  token      String   @unique
+  expires    DateTime
 
-    @@unique([identifier, token])
+  @@unique([identifier, token])
 }
 
-
 model Organization {
-  id        String   @id @default(uuid())
-  name      String
-  createdAt DateTime @default(now())
-  users     User[]
-  teams     Team[]
+  id          String       @id @default(uuid())
+  name        String
+  createdAt   DateTime     @default(now())
+  users       User[]
+  teams       Team[]
   invitations Invitation[]
 }
 
 model Team {
-  id     String     @id @default(cuid())
-  name   String
-  users  User[]
-  projects Project[]
-  organizationId  String
-  organization    Organization @relation(fields: [organizationId], references: [id])
+  id             String       @id @default(cuid())
+  name           String
+  users          User[]
+  projects       Project[]
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
 }
 
-
 model Project {
-  id       String     @id @default(cuid())
-  name     String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  status   ProjectStatus    // To keep track of the progress of the project
-  tasks    Task[]
-  teamId   String
-  team     Team      @relation(fields: [teamId], references: [id])
+  id        String        @id @default(cuid())
+  name      String
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  status    ProjectStatus // To keep track of the progress of the project
+  tasks     Task[]
+  teamId    String
+  team      Team          @relation(fields: [teamId], references: [id])
 }
 
 enum ProjectStatus {
@@ -113,21 +110,20 @@ enum ProjectStatus {
   COMPLETED
 }
 
-
 model Task {
-  id        String   @id @default(cuid())
-  title      String
+  id          String     @id @default(cuid())
+  title       String
   description String?
-  status    TaskStatus
-  priority Priority
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  dueDate   DateTime?
-  assigneeId String?
-  assignee  User?     @relation(fields: [assigneeId], references: [id])
-  projectId String
-  project   Project  @relation(fields: [projectId], references: [id])
-  comments  Comment[]
+  status      TaskStatus
+  priority    Priority
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  dueDate     DateTime?
+  assigneeId  String?
+  assignee    User?      @relation(fields: [assigneeId], references: [id])
+  projectId   String
+  project     Project    @relation(fields: [projectId], references: [id])
+  comments    Comment[]
 }
 
 enum TaskStatus {
@@ -158,12 +154,15 @@ model Comment {
 }
 
 model Invitation {
-  id              String       @id @default(cuid())
-  phoneNumber     String
-  organizationId  String
-  organization    Organization @relation(fields: [organizationId], references: [id])
-  status          InvitationStatus @default(INVITED)
-  createdAt       DateTime  @default(now())
+  id             String           @id @default(cuid())
+  phoneNumber    String           @unique
+  organizationId String
+  organization   Organization     @relation(fields: [organizationId], references: [id])
+  status         InvitationStatus @default(INVITED)
+  createdAt      DateTime         @default(now())
+  role           Role             @default(MEMBER)
+  invitedById    String //  the user who sent the invitation
+  invitedBy      User             @relation(fields: [invitedById], references: [id]) // This creates a relation with User
 }
 
 enum InvitationStatus {

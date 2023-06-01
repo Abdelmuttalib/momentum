@@ -16,16 +16,15 @@ const teamFormSchema = z.object({
 type TTeamForm = z.infer<typeof teamFormSchema>;
 
 interface CreateTeamFormProps {
-  onSuccess: () => void;
   onCancel: () => void;
   organizationId: User["organizationId"];
 }
 
 export default function CreateTeamForm({
-  onSuccess,
   onCancel,
   organizationId,
 }: CreateTeamFormProps) {
+  const apiContext = api.useContext();
   const {
     register,
     handleSubmit,
@@ -36,9 +35,10 @@ export default function CreateTeamForm({
   });
 
   const createTeamMutation = api.team.admin.createTeam.useMutation({
-    onSuccess: () => {
+    onSuccess: async () => {
       // Handle the new team. For example, you could redirect to the team's page
-      onSuccess();
+      await apiContext.team.admin.getAllTeamsByOrganization.invalidate();
+      onCancel();
       reset();
       toast.success("New team created!");
     },
@@ -50,7 +50,7 @@ export default function CreateTeamForm({
   async function onCreateTeam(data: TTeamForm): Promise<void> {
     await createTeamMutation.mutateAsync({
       name: data.name,
-      organizationId
+      organizationId,
     });
     // Handle the new team. For example, you could redirect to the team's page
   }

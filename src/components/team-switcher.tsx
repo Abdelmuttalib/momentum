@@ -1,35 +1,39 @@
 "use client";
 
 import * as React from "react";
-import { Check, ChevronsUpDown, PlusCircle } from "lucide-react";
+import {
+  Check,
+  ChevronsUpDown,
+  // PlusCircle
+} from "lucide-react";
 
 import cn from "@/utils/cn";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+// import {
+//   Command,
+//   CommandEmpty,
+//   CommandGroup,
+//   CommandInput,
+//   CommandItem,
+//   CommandList,
+//   CommandSeparator,
+// } from "@/components/ui/command";
+// import {
+//   Dialog,
+//   DialogContent,
+//   DialogDescription,
+//   DialogFooter,
+//   DialogHeader,
+//   DialogTitle,
+//   DialogTrigger,
+// } from "@/components/ui/dialog";
+// import { Input } from "@/components/ui/input";
+// import { Label } from "@/components/ui/label";
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  CommandSeparator,
-} from "@/components/ui/command";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
+  // Popover,
+  // PopoverContent,
+  type PopoverTrigger,
 } from "@/components/ui/popover";
 import { useSession } from "next-auth/react";
 import { api } from "@/utils/api";
@@ -44,31 +48,6 @@ import {
 } from "./ui/dropdown-menu";
 import type { Team } from "@prisma/client";
 
-const groups = [
-  // {
-  //   label: "Personal Account",
-  //   teams: [
-  //     {
-  //       label: "Alicia Koch",
-  //       value: "personal",
-  //     },
-  //   ],
-  // },
-  {
-    label: "Teams",
-    teams: [
-      {
-        label: "Acme Inc.",
-        value: "acme-inc",
-      },
-      {
-        label: "Monsters Inc.",
-        value: "monsters",
-      },
-    ],
-  },
-];
-
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<
   typeof PopoverTrigger
 >;
@@ -77,29 +56,23 @@ type PopoverTriggerProps = React.ComponentPropsWithoutRef<
 interface TeamSwitcherProps extends PopoverTriggerProps {
   className?: string;
   currentTeam: Team;
+  teams: Team[];
 }
 
 export default function TeamSwitcher({
   className,
   currentTeam,
+  teams,
 }: TeamSwitcherProps) {
-  const { data: session } = useSession();
-  const { data: teams } = api.team.admin.getAllTeamsByOrganization.useQuery({
-    organizationId: session?.user?.organizationId as string,
-  });
-
-  const { asPath, push } = useRouter();
-
-  console.log("in: ", teams);
+  const { asPath } = useRouter();
 
   const [open, setOpen] = React.useState(false);
-  const [showNewTeamDialog, setShowNewTeamDialog] = React.useState(false);
+  // const [showNewTeamDialog, setShowNewTeamDialog] = React.useState(false);
   // const [selectedTeam, setSelectedTeam] = React.useState<Team>(
   //   groups[0].teams[0] as Team
   // );
 
   const selectedTeam = teams?.find((team) => `/team/${team.id}` === asPath);
-  console.log("sss: ", selectedTeam);
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>

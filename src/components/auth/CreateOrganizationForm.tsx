@@ -32,7 +32,6 @@ export const CreateOrganizationForm: FC<{
   });
 
   async function onCreateOrganization(data: OrganizationFormData) {
-    console.log("org: ", data);
     if (isSubmitting) {
       return;
     }
@@ -151,7 +150,6 @@ export const CreateAdminAccountForm: FC<{
       onSuccess: (data) => {
         // Handle the new team. For example, you could redirect to the team's page
         // onSuccess();
-        console.log("Success: ", data);
         // reset();
         toast.success("admin account created successfully");
       },
@@ -161,8 +159,6 @@ export const CreateAdminAccountForm: FC<{
     });
 
   async function onCreateAdminAccount(data: TAdminAccountFormData) {
-    console.log("ad: ", data);
-
     const requestData = {
       firstName: data.firstName,
       lastName: data.lastName,

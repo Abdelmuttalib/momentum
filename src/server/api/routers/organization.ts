@@ -8,9 +8,15 @@ import {
   publicProcedure,
   protectedProcedure,
 } from "@/server/api/trpc";
-import { ProjectStatus, type Project, Role } from "@prisma/client";
+import {
+  ProjectStatus,
+  type Project,
+  Role,
+  InvitationStatus,
+} from "@prisma/client";
 import { createOrgWithAdminAccountFormSchema } from "@/components/auth/schema";
 import { hashPassword } from "@/utils/bcrypt";
+import { inviteUserToOrganizationFormSchema } from "@/pages/organization";
 
 export const organizationRouter = createTRPCRouter({
   createOrganizationWithAdminAccount: publicProcedure
@@ -40,6 +46,95 @@ export const organizationRouter = createTRPCRouter({
         },
       });
       return { newOrganization, newAdminUser };
+    }),
+
+  getAllInvitations: protectedProcedure
+    .input(
+      z.object({
+        organizationId: z.string().nonempty(),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      const invitations = await ctx.prisma.invitation.findMany({
+        where: {
+          organizationId: input.organizationId,
+        },
+      });
+
+      return invitations;
+    }),
+
+  inviteUserToOrganization: protectedProcedure
+    .input(
+      z.object({
+        phoneNumber: z
+          .string()
+          .regex(/^1[3-9]\d{9}$/)
+          .nonempty(),
+        role: z.nativeEnum(Role),
+        organizationId: z.string().nonempty(),
+        invitedById: z.string().nonempty(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const newInvite = await ctx.prisma.invitation.create({
+        data: {
+          ...input,
+        },
+      });
+
+      return newInvite;
+    }),
+
+  registerInvitedUser: publicProcedure
+    .input(
+      z.object({
+        firstName: z.string(),
+        lastName: z.string(),
+        email: z.string(),
+        phoneNumber: z.string(),
+        password: z.string(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const inviteData = await ctx.prisma.invitation.findUnique({
+        where: {
+          phoneNumber: input.phoneNumber,
+        },
+      });
+
+      if (inviteData && inviteData.status === InvitationStatus.INVITED) {
+        const hashedPassword = hashPassword(input.password);
+
+        const registeredUser = await ctx.prisma.user.create({
+          data: {
+            firstName: input.firstName,
+            lastName: input.lastName,
+            email: input.email,
+            phoneNumber: input.phoneNumber,
+            password: hashedPassword,
+            organization: {
+              connect: {
+                id: inviteData.organizationId,
+              },
+            },
+            role: inviteData.role,
+          },
+        });
+
+        if (registeredUser) {
+          await ctx.prisma.invitation.update({
+            where: {
+              phoneNumber: input.phoneNumber,
+            },
+            data: {
+              status: InvitationStatus.REGISTERED,
+            },
+          });
+
+          return registeredUser;
+        }
+      }
     }),
 
   deleteProject: protectedProcedure

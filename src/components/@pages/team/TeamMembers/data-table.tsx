@@ -1,5 +1,3 @@
-"use client";
-
 import {
   type ColumnDef,
   flexRender,
@@ -28,7 +26,6 @@ export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
-  const { t } = useTranslation("team");
   const table = useReactTable({
     data,
     columns,
@@ -38,11 +35,14 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="rounded-md border-2">
-        <Table>
-          <TableHeader className="bg-slate-100">
+      <div className="rounded-primary-lg border-2 bg-white">
+        <Table className="bg-transparent">
+          <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <TableRow
+                key={headerGroup.id}
+                className="h-16 rounded-primary-lg"
+              >
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead
@@ -52,11 +52,7 @@ export function DataTable<TData, TValue>({
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            t(
-                              `labels.${
-                                header.column.columnDef.header as string
-                              }`
-                            ),
+                            header.column.columnDef.header,
                             header.getContext()
                           )}
                     </TableHead>
@@ -71,7 +67,7 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  className="body-sm"
+                  className="body-sm h-20 rounded-b-primary-lg py-4"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>

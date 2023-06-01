@@ -1,9 +1,8 @@
-import React from "react";
+import type { ReactNode } from "react";
 
 import cn from "@/utils/cn";
-import { Priority, ProjectStatus, TaskStatus } from "@prisma/client";
 
-export type TColor =
+export type BadgeColor =
   | "green"
   | "yellow"
   | "red"
@@ -12,69 +11,13 @@ export type TColor =
   | "white"
   | "dark-gray";
 
-export function getProjectStatusBadgeColor(status: ProjectStatus): TColor {
-  switch (status) {
-    case ProjectStatus.PLANNED:
-      return "blue";
-
-    case ProjectStatus.IN_PROGRESS:
-      return "yellow";
-
-    case ProjectStatus.COMPLETED:
-      return "green";
-
-    default:
-      return "gray";
-  }
-}
-export function getTaskStatusBadgeColor(status: TaskStatus): TColor {
-  switch (status) {
-    case TaskStatus.BACKLOG:
-      return "gray";
-
-    case TaskStatus.IN_PROGRESS:
-      return "yellow";
-
-    case TaskStatus.IN_REVIEW:
-      return "blue";
-
-    case TaskStatus.REVISION:
-      return "red";
-
-    case TaskStatus.COMPLETED:
-      return "green";
-
-    case TaskStatus.CANCELED:
-      return "dark-gray";
-
-    default:
-      return "gray";
-  }
-}
-
-export function getTaskPriorityBadgeColor(status: Priority): TColor {
-  switch (status) {
-    case Priority.HIGH:
-      return "red";
-
-    case Priority.MEDIUM:
-      return "yellow";
-
-    case Priority.LOW:
-      return "green";
-
-    default:
-      return "green";
-  }
-}
-
 const Badge = ({
   color,
   children,
   className,
 }: {
-  color: TColor;
-  children: React.ReactNode;
+  color: BadgeColor;
+  children: ReactNode;
   className?: string;
 }) => {
   return (

@@ -1,6 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import type { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
-import type { Team, User } from "@prisma/client";
+import type { Project, Team, User } from "@prisma/client";
 import { api } from "@/utils/api";
 import { toast } from "sonner";
 
@@ -12,27 +15,41 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { type FC, useState } from "react";
+import { type FC, useState, useEffect } from "react";
 import { PlusIcon } from "lucide-react";
 import { IconLink } from "@/components/ui/icon-button";
 
-type TTeam = Team & {
+export type TTeam = Team & {
   users: User[];
+  projects: Project[];
 };
 
-const AddUserDialog: FC<{ team: TTeam }> = ({ team }) => {
+export const AddUserDialog: FC<{ team: TTeam }> = ({ team }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [render, toggleRender] = useState(1);
+  const apiContext = api.useContext();
+  console.log("team here: ", team);
   const { data: users, refetch: refetchUsers } =
     api.team.admin.getAllUsers.useQuery();
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-  const teamUserIds = new Set(team.users.map((user: User) => user.id));
+  const [teamUserIds, setTeamUserIds] = useState(
+    new Set(team.users.map((user: User) => user.id))
+  );
+
+  // const teamUserIds = new Set(team.users.map((user: User) => user.id));
+
+  useEffect(() => {
+    const teamUserIds = new Set(team.users.map((user: User) => user.id));
+    setTeamUserIds(teamUserIds);
+  }, [users, team.users]);
 
   const addUserToTeamMutation = api.team.admin.addUserToTeam.useMutation({
     onSuccess: async () => {
-      // Handle the new team. For example, you could redirect to the team's page
-      // onSuccess();
+      // await apiContext.team.admin.getAllUsers.invalidate();
+      await apiContext.team.admin.getAllTeamsByOrganization.invalidate();
       await refetchUsers();
-      // reset();
+      setIsOpen(false);
+      toggleRender(render + 1);
       toast.success("User added to team successfully");
     },
     onError: () => {
@@ -42,11 +59,8 @@ const AddUserDialog: FC<{ team: TTeam }> = ({ team }) => {
 
   const removeUserFromTeam = api.team.admin.removeUserFromTeam.useMutation({
     onSuccess: async () => {
-      // Handle the new team. For example, you could redirect to the team's page
-      // onSuccess();
-      await refetchUsers();
-      console.log(users);
-      // reset();
+      // await apiContext.team.admin.getAllUsers.invalidate();
+      await apiContext.team.admin.getAllTeamsByOrganization.invalidate();
       toast.success("User removed from team successfully");
     },
     onError: () => {
@@ -64,8 +78,8 @@ const AddUserDialog: FC<{ team: TTeam }> = ({ team }) => {
         <Button
           type="button"
           size="sm"
-          variant="outline"
-          className="ml-2 inline-flex gap-1 whitespace-nowrap"
+          variant="primary"
+          className="inline-flex h-10 gap-1 whitespace-nowrap"
         >
           <PlusIcon className="w-5" /> Add Members
         </Button>
@@ -92,7 +106,7 @@ const AddUserDialog: FC<{ team: TTeam }> = ({ team }) => {
                     <div>
                       <h4 className="font-medium">{user.phoneNumber}</h4>
                       <div className="body-sm flex items-center text-gray-600">
-                        <span>{user.name}</span>,<span>{user.email}</span>
+                        <span>{user.firstName}</span>,<span>{user.email}</span>
                       </div>
                     </div>
                     <div>
@@ -102,6 +116,8 @@ const AddUserDialog: FC<{ team: TTeam }> = ({ team }) => {
                             type="button"
                             size="sm"
                             variant="outline-destructive"
+                            disabled={removeUserFromTeam.isLoading}
+                            // isLoading={removeUserFromTeam.isLoading}
                             // eslint-disable-next-line @typescript-eslint/no-misused-promises
                             onClick={async () => {
                               await removeUserFromTeam.mutateAsync({
@@ -120,7 +136,7 @@ const AddUserDialog: FC<{ team: TTeam }> = ({ team }) => {
                       ) : (
                         <Button
                           size="sm"
-                          variant="dark"
+                          variant="primary"
                           // eslint-disable-next-line @typescript-eslint/no-misused-promises
                           onClick={async () => {
                             await addUserToTeamMutation.mutateAsync({
@@ -129,6 +145,8 @@ const AddUserDialog: FC<{ team: TTeam }> = ({ team }) => {
                               userId: user.id,
                             });
                           }}
+                          disabled={addUserToTeamMutation.isLoading}
+                          // isLoading={addUserToTeamMutation.isLoading}
                         >
                           <PlusIcon className="w-5" />
                           Add to Team
@@ -150,34 +168,63 @@ const AddUserDialog: FC<{ team: TTeam }> = ({ team }) => {
   );
 };
 
-export const columns: ColumnDef<Team>[] = [
-  {
-    accessorKey: "id",
-    header: "id",
-  },
+// const deleteTeamMutation = api.team.admin.deleteTeam.useMutation({
+//   onSuccess: async () => {
+//     toast.success("Team deleted");
+//     await apiContext.team.admin.getAllTeamsByOrganization.invalidate();
+//     // api.team.allTeams.refetch(); // if you have getTeams query
+//   },
+//   onError: (error) => {
+//     toast.error(error.message);
+//   },
+// });
+// async function onDeleteClick(teamId: string) {
+//   await deleteTeamMutation.mutateAsync({ id: teamId });
+// }
+
+export const organizationTeamsColumns: ColumnDef<Team>[] = [
   {
     accessorKey: "name",
-    header: "team_name",
+    header: "Team Name",
+  },
+  {
+    accessorKey: "id",
+    header: "Projects",
+    cell: ({ row: { original } }) => {
+      const team = original as TTeam;
+      const teamProjects = team?.projects;
+      return (
+        <div className="flex items-center">
+          {teamProjects.map((project) => (
+            <p key={project.id}>{project.name},</p>
+          ))}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "users",
-    header: "members",
+    header: "Team Members",
     cell: ({ row: { original } }) => {
-      console.log("row: ", original);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const teamRow: TTeam = original as TTeam;
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-      return teamRow.users.map((user: User) => (
-        <p key={user.id}>{user.email},</p>
-      ));
+      const team = original as TTeam;
+      const teamUsers = team?.users;
+      return (
+        <div className="flex items-center">
+          {teamUsers?.map((user) => (
+            <p key={user.id}>{user.email},</p>
+          ))}
+        </div>
+      );
     },
   },
   {
     accessorKey: "actions",
-    header: "actions",
+    header: "Actions",
     cell: ({ row: { original } }) => {
+      const apiContext = api.useContext();
       const deleteTeamMutation = api.team.admin.deleteTeam.useMutation({
-        onSuccess: () => {
+        onSuccess: async () => {
+          await apiContext.team.admin.getAllTeamsByOrganization.invalidate();
           toast.success("Team deleted");
           // api.team.allTeams.refetch(); // if you have getTeams query
         },
@@ -185,17 +232,18 @@ export const columns: ColumnDef<Team>[] = [
           toast.error(error.message);
         },
       });
-      async function onDeleteClick() {
-        await deleteTeamMutation.mutateAsync({ id: original.id });
+      async function onDeleteClick(teamId: string) {
+        console.log("her; ", teamId);
+        await deleteTeamMutation.mutateAsync({ id: teamId });
       }
-
+      console.log("v: ", original);
       return (
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        <div className="flex gap-3">
+        <div className="flex items-center gap-2">
           <IconLink
             href={`/team/${original.id}`}
-            variant="outline"
-            className="h-full py-3"
+            variant="secondary"
+            className="h-full px-3 py-2"
+            size="sm"
           >
             View
           </IconLink>
@@ -203,11 +251,14 @@ export const columns: ColumnDef<Team>[] = [
           <Button
             type="button"
             size="sm"
-            variant="outline"
+            variant="outline-destructive"
+            className="h-9"
+            disabled={deleteTeamMutation.isLoading}
+            isLoading={deleteTeamMutation.isLoading}
             // eslint-disable-next-line @typescript-eslint/no-misused-promises
-            onClick={onDeleteClick}
+            onClick={() => onDeleteClick(original.id)}
           >
-            Delete
+            {deleteTeamMutation.isLoading ? "Deleting team" : "Delete team"}
           </Button>
         </div>
       );

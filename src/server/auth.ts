@@ -12,8 +12,9 @@ import { prisma } from "@/server/db";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 import bcrypt from "bcryptjs";
-import type { User } from "@prisma/client";
+import type { Invitation, Role, User } from "@prisma/client";
 import { hashPassword } from "@/utils/bcrypt";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -25,26 +26,23 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
-      // ...other properties
-      // role: UserRole;
+      firstName: string;
+      lastName: string;
+      email?: string;
+      image?: string;
+      phoneNumber: string;
+      role: Role;
+      organizationId: string;
+      sentInvitations?: Invitation[];
     } & DefaultSession["user"];
   }
-
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
 }
 
-/**
- * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
- *
- * @see https://next-auth.js.org/configuration/options
- */
 export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
+  adapter: PrismaAdapter(prisma),
   callbacks: {
     jwt({ token, user }: { token: any; user: User }) {
       // if (user && user.phoneNumber) {
@@ -53,7 +51,6 @@ export const authOptions: NextAuthOptions = {
       // if (user && user.id) {
       //   token.id = user.id;
       // }
-      // console.log("USER JWT: ", user);
       // return token;
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return {
@@ -105,15 +102,12 @@ export const authOptions: NextAuthOptions = {
 
         const hashedPassword = hashPassword(credentials?.password);
 
-        console.log("user: ", user);
         if (user && credentials) {
-          console.log("credentials: ", credentials);
           // Any object returned will be saved in `user` property of the JWT
           const isPasswordMatch = await bcrypt.compare(
             credentials?.password,
             hashedPassword
           );
-          console.log(isPasswordMatch);
           if (isPasswordMatch) {
             return Promise.resolve(user);
           }

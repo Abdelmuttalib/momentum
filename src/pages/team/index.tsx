@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { PlusIcon } from "@heroicons/react/20/solid";
 import type {
   GetServerSideProps,
@@ -15,13 +16,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { DataTable } from "@/components/@pages/team/data-table";
-import { columns } from "@/components/@pages/team/payments";
+// import { DataTable } from "@/components/@pages/team/data-table";
+// import { columns } from "@/components/@pages/team/TeamMembersTable/payments";
 import { api } from "@/utils/api";
 import CreateTeamForm from "@/components/@pages/team/CreateTeamForm";
 import { getServerAuthSession } from "@/server/auth";
 import type { Session } from "next-auth";
-import type { User } from "@prisma/client";
+import type { Organization, User } from "@prisma/client";
+import { DataTable } from "@/components/@pages/team/TeamMembers/data-table";
+
+import { organizationTeamsColumns } from "@/components/@pages/organization/organization-teams";
 
 // const InviteUserForm: FC<{
 //   onSuccess: () => void;
@@ -97,12 +101,10 @@ import type { User } from "@prisma/client";
 // };
 
 interface CreateNewTeamDialogProps {
-  onSuccess: () => void;
   organizationId: User["organizationId"];
 }
 
-function CreateNewTeamDialog({
-  onSuccess,
+export function CreateNewTeamDialog({
   organizationId,
 }: CreateNewTeamDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -142,10 +144,6 @@ function CreateNewTeamDialog({
         </div> */}
           <CreateTeamForm
             organizationId={organizationId}
-            onSuccess={() => {
-              onSuccess();
-              setIsOpen(false);
-            }}
             onCancel={() => setIsOpen(false)}
           />
         </DialogContent>
@@ -159,44 +157,119 @@ type UserManagementPageProps = InferGetServerSidePropsType<
 >;
 
 const UserManagementPage: NextPage<UserManagementPageProps> = ({
-  userSession,
+  organizationId,
 }) => {
-  const organizationId = userSession?.user?.organizationId as string;
+  const { data: allOrganizationTeams } =
+    api.team.admin.getAllTeamsByOrganization.useQuery(
+      {
+        organizationId,
+      },
+      {
+        enabled: !!organizationId,
+      }
+    );
 
-  const { data: allOrganizationTeams, refetch: refetchOrganizationTeams } =
-    api.team.admin.getAllTeamsByOrganization.useQuery({
-      organizationId,
-    });
-
-  console.log("t: ", allOrganizationTeams);
   return (
     <Layout pageTitle="Team Management">
       {/* <UserManagementTable /> */}
       <div className="flex flex-col gap-4">
         <div className="flex w-full items-center justify-end">
-          <CreateNewTeamDialog
-            onSuccess={refetchOrganizationTeams as () => void}
-            organizationId={organizationId}
-          />
+          <CreateNewTeamDialog organizationId={organizationId} />
         </div>
         <div>
           {allOrganizationTeams && (
-            <DataTable columns={columns} data={allOrganizationTeams} />
+            <DataTable
+              columns={organizationTeamsColumns}
+              data={allOrganizationTeams}
+            />
           )}
         </div>
+        {/* <CustomTableLayout className="overflow-x-auto">
+          <CustomTableHead className="grid-cols-4">
+            <CustomTableHeadItem>Team Name</CustomTableHeadItem>
+            <CustomTableHeadItem>Projects</CustomTableHeadItem>
+            <CustomTableHeadItem>Members</CustomTableHeadItem>
+            <CustomTableHeadItem>Actions</CustomTableHeadItem>
+          </CustomTableHead>
+
+          <CustomTableBody className="w-full overflow-x-auto">
+            {allOrganizationTeams?.map((team) => (
+              <CustomTableRow key={team.id} className="grid-cols-4">
+                <CustomTableRowItem>{team.name}</CustomTableRowItem>
+                <CustomTableRowItem className="flex gap-3 truncate pr-8">
+                  {team.projects.map((project) => (
+                    <>
+                      <p key={project.id} className="whitespace-nowrap">
+                        {project.name}
+                      </p>
+                      <span className="-ml-3">,</span>
+                    </>
+                  ))}
+                </CustomTableRowItem>
+                <CustomTableRowItem className="w-fit">
+                  {team.users.length}
+                </CustomTableRowItem>
+                <CustomTableRowItem className="flex items-center gap-3">
+                  <IconLink
+                    href={`/team/${team.id}`}
+                    variant="secondary"
+                    className="h-full px-3 py-2"
+                    size="sm"
+                  >
+                    View
+                  </IconLink>
+                  <AddUserDialog team={team} />
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline-destructive"
+                    className="h-9"
+                    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                    onClick={() => onDeleteClick(team.id)}
+                  >
+                    Delete
+                  </Button>
+                </CustomTableRowItem>
+              </CustomTableRow>
+            ))}
+          </CustomTableBody>
+        </CustomTableLayout> */}
       </div>
     </Layout>
   );
 };
 
+{
+  /* <div className="flex gap-3">
+          <IconLink
+            href={`/team/${original.id}`}
+            variant="outline"
+            className="h-full py-3"
+          >
+            View
+          </IconLink>
+          <AddUserDialog team={original as TTeam} />
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
+            onClick={onDeleteClick}
+          >
+            Delete
+          </Button>
+        </div> */
+}
+
 export default UserManagementPage;
 
 export const getServerSideProps: GetServerSideProps<{
   userSession: Session | null;
+  organizationId: Organization["id"];
 }> = async ({ req, res }) => {
-  const session = await getServerAuthSession({ req, res });
+  const userSession = await getServerAuthSession({ req, res });
 
-  if (!session) {
+  if (!userSession) {
     return {
       redirect: {
         destination: "/login",
@@ -208,7 +281,8 @@ export const getServerSideProps: GetServerSideProps<{
   return {
     props: {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      userSession: JSON.parse(JSON.stringify(session)),
+      userSession: JSON.parse(JSON.stringify(userSession)),
+      organizationId: userSession.user.organizationId,
     },
   };
 };

@@ -66,7 +66,6 @@ const SignInForm: FC<{
       });
   };
 
-  console.log(session);
   return (
     <div className="w-full max-w-md bg-white px-6 py-4">
       <div className="flex w-full items-center justify-between">

@@ -111,10 +111,12 @@ export default function Layout({
       </aside>
       <div className="flex w-full flex-col overflow-auto">
         <Header pageTitle={pageTitle} actions={rightSideActions} />
-        <main className={cn("w-full px-4 pb-10 pt-6 lg:px-8", className)}>
+        <main
+          className={cn("w-full flex-grow px-4 pb-10 pt-6 lg:px-8", className)}
+        >
           {children}
         </main>
-        <Footer />
+        {/* <Footer /> */}
       </div>
     </div>
   );

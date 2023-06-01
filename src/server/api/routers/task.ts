@@ -58,6 +58,23 @@ export const taskRouter = createTRPCRouter({
       return updatedTask;
     }),
 
+  updateTaskStatus: protectedProcedure
+    .input(
+      z.object({
+        taskId: z.string(),
+        status: z.nativeEnum(TaskStatus),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const updatedTask = await ctx.prisma.task.update({
+        where: { id: input.taskId },
+        data: {
+          status: input.status,
+        },
+      });
+      return updatedTask;
+    }),
+
   deleteTask: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ input, ctx }) => {

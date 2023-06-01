@@ -12,7 +12,6 @@ import Seo from "@/components/Seo";
 const Home: NextPage = () => {
   const { data: sessionData } = useSession();
 
-  console.log(sessionData);
 
   const onPrintReportData = () => {
     window.print();

@@ -73,15 +73,11 @@ export default function ProjectSwitcher({
 
   const { asPath, push } = useRouter();
 
-  console.log("in: ", projects);
-
   const [open, setOpen] = React.useState(false);
   const [showNewTeamDialog, setShowNewTeamDialog] = React.useState(false);
   // const [selectedTeam, setSelectedTeam] = React.useState<Team>(
   //   groups[0].teams[0] as Team
   // );
-
-  console.log("sss: ", currentProject);
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>

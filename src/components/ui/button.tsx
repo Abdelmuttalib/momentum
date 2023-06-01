@@ -7,7 +7,7 @@ import cn from "@/utils/cn";
 // text-primary-900 bg-primary-100/70 hover:bg-primary-100 focus:bg-primary-100/70
 
 const buttonVariants = cva(
-  "relative inline-flex items-center outline-none transition duration-200 justify-center rounded-primary border-2 border-transparent focus:outline-transparent disabled:opacity-50 disabled:pointer-events-none disabled:opacity-40 disabled:hover:opacity-40 disabled:cursor-not-allowed disabled:shadow-none",
+  "relative inline-flex items-center justify-center gap-1 rounded-primary-lg inline-flex items-center outline-none transition duration-200 justify-center rounded-primary border-2 border-transparent focus:outline-transparent disabled:opacity-50 disabled:pointer-events-none disabled:opacity-40 disabled:hover:opacity-40 disabled:cursor-not-allowed disabled:shadow-none",
   {
     variants: {
       variant: {
@@ -15,10 +15,10 @@ const buttonVariants = cva(
           "text-white bg-primary hover:bg-primary-600 focus:bg-primary disabled:bg-primary disabled:hover:bg-primary disabled:focus:bg-primary focus:ring-2 focus:ring-offset-2 focus:ring-primary focus:bg-primary-600",
 
         outline:
-          "text-primary-800 bg-white border-gray-200/100 hover:bg-gray-50 focus:border-primary",
+          "text-primary-800 bg-white border-gray-200/100 hover:bg-gray-50 focus:bg-gray-50 focus:border-primary",
 
         secondary:
-          "text-primary-800 bg-primary-100/70 hover:bg-primary-100 focus:bg-primary-100/70 focus:border-primary-200",
+          "text-primary-600 bg-primary-100/60 hover:bg-primary-100/70 focus:bg-primary-100/70 focus:bg-primary-100/50 focus:border-primary-200",
 
         destructive: "bg-red-500 text-white hover:bg-red-600",
         "outline-destructive":
@@ -35,10 +35,9 @@ const buttonVariants = cva(
         dark: "bg-gray-900 text-gray-200 duration-150 ease-linear hover:bg-gray-900/90 active:bg-gray-800 disabled:bg-gray-700 focus:bg-gray-900",
       },
       size: {
-        default: "label-sm px-5 py-3",
-        sm: "label-sm px-4 py-2",
-        md: "label-sm px-5 py-2.5",
-        lg: "label-md px-5 py-2.5",
+        default: "label-sm px-4 h-12",
+        sm: "label-sm px-3 h-11",
+        lg: "label-md px-5 h-14",
       },
     },
     defaultVariants: {

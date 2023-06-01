@@ -4,12 +4,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { z } from "zod";
 
-import {
-  createTRPCRouter,
-  publicProcedure,
-  protectedProcedure,
-} from "@/server/api/trpc";
-import { Role, type Team } from "@prisma/client";
+import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
+import { Role } from "@prisma/client";
 
 const teamAdminRouter = createTRPCRouter({
   createTeam: protectedProcedure
@@ -29,6 +25,13 @@ const teamAdminRouter = createTRPCRouter({
   deleteTeam: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ input, ctx }) => {
+      // const project = await ctx.prisma.;
+      await ctx.prisma.project.deleteMany({
+        where: {
+          teamId: input.id,
+        },
+      });
+
       await ctx.prisma.team.delete({
         where: { id: input.id },
       });
@@ -58,6 +61,7 @@ const teamAdminRouter = createTRPCRouter({
               role: true,
             },
           },
+          projects: true,
         },
       });
       return organizationsTeams;

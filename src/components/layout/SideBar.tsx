@@ -1,5 +1,4 @@
-import { XMarkIcon } from "@heroicons/react/20/solid";
-import { Squares2X2Icon } from "@heroicons/react/24/outline";
+import { BuildingOfficeIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { Dispatch, SetStateAction } from "react";
@@ -24,21 +23,16 @@ export const dashboardLinks: DashboardLink[] = [
   //   href: "/",
   // },
   {
-    label: "Teams",
-    icon: <UsersIcon className="w-6 text-current" />,
-    href: "/team",
+    label: "Organization",
+    icon: <BuildingOfficeIcon className="w-6 text-current" />,
+    href: "/organization",
   },
   // {
-  //   text: "Project Management",
-  //   icon: <Squares2X2Icon className="mx-2 my-1.5 w-5 text-current" />,
-  //   href: "/project-management",
+  //   label: "Teams",
+  //   icon: <UsersIcon className="w-6 text-current" />,
+  //   href: "/team",
   // },
 
-  // {
-  //   text: "projects",
-  //   icon: <Squares2X2Icon className="mx-2 my-1.5 w-5 text-current" />,
-  //   href: "/dashboard/projects",
-  // },
   // {
   //   text: 'user-management',
   //   icon: <UsersIcon className='mx-2 my-1.5 w-5 text-current' />,
@@ -115,7 +109,6 @@ import { api } from "@/utils/api";
 
 export function AccordionDemo({ subLinks }: { subLinks: Team[] }) {
   const { pathname, asPath } = useRouter();
-  console.log("asPath: ", asPath);
   return (
     <Accordion type="single" collapsible className="w-full">
       <AccordionItem value="item-1" className="border-none">
@@ -163,10 +156,17 @@ interface SideBarProps {
 const SideBar = ({ mode = "normal", setShowSidebarMenu }: SideBarProps) => {
   const { pathname } = useRouter();
   const { data: session } = useSession();
+  const organizationId = session?.user?.organizationId as string;
 
-  const { data: teams } = api.team.admin.getAllTeamsByOrganization.useQuery({
-    organizationId: session?.user?.organizationId,
-  });
+  const { data: teams } = api.team.admin.getAllTeamsByOrganization.useQuery(
+    {
+      organizationId: organizationId,
+    },
+
+    {
+      enabled: !!organizationId,
+    }
+  );
 
   // className={cn('relative border-r bg-gray-900', {
   //   'hidden h-full min-h-screen w-full flex-col lg:flex lg:w-72':
@@ -175,11 +175,9 @@ const SideBar = ({ mode = "normal", setShowSidebarMenu }: SideBarProps) => {
   //     mode === 'mobile',
   // })}
 
-  console.log(pathname);
-
   return (
     <div
-      className={cn("relative border-r bg-gray-900", {
+      className={cn("relative bg-gray-900", {
         "hidden h-full min-h-screen w-full flex-col xl:block xl:w-64":
           mode === "normal",
         "fixed inset-0 z-50 flex h-[100svh] w-full flex-col border-r-0 backdrop-blur-md backdrop-filter transition-colors duration-300 lg:w-80":
