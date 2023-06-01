@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type FC, type Dispatch, type SetStateAction } from "react";
@@ -10,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { type TRegisterStep } from "@/pages/register";
 import { ArrowLeftIcon } from "lucide-react";
 import { api } from "@/utils/api";
+import { useRouter } from "next/router";
 
 type OrganizationFormData = {
   name: string;
@@ -78,6 +80,7 @@ export const CreateAdminAccountForm: FC<{
   organizationName: string;
   setRegisterStep: Dispatch<SetStateAction<TRegisterStep>>;
 }> = ({ organizationName, setRegisterStep }) => {
+  const { push } = useRouter();
   const adminAccountFormSchema = z
     .object({
       firstName: z
@@ -133,11 +136,12 @@ export const CreateAdminAccountForm: FC<{
 
   const createOrganizationWithAdminAccountMutation =
     api.organization.createOrganizationWithAdminAccount.useMutation({
-      onSuccess: () => {
+      onSuccess: async () => {
         // Handle the new team. For example, you could redirect to the team's page
         // onSuccess();
         // reset();
         toast.success("admin account created successfully");
+        await push("/login");
       },
       onError: () => {
         toast.error("Failed to create new team");
