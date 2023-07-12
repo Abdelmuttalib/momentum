@@ -1,3 +1,4 @@
+import { cn } from "@/utils/cn";
 import { cva, type VariantProps } from "class-variance-authority";
 import Link, { type LinkProps } from "next/link";
 import React from "react";
