@@ -7,7 +7,7 @@ import {
 } from "@heroicons/react/20/solid";
 import { type FC, type MouseEvent, useRef, useState } from "react";
 
-import cn from "@/utils/cn";
+import { cn } from "@/utils/cn";
 
 import { Button } from "@/components/ui/button";
 import { IconButton } from "@/components/ui/icon-button";

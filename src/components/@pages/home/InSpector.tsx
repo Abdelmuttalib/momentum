@@ -4,7 +4,7 @@ import Image from "next/image";
 import { type FC, useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 
-import cn from "@/utils/cn";
+import { cn } from "@/utils/cn";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -46,7 +46,7 @@ const InSpector: FC<InSpectorProps> = ({ onPrint }) => {
                     "lg:label-sm h-fit w-full rounded-md px-4 py-3 text-left leading-5 sm:px-5",
                     "whitespace-nowrap focus:outline-none",
                     selected
-                      ? "border-gray-800 bg-primary-100"
+                      ? "bg-primary-100 border-gray-800"
                       : "bg-gray-100 text-gray-500 hover:bg-gray-50"
                   )
                 }

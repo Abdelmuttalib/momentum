@@ -4,7 +4,7 @@ import { type SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import cn from "@/utils/cn";
+import { cn } from "@/utils/cn";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -110,7 +110,7 @@ const CreateAccountForm: FC<{
         <div>
           <label htmlFor="phoneNumber">{t("labels.phoneNumber")}</label>
           <div className="relative flex">
-            <div className="flex w-14 items-center justify-center rounded-l-primary border-2 border-r-0 bg-gray-100/70">
+            <div className="rounded-l-primary flex w-14 items-center justify-center border-2 border-r-0 bg-gray-100/70">
               <span className="label-sm text-gray-600">+86</span>
             </div>
             <Input

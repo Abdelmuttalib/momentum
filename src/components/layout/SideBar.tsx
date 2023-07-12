@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import type { Dispatch, ReactNode, SetStateAction } from "react";
 
-import cn from "@/utils/cn";
+import { cn } from "@/utils/cn";
 
 import { IconButton } from "@/components/ui/icon-button";
 import Image from "next/image";
@@ -54,7 +54,7 @@ export function SideBarLink({ href, icon, label, isCurrentPath }: SideBarLink) {
     <Link
       href={href}
       className={cn(
-        "label-sm group flex w-full items-center border-r-4 border-transparent py-4 pl-4 hover:border-transparent hover:bg-gray-900 focus:border-gray-900 focus:bg-gray-900/80 focus:text-primary-50 focus:outline-transparent xl:gap-3",
+        "label-sm focus:text-primary-50 group flex w-full items-center border-r-4 border-transparent py-4 pl-4 hover:border-transparent hover:bg-gray-900 focus:border-gray-900 focus:bg-gray-900/80 focus:outline-transparent xl:gap-3",
         {
           "border-r-primary-400 bg-gray-800/50 text-primary dark:bg-gray-800/40":
             isCurrentPath,
@@ -75,9 +75,9 @@ export function SideBarSubLink({ href, label, isCurrentPath }: SideBarLink) {
     <Link
       href={href}
       className={cn(
-        "text-md group flex w-full items-center rounded-lg border-l-4 border-transparent py-2.5 pl-4 font-semibold hover:bg-gray-900 focus:border-gray-900 focus:bg-gray-900/80 focus:text-primary-50 focus:outline-transparent xl:gap-3",
+        "text-md focus:text-primary-50 group flex w-full items-center rounded-lg border-l-4 border-transparent py-2.5 pl-4 font-semibold hover:bg-gray-900 focus:border-gray-900 focus:bg-gray-900/80 focus:outline-transparent xl:gap-3",
         {
-          "rounded-l-sm border-l-primary-400 bg-gray-800/50 text-primary dark:bg-gray-800/40":
+          "border-l-primary-400 rounded-l-sm bg-gray-800/50 text-primary dark:bg-gray-800/40":
             isCurrentPath,
           "text-gray-100": !isCurrentPath,
         }
@@ -109,7 +109,7 @@ export function AccordionDemo({ subLinks }: { subLinks: Team[] | undefined }) {
       <AccordionItem value="item-1" className="border-none">
         <AccordionTrigger
           className={cn(
-            "label-sm group flex w-full items-center border-r-4 border-transparent px-4 py-4 text-gray-100 hover:border-transparent hover:bg-gray-900 hover:no-underline focus:border-gray-900 focus:bg-gray-900/80 focus:text-primary-50 focus:outline-transparent xl:gap-3"
+            "label-sm focus:text-primary-50 group flex w-full items-center border-r-4 border-transparent px-4 py-4 text-gray-100 hover:border-transparent hover:bg-gray-900 hover:no-underline focus:border-gray-900 focus:bg-gray-900/80 focus:outline-transparent xl:gap-3"
           )}
         >
           <span className="flex items-center gap-4">

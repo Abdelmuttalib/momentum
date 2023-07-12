@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 
-import cn from "@/utils/cn";
+import { cn } from "@/utils/cn";
 import type { ReactNode } from "react";
 
 export default function CustomTableLayout({
@@ -23,7 +23,7 @@ export function CustomTableHead({
   return (
     <div
       className={cn(
-        "border-t-none label-sm grid w-full items-center justify-between rounded-t-primary border-2 bg-white px-4 py-5 lg:px-8",
+        "border-t-none label-sm rounded-t-primary grid w-full items-center justify-between border-2 bg-white px-4 py-5 lg:px-8",
         className
       )}
     >

@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { api } from "@/utils/api";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import cn from "@/utils/cn";
+import { cn } from "@/utils/cn";
 import { useState, type Dispatch, type SetStateAction } from "react";
 import {
   Select,

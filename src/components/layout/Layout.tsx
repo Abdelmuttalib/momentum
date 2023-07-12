@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { type ReactNode, useState } from "react";
 
-import cn from "@/utils/cn";
+import { cn } from "@/utils/cn";
 
 import { IconButton } from "@/components/ui/icon-button";
 

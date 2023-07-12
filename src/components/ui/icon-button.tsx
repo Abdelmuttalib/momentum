@@ -2,8 +2,6 @@ import { cva, type VariantProps } from "class-variance-authority";
 import Link, { type LinkProps } from "next/link";
 import React from "react";
 
-import cn from "@/utils/cn";
-
 const iconButtonVariants = cva(
   "cursor-pointer border-2 border-transparent transition duration-200 outline-transparent focus:outline-transparent whitespace-nowrap rounded-xl inline-flex items-center justify-center",
   {

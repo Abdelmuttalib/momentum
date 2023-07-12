@@ -33,7 +33,7 @@ import { Input } from "@/components/ui/input";
 import { Controller, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { z } from "zod";
-import cn from "@/utils/cn";
+import { cn } from "@/utils/cn";
 import { EllipsisHorizontalIcon, PlusIcon } from "@heroicons/react/20/solid";
 import { api } from "@/utils/api";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -302,7 +302,7 @@ function Task({
 const TaskColumn: FC<{ tasks: Task[]; title: string }> = ({ tasks, title }) => {
   return (
     <>
-      <div className="flex items-center gap-3 bg-primary-50 px-4 py-3">
+      <div className="bg-primary-50 flex items-center gap-3 px-4 py-3">
         <h2 className="text-lg font-bold capitalize">
           {title.replace("_", " ").toLocaleLowerCase()}
         </h2>
@@ -399,7 +399,7 @@ const TaskBoard = ({
                   {...provided.droppableProps}
                   ref={provided.innerRef}
                   className={cn(
-                    "h-full min-h-[75svh] w-full space-y-3 rounded-primary bg-white shadow-md lg:w-1/3",
+                    "rounded-primary h-full min-h-[75svh] w-full space-y-3 bg-white shadow-md lg:w-1/3",
                     {
                       "bg-primary-50/20": snapshot.isDraggingOver,
                     }

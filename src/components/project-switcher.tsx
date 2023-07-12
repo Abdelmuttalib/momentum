@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 
-import cn from "@/utils/cn";
+import { cn } from "@/utils/cn";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 
@@ -60,7 +60,7 @@ export default function ProjectSwitcher({
               src={`https://avatar.vercel.sh/${currentProject.name}.png`}
               alt={currentProject.name}
             />
-            <AvatarFallback className="mr-2 h-6 w-6 rounded-full bg-gradient-to-br from-primary-700 to-primary-500"></AvatarFallback>
+            <AvatarFallback className="from-primary-700 to-primary-500 mr-2 h-6 w-6 rounded-full bg-gradient-to-br"></AvatarFallback>
           </Avatar>
           <p className="max-w-[180px] truncate">{currentProject.name}</p>
           <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50" />
@@ -83,7 +83,7 @@ export default function ProjectSwitcher({
                     src={`https://avatar.vercel.sh/${project.name}.png`}
                     alt={project.name}
                   />
-                  <AvatarFallback className="mr-2 h-6 w-6 rounded-full bg-gradient-to-br from-primary-700 to-primary-500"></AvatarFallback>
+                  <AvatarFallback className="from-primary-700 to-primary-500 mr-2 h-6 w-6 rounded-full bg-gradient-to-br"></AvatarFallback>
                 </Avatar>
                 <p className="truncate whitespace-nowrap">{project.name}</p>
                 <Check
