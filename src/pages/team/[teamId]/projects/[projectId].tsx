@@ -143,7 +143,10 @@ export function UpdateTaskForm({
           name="status"
           control={control}
           render={({ field }) => (
-            <Select {...field} onValueChange={(value) => field.onChange(value)}>
+            <Select
+              {...field}
+              onValueChange={(value) => field.onChange(value as TaskStatus)}
+            >
               <SelectTrigger className="w-full text-gray-800">
                 <SelectValue placeholder="Select a status" />
               </SelectTrigger>
@@ -177,7 +180,10 @@ export function UpdateTaskForm({
           name="priority"
           control={control}
           render={({ field }) => (
-            <Select {...field} onValueChange={(value) => field.onChange(value)}>
+            <Select
+              {...field}
+              onValueChange={(value) => field.onChange(value as Priority)}
+            >
               <SelectTrigger className="w-full text-gray-800">
                 <SelectValue placeholder="Select a status" />
               </SelectTrigger>
@@ -538,7 +544,10 @@ export function CreateTaskForm({
           name="status"
           control={control}
           render={({ field }) => (
-            <Select {...field} onValueChange={(value) => field.onChange(value)}>
+            <Select
+              {...field}
+              onValueChange={(value) => field.onChange(value as TaskStatus)}
+            >
               <SelectTrigger className="w-full text-gray-800">
                 <SelectValue placeholder="Select a status" />
               </SelectTrigger>
@@ -572,7 +581,10 @@ export function CreateTaskForm({
           name="priority"
           control={control}
           render={({ field }) => (
-            <Select {...field} onValueChange={(value) => field.onChange(value)}>
+            <Select
+              {...field}
+              onValueChange={(value) => field.onChange(value as Priority)}
+            >
               <SelectTrigger className="w-full text-gray-800">
                 <SelectValue placeholder="Select a status" />
               </SelectTrigger>

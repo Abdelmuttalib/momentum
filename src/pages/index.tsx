@@ -15,6 +15,7 @@ export default function HomePage() {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const session = await getServerAuthSession({ req, res });
 
   // if (!session) {

@@ -73,7 +73,7 @@ export const AddUserDialog: FC<{ team: TTeam }> = ({ team }) => {
         <Button
           type="button"
           size="sm"
-          variant="primary"
+          variant="default"
           className="inline-flex h-10 gap-1 whitespace-nowrap"
         >
           <PlusIcon className="w-5" /> Add Members
@@ -131,7 +131,7 @@ export const AddUserDialog: FC<{ team: TTeam }> = ({ team }) => {
                       ) : (
                         <Button
                           size="sm"
-                          variant="primary"
+                          variant="default"
                           // eslint-disable-next-line @typescript-eslint/no-misused-promises
                           onClick={async () => {
                             await addUserToTeamMutation.mutateAsync({

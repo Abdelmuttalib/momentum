@@ -115,7 +115,7 @@ function NewInviteForm({
               <FormControl>
                 <Select
                   {...field}
-                  onValueChange={(value) => field.onChange(value)}
+                  onValueChange={(value) => field.onChange(value as Role)}
                 >
                   <SelectTrigger className="w-full text-gray-800">
                     <SelectValue placeholder="Select a status" />
