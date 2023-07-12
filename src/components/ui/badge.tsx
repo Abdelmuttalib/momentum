@@ -1,44 +1,36 @@
-import type { ReactNode } from "react";
+import * as React from "react"
+import { cva, type VariantProps } from "class-variance-authority"
 
-import cn from "@/utils/cn";
+import { cn } from "@/lib/cn"
 
-export type BadgeColor =
-  | "green"
-  | "yellow"
-  | "red"
-  | "blue"
-  | "gray"
-  | "white"
-  | "dark-gray";
+const badgeVariants = cva(
+  "inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+  {
+    variants: {
+      variant: {
+        default:
+          "border-transparent bg-primary text-primary-foreground shadow hover:bg-primary/80",
+        secondary:
+          "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        destructive:
+          "border-transparent bg-destructive text-destructive-foreground shadow hover:bg-destructive/80",
+        outline: "text-foreground",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  }
+)
 
-const Badge = ({
-  color,
-  children,
-  className,
-}: {
-  color: BadgeColor;
-  children: ReactNode;
-  className?: string;
-}) => {
+export interface BadgeProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof badgeVariants> {}
+
+function Badge({ className, variant, ...props }: BadgeProps) {
   return (
-    <span
-      className={cn(
-        "whitespace-nowrap rounded-full px-3 py-1 text-sm font-semibold",
-        {
-          "bg-green-100 text-green-800": color === "green",
-          "bg-yellow-100 text-yellow-800": color === "yellow",
-          "bg-red-100 text-red-800": color === "red",
-          "bg-primary-100/70 text-primary-700": color === "blue",
-          "bg-gray-200/70 text-gray-800": color === "gray",
-          "bg-white text-gray-800": color === "white",
-          "bg-gray-300 text-gray-500": color === "dark-gray",
-        },
-        className
-      )}
-    >
-      {children}
-    </span>
-  );
-};
+    <div className={cn(badgeVariants({ variant }), className)} {...props} />
+  )
+}
 
-export default Badge;
+export { Badge, badgeVariants }

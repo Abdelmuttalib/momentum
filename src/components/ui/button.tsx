@@ -1,88 +1,57 @@
-import { cva, type VariantProps } from "class-variance-authority";
-import { Loader2 } from "lucide-react";
-import * as React from "react";
+import * as React from "react"
+import { Slot } from "@radix-ui/react-slot"
+import { cva, type VariantProps } from "class-variance-authority"
 
-import cn from "@/utils/cn";
-
-// text-primary-900 bg-primary-100/70 hover:bg-primary-100 focus:bg-primary-100/70
+import { cn } from "@/lib/cn"
 
 const buttonVariants = cva(
-  "relative inline-flex items-center justify-center gap-1 rounded-primary-lg inline-flex items-center outline-none transition duration-200 justify-center rounded-primary border-2 border-transparent focus:outline-transparent disabled:opacity-50 disabled:pointer-events-none disabled:opacity-40 disabled:hover:opacity-40 disabled:cursor-not-allowed disabled:shadow-none",
+  "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
-        primary:
-          "text-white bg-primary hover:bg-primary-600 focus:bg-primary disabled:bg-primary disabled:hover:bg-primary disabled:focus:bg-primary focus:ring-2 focus:ring-offset-2 focus:ring-primary focus:bg-primary-600",
-
+        default:
+          "bg-primary text-primary-foreground shadow hover:bg-primary/90",
+        destructive:
+          "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
         outline:
-          "text-primary-800 bg-white border-gray-200/100 hover:bg-gray-50 focus:bg-gray-50 focus:border-primary",
-
+          "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
         secondary:
-          "text-primary-600 bg-primary-100/60 hover:bg-primary-100/70 focus:bg-primary-100/70 focus:bg-primary-100/50 focus:border-primary-200",
-
-        destructive: "bg-red-500 text-white hover:bg-red-600",
-        "outline-destructive":
-          "border-red-500 text-red-500 hover:bg-red-500 hover:text-white",
-
-        subtle:
-          "bg-slate-100 text-slate-900 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-100",
-
-        ghost:
-          "bg-transparent hover:bg-slate-100 dark:hover:bg-slate-800 dark:text-slate-100 dark:hover:text-slate-100 data-[state=open]:bg-transparent dark:data-[state=open]:bg-transparent",
-
-        link: "bg-transparent underline-offset-4 hover:underline text-gray-900 hover:bg-transparent",
-
-        dark: "bg-gray-900 text-gray-200 duration-150 ease-linear hover:bg-gray-900/90 active:bg-gray-800 disabled:bg-gray-700 focus:bg-gray-900",
+          "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
+        link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
-        default: "label-sm px-4 h-12",
-        sm: "label-sm px-3 h-11",
-        lg: "label-md px-5 h-14",
+        default: "h-9 px-4 py-2",
+        sm: "h-8 rounded-md px-3 text-xs",
+        lg: "h-10 rounded-md px-8",
+        icon: "h-9 w-9",
       },
     },
     defaultVariants: {
-      variant: "primary",
+      variant: "default",
       size: "default",
     },
   }
-);
+)
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
-  isLoading?: boolean;
-  children?: React.ReactNode;
+  asChild?: boolean
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, children, isLoading, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : "button"
     return (
-      <button
-        className={cn(
-          buttonVariants({
-            variant,
-            size,
-            className,
-          }),
-          {
-            "cursor-not-allowed": isLoading,
-          }
-        )}
+      <Comp
+        className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
         {...props}
-      >
-        {!isLoading ? (
-          children
-        ) : (
-          <div className="inline-flex items-center">
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            Loading
-          </div>
-        )}
-      </button>
-    );
+      />
+    )
   }
-);
-Button.displayName = "Button";
+)
+Button.displayName = "Button"
 
-export { Button, buttonVariants };
+export { Button, buttonVariants }

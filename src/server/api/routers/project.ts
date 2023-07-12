@@ -45,6 +45,7 @@ export const projectRouter = createTRPCRouter({
       })
     )
     .query(async ({ input, ctx }) => {
+      
       const projects: Project[] = await ctx.prisma.project.findMany({
         where: { teamId: input.teamId },
         include: {

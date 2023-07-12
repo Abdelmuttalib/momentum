@@ -1,61 +1,40 @@
-import { type GetServerSideProps, type NextPage } from "next";
-import { useSession } from "next-auth/react";
+import { type GetServerSideProps } from "next";
 
-// import { api } from "@/utils/api";
-import { Layout } from "@/components/layout";
-import InSpector from "@/components/@pages/home/InSpector";
 import { getServerAuthSession } from "@/server/auth";
-import PrintableReport from "@/components/@pages/home/PrintableReport";
-import { inspections } from "@/components/@pages/home/data";
 import Seo from "@/components/Seo";
 
-const Home: NextPage = () => {
-  const onPrintReportData = () => {
-    window.print();
-  };
-
+export default function HomePage() {
   return (
     <>
-      <Seo title="InSpect | invix" />
-      <div className="hidden print:block">
-        <PrintableReport
-          data={[...inspections["Main Building"], ...inspections["Building 1"]]}
-        />
-      </div>
-      <div className="block print:hidden">
-        <Layout pageTitle="Home" className="px-0 lg:px-0">
-          <InSpector onPrint={onPrintReportData} />
-        </Layout>
-      </div>
+      <Seo title="Momentum" />
+      <main className="flex h-full min-h-[100svh] w-full items-center justify-center text-7xl font-semibold tracking-tight text-gray-800">
+        Momentum
+      </main>
     </>
   );
-};
-
-export default Home;
+}
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   const session = await getServerAuthSession({ req, res });
 
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/login",
-        permanent: false,
-      },
-    };
-  }
+  // if (!session) {
+  //   return {
+  //     redirect: {
+  //       destination: "/login",
+  //       permanent: false,
+  //     },
+  //   };
+  // }
 
-  return {
-    redirect: {
-      destination: "/team",
-      permanent: false,
-    },
-  };
   // return {
-  //   props: {
-  //     session,
+  //   redirect: {
+  //     destination: "/team",
+  //     permanent: false,
   //   },
   // };
+  return {
+    props: {},
+  };
 };
 
 // const AuthShowcase: React.FC = () => {
