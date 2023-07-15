@@ -8,7 +8,6 @@ import { cn } from "@/utils/cn";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-import useTranslation from "next-translate/useTranslation";
 import { useRouter } from "next/router";
 import { ArrowLeftIcon } from "@heroicons/react/20/solid";
 import { api } from "@/utils/api";
@@ -30,7 +29,6 @@ const signUpValidationSchema = z
 type CreateUserAccountForm = z.infer<typeof signUpValidationSchema>;
 
 function CreateUserAccountForm() {
-  const { t } = useTranslation("login");
   const { back, push } = useRouter();
 
   const {
@@ -62,7 +60,7 @@ function CreateUserAccountForm() {
   }
 
   return (
-    <div className="w-full max-w-md bg-white px-6 py-4">
+    <div className="w-full max-w-md px-6 py-4">
       <h1 className="h1">Get Started</h1>
 
       <p className="text-gray-700">get started by creating your account.</p>

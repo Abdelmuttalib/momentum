@@ -13,11 +13,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   // Destructure the phoneNumber and password from the request body
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const { organization, phoneNumber, first_name, last_name, email, password } =
-    req.body;
+  const { company, first_name, last_name, email, password } = req.body;
 
-  // Check if the phoneNumber and password are provided
-  if (!phoneNumber || !password) {
+  // Check if the email and password are provided
+  if (!email || !password) {
     return res
       .status(400)
       .json({ message: "Phone number and Password are required" });
@@ -27,7 +26,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const existingUser = await prisma.user.findUnique({
     where: {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      phoneNumber: phoneNumber,
+      email: email,
     },
   });
 
@@ -46,11 +45,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const prismaUser = await prisma.user.create({
       data: {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        phoneNumber: phoneNumber,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         firstName: first_name,
         lastName: last_name,
-        organization,
+        company,
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         email: email,
         password: hashedPassword,

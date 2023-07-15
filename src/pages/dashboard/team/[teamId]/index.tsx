@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Layout } from "@/components/layout";
 import { prisma } from "@/server/db";
@@ -118,7 +119,7 @@ export const getServerSideProps: GetServerSideProps = async ({
   if (!userSession) {
     return {
       redirect: {
-        destination: "/dashboard/team",
+        destination: "sign-in",
         permanent: false,
       },
     };

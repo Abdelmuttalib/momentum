@@ -103,7 +103,7 @@ export const AddUserDialog: FC<{ team: TTeam; users: User[] }> = ({ team }) => {
                 >
                   <div className="flex items-center justify-between gap-2">
                     <div>
-                      <h4 className="font-medium">{user.phoneNumber}</h4>
+                      <h4 className="font-medium">{user.email}</h4>
                       <div className="body-sm flex items-center text-gray-600">
                         <span>{user.firstName}</span>,<span>{user.email}</span>
                       </div>
@@ -245,7 +245,7 @@ export const organizationTeamsColumns: ColumnDef<Team>[] = [
           >
             View
           </IconLink>
-          <AddUserDialog team={original as TTeam} />
+          {/* <AddUserDialog team={original as TTeam} /> */}
           {/* <Button
             type="button"
             size="sm"

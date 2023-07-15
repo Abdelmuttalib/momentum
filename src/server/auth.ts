@@ -13,7 +13,6 @@ import CredentialsProvider from "next-auth/providers/credentials";
 
 import bcrypt from "bcryptjs";
 import type { Invitation, Role, User } from "@prisma/client";
-import { hashPassword } from "@/utils/bcrypt";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 
 /**

@@ -27,11 +27,11 @@ function InviteLoader() {
   );
 }
 
-function Invite({ id, phoneNumber, status, role }: Invitation) {
+function Invite({ id, email, status, role }: Invitation) {
   return (
     <CustomTableRow key={id} className="grid-cols-3">
-      <CustomTableRowItem>{phoneNumber}</CustomTableRowItem>
-      <CustomTableRowItem className="">
+      <CustomTableRowItem>{email}</CustomTableRowItem>
+      <CustomTableRowItem>
         <Badge color="green">{status}</Badge>
       </CustomTableRowItem>
       <CustomTableRowItem>
@@ -53,7 +53,7 @@ export default function InvitesList({
   return (
     <CustomTableLayout>
       <CustomTableHead className="grid-cols-3">
-        <CustomTableHeadItem>Phone Number</CustomTableHeadItem>
+        <CustomTableHeadItem>Email</CustomTableHeadItem>
         <CustomTableHeadItem>Invite Status</CustomTableHeadItem>
         <CustomTableHeadItem>Role</CustomTableHeadItem>
       </CustomTableHead>

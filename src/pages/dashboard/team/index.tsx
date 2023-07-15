@@ -23,11 +23,11 @@ import { api } from "@/utils/api";
 import CreateTeamForm from "@/components/@pages/team/CreateTeamForm";
 import { getServerAuthSession } from "@/server/auth";
 import type { Session } from "next-auth";
-import type { Company, Organization, User } from "@prisma/client";
+import type { Company, User } from "@prisma/client";
 import { DataTable } from "@/components/@pages/team/TeamMembers/data-table";
 
 import {
-  TTeam,
+  type TTeam,
   organizationTeamsColumns,
 } from "@/components/@pages/organization/organization-teams";
 import Team from "@/components/@pages/team/TeamProjects/Team";

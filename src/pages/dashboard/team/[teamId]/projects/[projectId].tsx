@@ -4,13 +4,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Layout } from "@/components/layout";
 import { prisma } from "@/server/db";
-import {
-  TaskStatus,
-  type Project,
-  type Task,
-  type Team,
-  ProjectStatus,
-} from "@prisma/client";
+import { TaskStatus, type Project, type Task, type Team } from "@prisma/client";
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useState, type FC, useEffect } from "react";
 import {

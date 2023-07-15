@@ -1,6 +1,6 @@
 import { type GetStaticProps } from "next";
 import Seo from "@/components/Seo";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
 import { cn } from "@/utils/cn";
 
@@ -123,6 +123,7 @@ function Features() {
   );
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function AppExplanation() {
   return (
     <section className="bg-gray-100 px-8 py-16">

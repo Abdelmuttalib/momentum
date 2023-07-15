@@ -1,7 +1,7 @@
 import {
-  BuildingOfficeIcon,
-  Cog6ToothIcon,
-  RectangleGroupIcon,
+  // BuildingOfficeIcon,
+  // Cog6ToothIcon,
+  // RectangleGroupIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
@@ -12,7 +12,6 @@ import { cn } from "@/utils/cn";
 
 import { IconButton } from "@/components/ui/icon-button";
 import Image from "next/image";
-import LanguageSwitcher from "../language-switcher";
 import { UsersIcon } from "lucide-react";
 
 type DashboardLink = {

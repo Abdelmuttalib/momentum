@@ -8,9 +8,7 @@ import { IconButton } from "@/components/ui/icon-button";
 import SideBar from "./SideBar";
 
 import { Bars3Icon } from "@heroicons/react/20/solid";
-import LanguageSwitcher from "../language-switcher";
 import UserAccountMenu from "../user/UserAccountMenu";
-import { MobileNav } from "./mobile-nav";
 
 interface HeaderProps {
   pageTitle: string | ReactNode;

@@ -14,7 +14,6 @@ import { Input } from "@/components/ui/input";
 
 import { type TAuthType } from "./AuthContainer";
 import useTranslation from "next-translate/useTranslation";
-import { hashPassword } from "@/utils/bcrypt";
 
 const signInFormSchema = z.object({
   email: z.string().email().nonempty(),
@@ -46,7 +45,6 @@ const SignInForm: FC<{
   const onSubmit: SubmitHandler<SignInFormFields> = (data) => {
     // onSignIn
     setIsLoading(true);
-    const hashedPassword = hashPassword(data.password);
     signIn("credentials", {
       email: data.email,
       password: data.password,
