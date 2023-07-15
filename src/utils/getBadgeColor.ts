@@ -1,11 +1,11 @@
 import type { BadgeColor } from "@/components/ui/badge";
 import {
   InvitationStatus,
-  Priority,
   ProjectStatus,
   Role,
   TaskStatus,
 } from "@prisma/client";
+import { Priority } from "./enums";
 
 export function getInviteStatusBadgeColor(
   status: InvitationStatus

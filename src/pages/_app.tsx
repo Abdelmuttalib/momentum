@@ -6,6 +6,8 @@ import { api } from "@/utils/api";
 
 import "@/styles/globals.css";
 import { Toaster } from "sonner";
+import TailwindIndicator from "@/components/tailwind-indicator";
+import GradientBackground from "@/components/GradientBackground";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -23,7 +25,9 @@ const MyApp: AppType<{ session: Session | null }> = ({
           marginRight: "1.5rem",
         }}
       />
+      <GradientBackground />
       <Component {...pageProps} />
+      <TailwindIndicator />
     </SessionProvider>
   );
 };

@@ -34,13 +34,13 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="rounded-primary-lg border-2 bg-white">
+      <div className="rounded-md border bg-white">
         <Table className="bg-transparent">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow
                 key={headerGroup.id}
-                className="h-16 rounded-primary-lg"
+                className="rounded-primary-lg h-16"
               >
                 {headerGroup.headers.map((header) => {
                   return (
@@ -66,7 +66,7 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  className="body-sm h-20 rounded-b-primary-lg py-4"
+                  className="body-sm rounded-b-primary-lg h-20 py-4"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>

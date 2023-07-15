@@ -10,6 +10,7 @@ import SideBar from "./SideBar";
 import { Bars3Icon } from "@heroicons/react/20/solid";
 import LanguageSwitcher from "../language-switcher";
 import UserAccountMenu from "../user/UserAccountMenu";
+import { MobileNav } from "./mobile-nav";
 
 interface HeaderProps {
   pageTitle: string | ReactNode;
@@ -25,7 +26,7 @@ function Header({ pageTitle, actions }: HeaderProps) {
       {showSidebarMenu && (
         <SideBar mode="mobile" setShowSidebarMenu={setShowSidebarMenu} />
       )}
-      <header className="sticky top-0 z-40 flex-none border-b bg-white/[0.7] py-3 backdrop-blur-md backdrop-filter transition-colors duration-300 print:hidden lg:pl-0">
+      <header className="sticky top-0 z-40 flex-none border-b bg-white/[0.3] py-3 backdrop-blur-md backdrop-filter transition-colors duration-300 print:hidden lg:pl-0">
         <div className="flex h-14 items-center justify-between overflow-y-hidden px-4 lg:px-8">
           <div className="flex w-full items-center justify-between gap-3 ">
             <div className="flex items-center gap-3">
@@ -58,7 +59,7 @@ function Header({ pageTitle, actions }: HeaderProps) {
             /> */}
 
             <div className="flex items-center gap-2">
-              <LanguageSwitcher />
+              {/* <LanguageSwitcher /> */}
               <UserAccountMenu />
             </div>
           </div>
@@ -105,6 +106,7 @@ export default function Layout({
     <div className="fixed left-0 top-0 flex h-full min-h-[100svh] w-screen  antialiased transition-colors duration-300">
       <aside>
         <SideBar mode="normal" />
+        {/* <MobileNav /> */}
       </aside>
       <div className="flex w-full flex-col overflow-auto">
         <Header pageTitle={pageTitle} actions={rightSideActions} />

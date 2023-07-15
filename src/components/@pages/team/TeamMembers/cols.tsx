@@ -24,7 +24,6 @@ export const AddUserDialog: FC<{ team: TTeam }> = ({ team }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [render, toggleRender] = useState(1);
   const apiContext = api.useContext();
-  console.log("team here: ", team);
   const { data: users, refetch: refetchUsers } =
     api.team.admin.getAllUsers.useQuery();
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
@@ -42,7 +41,7 @@ export const AddUserDialog: FC<{ team: TTeam }> = ({ team }) => {
   const addUserToTeamMutation = api.team.admin.addUserToTeam.useMutation({
     onSuccess: async () => {
       // await apiContext.team.admin.getAllUsers.invalidate();
-      await apiContext.team.admin.getAllTeamsByOrganization.invalidate();
+      await apiContext.team.admin.getAllTeamsByCompanyId.invalidate();
       await refetchUsers();
       toggleRender(render + 1);
       toast.success("User added to team successfully");
@@ -55,7 +54,7 @@ export const AddUserDialog: FC<{ team: TTeam }> = ({ team }) => {
   const removeUserFromTeam = api.team.admin.removeUserFromTeam.useMutation({
     onSuccess: async () => {
       // await apiContext.team.admin.getAllUsers.invalidate();
-      await apiContext.team.admin.getAllTeamsByOrganization.invalidate();
+      await apiContext.team.admin.getAllTeamsByCompanyId.invalidate();
       toast.success("User removed from team successfully");
     },
     onError: () => {
@@ -184,7 +183,6 @@ export const cols: ColumnDef<Team>[] = [
     accessorKey: "users",
     header: "members",
     cell: ({ row: { original } }) => {
-      console.log("row: ", original);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const teamRow: TTeam = original as TTeam;
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call

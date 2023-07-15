@@ -17,7 +17,7 @@ datasource db {
 
 // Necessary for Next auth
 model Account {
-  id                String  @id @default(cuid())
+  id                String  @id @default(uuid())
   userId            String
   type              String
   provider          String
@@ -35,7 +35,7 @@ model Account {
 }
 
 model Session {
-  id           String   @id @default(cuid())
+  id           String   @id @default(uuid())
   sessionToken String   @unique
   userId       String
   expires      DateTime
@@ -43,12 +43,11 @@ model Session {
 }
 
 model User {
-  id              String       @id @default(cuid())
+  id              String       @id @default(uuid())
   firstName       String?
   lastName        String?
-  phoneNumber     String       @unique
-  email           String?      @unique
-  emailVerified   DateTime?
+  email           String       @unique
+  emailVerified   Boolean      @default(false)
   image           String?
   accounts        Account[]
   sessions        Session[]
@@ -57,8 +56,8 @@ model User {
   teams           Team[]
   tasks           Task[]
   comments        Comment[]
-  organizationId  String
-  organization    Organization @relation(fields: [organizationId], references: [id])
+  companyId       String
+  company         Company      @relation(fields: [companyId], references: [id])
   sentInvitations Invitation[] // This field represents all invitations sent by the user
 }
 
@@ -75,7 +74,7 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-model Organization {
+model Company {
   id          String       @id @default(uuid())
   name        String
   createdAt   DateTime     @default(now())
@@ -85,16 +84,16 @@ model Organization {
 }
 
 model Team {
-  id             String       @id @default(cuid())
-  name           String
-  users          User[]
-  projects       Project[]
-  organizationId String
-  organization   Organization @relation(fields: [organizationId], references: [id])
+  id        String    @id @default(uuid())
+  name      String
+  users     User[]
+  projects  Project[]
+  companyId String
+  company   Company   @relation(fields: [companyId], references: [id])
 }
 
 model Project {
-  id        String        @id @default(cuid())
+  id        String        @id @default(uuid())
   name      String
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
@@ -111,18 +110,18 @@ enum ProjectStatus {
 }
 
 model Task {
-  id          String     @id @default(cuid())
+  id          String       @id @default(uuid())
   title       String
   description String?
   status      TaskStatus
-  priority    Priority
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  priority    TaskPriority
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
   dueDate     DateTime?
   assigneeId  String?
-  assignee    User?      @relation(fields: [assigneeId], references: [id])
+  assignee    User?        @relation(fields: [assigneeId], references: [id])
   projectId   String
-  project     Project    @relation(fields: [projectId], references: [id])
+  project     Project      @relation(fields: [projectId], references: [id])
   comments    Comment[]
 }
 
@@ -136,14 +135,14 @@ enum TaskStatus {
   CANCELED
 }
 
-enum Priority {
+enum TaskPriority {
   HIGH
   MEDIUM
   LOW
 }
 
 model Comment {
-  id        String   @id @default(cuid())
+  id        String   @id @default(uuid())
   content   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -154,15 +153,15 @@ model Comment {
 }
 
 model Invitation {
-  id             String           @id @default(cuid())
-  phoneNumber    String           @unique
-  organizationId String
-  organization   Organization     @relation(fields: [organizationId], references: [id])
-  status         InvitationStatus @default(INVITED)
-  createdAt      DateTime         @default(now())
-  role           Role             @default(MEMBER)
-  invitedById    String //  the user who sent the invitation
-  invitedBy      User             @relation(fields: [invitedById], references: [id]) // This creates a relation with User
+  id          String           @id @default(uuid())
+  email       String           @unique
+  companyId   String
+  company     Company          @relation(fields: [companyId], references: [id])
+  status      InvitationStatus @default(INVITED)
+  createdAt   DateTime         @default(now())
+  role        Role             @default(MEMBER)
+  invitedById String //  the user who sent the invitation
+  invitedBy   User             @relation(fields: [invitedById], references: [id]) // This creates a relation with User
 }
 
 enum InvitationStatus {

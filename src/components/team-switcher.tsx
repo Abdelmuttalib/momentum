@@ -80,25 +80,25 @@ export default function TeamSwitcher({
           aria-expanded={open}
           aria-label="Select a team"
           className={cn(
-            "w-[250px] justify-between truncate whitespace-nowrap text-gray-900",
+            "w-52 justify-between truncate whitespace-nowrap px-3 text-gray-900",
             className
           )}
         >
-          <Avatar className="mr-2 h-6 w-6">
+          <Avatar className="mr-2 h-5 w-5">
             <AvatarImage
               src={`https://avatar.vercel.sh/${currentTeam.name}.png`}
               alt={currentTeam.name}
             />
             <AvatarFallback className="from-primary-700 to-primary-500 mr-2 h-6 w-6 rounded-full bg-gradient-to-br"></AvatarFallback>
           </Avatar>
-          <p className="max-w-[180px] truncate">{currentTeam.name}</p>
+          <p className="max-w-[140px] truncate text-left">{currentTeam.name}</p>
           <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-[250px] rounded-lg bg-white p-0">
+      <DropdownMenuContent className="w-52 rounded-lg bg-white p-0">
         <DropdownMenuSeparator />
         {teams?.map((team) => (
-          <Link key={team.id} href={`/team/${team.id}`}>
+          <Link key={team.id} href={`/dashboard/team/${team.id}`}>
             <DropdownMenuItem
               className="whitespace-nowrap px-3 py-3 font-medium"
               // onClick={() => void signOut()}

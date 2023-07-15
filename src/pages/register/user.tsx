@@ -14,32 +14,30 @@ import { ArrowLeftIcon } from "@heroicons/react/20/solid";
 import { api } from "@/utils/api";
 import { LoginBackground } from "@/components/layout";
 
+const signUpValidationSchema = z
+  .object({
+    firstName: z.string().min(2).nonempty(),
+    lastName: z.string().min(2).nonempty(),
+    email: z.string().min(4).email().nonempty(),
+    password: z.string().min(8),
+    confirmPassword: z.string().min(8),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    path: ["confirmPassword"],
+    message: "passwords do not match",
+  });
+
+type CreateUserAccountForm = z.infer<typeof signUpValidationSchema>;
+
 function CreateUserAccountForm() {
   const { t } = useTranslation("login");
   const { back, push } = useRouter();
-  const signUpValidationSchema = z
-    .object({
-      phoneNumber: z
-        .string()
-        .regex(/^1[3-9]\d{9}$/)
-        .nonempty(),
-      firstName: z.string().min(2).nonempty(),
-      lastName: z.string().min(2).nonempty(),
-      email: z.string().min(1).email(),
-      password: z.string().min(8),
-      confirmPassword: z.string().min(8),
-    })
-    .refine((data) => data.password === data.confirmPassword, {
-      path: ["confirmPassword"],
-    });
-
-  type TCreateUserAccountForm = z.infer<typeof signUpValidationSchema>;
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<TCreateUserAccountForm>({
+  } = useForm<CreateUserAccountForm>({
     resolver: zodResolver(signUpValidationSchema),
   });
 
@@ -47,86 +45,47 @@ function CreateUserAccountForm() {
     api.organization.registerInvitedUser.useMutation({
       onSuccess: async () => {
         toast.success("Account created successfully");
-        await push("/login");
+        await push("/sign-in");
       },
       onError: () => {
         toast.error("Something went wrong, kindly try again!");
       },
     });
 
-  async function onSubmit(data: TCreateUserAccountForm) {
+  async function onSubmit(data: CreateUserAccountForm) {
     await registerInvitedUserMutation.mutateAsync({
-      phoneNumber: data.phoneNumber,
       firstName: data.firstName,
       lastName: data.lastName,
       email: data.email,
       password: data.password,
     });
-
-    // onCreateAccount
-    // const requestOptions = {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify({
-    //     phoneNumber: data.phoneNumber,
-    //     name: data.name,
-    //     email: data.email,
-    //     password: data.password,
-    //   }),
-    // };
-    // fetch("/api/user/register", requestOptions)
-    //   .then((response) => {
-    //     if (response.ok) {
-    //       // toast.success('Account created successfully');
-    //       toast.success("账号创建成功");
-    //     }
-    //   })
-    //   .catch(() => {
-    //     toast.error("Something went wrong, kindly try again!");
-    //   });
   }
 
   return (
     <div className="w-full max-w-md bg-white px-6 py-4">
-      <div className="flex w-full items-center justify-between">
-        <h1 className="h3">{t("headings.getStarted")}</h1>
-        {/* <IconLink
-          variant="secondary"
-          href={asPath}
-          locale={locale === "en" ? "zh" : "en"}
-          className="uppercase"
-        >
-          {locale === "en" ? "zh" : "en"}
-        </IconLink> */}
-      </div>
-      <p className="text-gray-700">
-        {t("paragraphs.createAccountDescription")}
-      </p>
+      <h1 className="h1">Get Started</h1>
+
+      <p className="text-gray-700">get started by creating your account.</p>
 
       <form
         className="mt-10 flex flex-col gap-3"
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onSubmit={handleSubmit(onSubmit)}
       >
-        {/* Phone Number Input */}
+        {/* Email Input */}
         <div>
-          <label htmlFor="phoneNumber">{t("labels.phoneNumber")}</label>
-          <div className="relative flex">
-            <div className="rounded-l-primary flex w-14 items-center justify-center border-2 border-r-0 bg-gray-100/70">
-              <span className="label-sm text-gray-600">+86</span>
-            </div>
-            <Input
-              id="phoneNumber"
-              {...register("phoneNumber")}
-              type="tel"
-              placeholder="1XXXXXXXXX"
-              // className='rounded-l-none border-l-0 outline-none'
-              className="rounded-l-none border-l-0 outline-none focus:border-l-0"
-            />
-          </div>
-          {errors.phoneNumber && (
+          <label htmlFor="email">Email</label>
+          <Input
+            id="email"
+            {...register("email")}
+            type="email"
+            inputMode="email"
+            placeholder="email@mail.com"
+            className="mt-0.5"
+          />
+          {errors.email && (
             <p className="mt-0.5 text-sm text-red-500">
-              {t(`${errors.phoneNumber.message as string}`)}
+              {errors.email.message}
             </p>
           )}
         </div>
@@ -146,7 +105,7 @@ function CreateUserAccountForm() {
             />
             {errors.firstName && (
               <p className="mt-0.5 text-sm text-red-500">
-                {t(`${errors.firstName.message as string}`)}
+                {errors.firstName.message}
               </p>
             )}
           </div>
@@ -164,29 +123,10 @@ function CreateUserAccountForm() {
             />
             {errors.lastName && (
               <p className="mt-0.5 text-sm text-red-500">
-                {t(`${errors.lastName.message as string}`)}
+                {errors.lastName.message}
               </p>
             )}
           </div>
-        </div>
-
-        {/* Email Input */}
-        <div>
-          <label htmlFor="email" className="block text-gray-600">
-            Email
-          </label>
-          <Input
-            id="email"
-            type="email"
-            {...register("email", { required: true })}
-            placeholder="Email"
-            className={cn("mt-0.5", { "border-red-500": errors.email })}
-          />
-          {errors.email && (
-            <p className="mt-0.5 text-sm text-red-500">
-              {errors.email.message}
-            </p>
-          )}
         </div>
 
         {/* Password Input */}
@@ -208,26 +148,6 @@ function CreateUserAccountForm() {
           )}
         </div>
 
-        {/* <div>
-            <label htmlFor='password' className='block text-gray-600'>
-              Password
-            </label>
-            <input
-              id='password'
-              type='password'
-              {...register('password', { required: true })}
-              placeholder='password'
-              className={cn('input-2 mt-0.5', {
-                'border-red-500': errors.password,
-              })}
-            />
-            {errors.password && (
-              <p className='mt-0.5 text-sm text-red-500'>
-                {errors.password?.message}
-              </p>
-            )}
-          </div> */}
-
         {/* Confirm Password Input */}
         <div>
           <label htmlFor="confirmPassword" className="block text-gray-600">
@@ -244,11 +164,10 @@ function CreateUserAccountForm() {
           />
           {errors.confirmPassword && (
             <p className="mt-0.5 text-sm text-red-500">
-              {errors?.password?.message}
+              {errors?.confirmPassword?.message}
             </p>
           )}
         </div>
-
         <Button
           type="submit"
           disabled={
@@ -258,7 +177,7 @@ function CreateUserAccountForm() {
           isLoading={registerInvitedUserMutation.isLoading}
           className="mt-2 w-full"
         >
-          {t("buttons.createAccount")}
+          Create Account
         </Button>
 
         {/* Another Auth Routes */}
@@ -267,10 +186,10 @@ function CreateUserAccountForm() {
           <Button
             type="button"
             variant="secondary"
-            className="group mx-6 bg-transparent transition-all duration-300 hover:-ml-0.5  hover:bg-transparent focus:bg-transparent"
             onClick={() => back()}
+            disabled={registerInvitedUserMutation.isLoading}
           >
-            <ArrowLeftIcon className="-ml-1 mr-1 h-5 w-5 transition-all duration-300 " />
+            <ArrowLeftIcon className="mr-2 h-4 w-4" />
             Back
           </Button>
         </div>

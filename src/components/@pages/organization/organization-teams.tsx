@@ -24,11 +24,10 @@ export type TTeam = Team & {
   projects: Project[];
 };
 
-export const AddUserDialog: FC<{ team: TTeam }> = ({ team }) => {
+export const AddUserDialog: FC<{ team: TTeam; users: User[] }> = ({ team }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [render, toggleRender] = useState(1);
   const apiContext = api.useContext();
-  console.log("team here: ", team);
   const { data: users, refetch: refetchUsers } =
     api.team.admin.getAllUsers.useQuery();
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
@@ -46,7 +45,7 @@ export const AddUserDialog: FC<{ team: TTeam }> = ({ team }) => {
   const addUserToTeamMutation = api.team.admin.addUserToTeam.useMutation({
     onSuccess: async () => {
       // await apiContext.team.admin.getAllUsers.invalidate();
-      await apiContext.team.admin.getAllTeamsByOrganization.invalidate();
+      await apiContext.team.admin.getAllTeamsByCompanyId.invalidate();
       await refetchUsers();
       setIsOpen(false);
       toggleRender(render + 1);
@@ -60,7 +59,7 @@ export const AddUserDialog: FC<{ team: TTeam }> = ({ team }) => {
   const removeUserFromTeam = api.team.admin.removeUserFromTeam.useMutation({
     onSuccess: async () => {
       // await apiContext.team.admin.getAllUsers.invalidate();
-      await apiContext.team.admin.getAllTeamsByOrganization.invalidate();
+      await apiContext.team.admin.getAllTeamsByCompanyId.invalidate();
       toast.success("User removed from team successfully");
     },
     onError: () => {
@@ -79,9 +78,9 @@ export const AddUserDialog: FC<{ team: TTeam }> = ({ team }) => {
           type="button"
           size="sm"
           variant="default"
-          className="inline-flex h-10 gap-1 whitespace-nowrap"
+          className="inline-flex items-center gap-1 whitespace-nowrap"
         >
-          <PlusIcon className="w-5" /> Add Members
+          <PlusIcon className="w-[1.125rem]" /> Add Members
         </Button>
       </DialogTrigger>
       {isOpen && (
@@ -91,7 +90,7 @@ export const AddUserDialog: FC<{ team: TTeam }> = ({ team }) => {
               <h2 className="h4 inline">Add a new Member to the Team</h2>
             </DialogTitle>
             <DialogDescription className="body-sm inline">
-              <p>Enter the phone number of the user to invite.</p>
+              <p>Enter the email address of the user to invite.</p>
             </DialogDescription>
           </DialogHeader>
           <div>
@@ -171,7 +170,7 @@ export const AddUserDialog: FC<{ team: TTeam }> = ({ team }) => {
 // const deleteTeamMutation = api.team.admin.deleteTeam.useMutation({
 //   onSuccess: async () => {
 //     toast.success("Team deleted");
-//     await apiContext.team.admin.getAllTeamsByOrganization.invalidate();
+//     await apiContext.team.admin.getAllTeamsByCompanyId.invalidate();
 //     // api.team.allTeams.refetch(); // if you have getTeams query
 //   },
 //   onError: (error) => {
@@ -224,7 +223,7 @@ export const organizationTeamsColumns: ColumnDef<Team>[] = [
       // const apiContext = api.useContext();
       // const deleteTeamMutation = api.team.admin.deleteTeam.useMutation({
       //   onSuccess: async () => {
-      //     await apiContext.team.admin.getAllTeamsByOrganization.invalidate();
+      //     await apiContext.team.admin.getAllTeamsByCompanyId.invalidate();
       //     toast.success("Team deleted");
       //     // api.team.allTeams.refetch(); // if you have getTeams query
       //   },
@@ -239,7 +238,7 @@ export const organizationTeamsColumns: ColumnDef<Team>[] = [
       return (
         <div className="flex items-center gap-2">
           <IconLink
-            href={`/team/${original.id}`}
+            href={`/dashboard/team/${original.id}`}
             variant="secondary"
             className="h-full px-3 py-2"
             size="sm"

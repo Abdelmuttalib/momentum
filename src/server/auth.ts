@@ -28,11 +28,11 @@ declare module "next-auth" {
       id: string;
       firstName: string;
       lastName: string;
-      email?: string;
+      email: string;
       image?: string;
-      phoneNumber: string;
       role: Role;
-      organizationId: string;
+      companyId: string;
+      emailVerified: boolean;
       sentInvitations?: Invitation[];
     } & DefaultSession["user"];
   }
@@ -56,11 +56,12 @@ export const authOptions: NextAuthOptions = {
       return {
         ...token,
         ...(user && user.id ? { id: user.id } : {}),
-        ...(user && user.phoneNumber ? { phoneNumber: user.phoneNumber } : {}),
-        ...(user && user.role ? { role: user.role } : {}),
-        ...(user && user.organizationId
-          ? { organizationId: user.organizationId }
+        ...(user && user.email ? { email: user.email } : {}),
+        ...(user && user.emailVerified
+          ? { emailVerified: user.emailVerified }
           : {}),
+        ...(user && user.role ? { role: user.role } : {}),
+        ...(user && user.companyId ? { companyId: user.companyId } : {}),
       };
     },
     session: ({ session, token }) => {
@@ -69,13 +70,12 @@ export const authOptions: NextAuthOptions = {
         user: {
           ...session.user,
           ...(token && token.id ? { id: token.id } : {}),
-          ...(token && token.phoneNumber
-            ? { phoneNumber: token.phoneNumber }
+          ...(token && token.email ? { email: token.email } : {}),
+          ...(token && token.emailVerified
+            ? { emailVerified: token.emailVerified }
             : {}),
           ...(token && token.role ? { role: token.role } : {}),
-          ...(token && token.organizationId
-            ? { organizationId: token.organizationId }
-            : {}),
+          ...(token && token.companyId ? { companyId: token.companyId } : {}),
         },
       };
     },
@@ -87,12 +87,12 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: "Credentials",
       async authorize(credentials) {
-        if (!credentials?.phoneNumber || !credentials?.password) {
+        if (!credentials?.email || !credentials?.password) {
           return Promise.resolve(null);
         }
         const user = await prisma.user.findUnique({
           where: {
-            phoneNumber: credentials?.phoneNumber,
+            email: credentials?.email,
           },
         });
 
@@ -100,13 +100,11 @@ export const authOptions: NextAuthOptions = {
           return Promise.resolve(null);
         }
 
-        const hashedPassword = hashPassword(credentials?.password);
-
         if (user && credentials) {
           // Any object returned will be saved in `user` property of the JWT
           const isPasswordMatch = await bcrypt.compare(
             credentials?.password,
-            hashedPassword
+            user.password
           );
           if (isPasswordMatch) {
             return Promise.resolve(user);

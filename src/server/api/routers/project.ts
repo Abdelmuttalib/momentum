@@ -38,14 +38,13 @@ export const projectRouter = createTRPCRouter({
       });
     }),
 
-  getAllProjectsByTeam: protectedProcedure
+  getAllProjectsByTeamId: protectedProcedure
     .input(
       z.object({
         teamId: z.string(),
       })
     )
     .query(async ({ input, ctx }) => {
-      
       const projects: Project[] = await ctx.prisma.project.findMany({
         where: { teamId: input.teamId },
         include: {

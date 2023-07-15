@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,12 +18,12 @@ type TTeamForm = z.infer<typeof teamFormSchema>;
 
 interface CreateTeamFormProps {
   onCancel: () => void;
-  organizationId: User["organizationId"];
+  companyId: User["companyId"];
 }
 
 export default function CreateTeamForm({
   onCancel,
-  organizationId,
+  companyId,
 }: CreateTeamFormProps) {
   const apiContext = api.useContext();
   const {
@@ -37,7 +38,7 @@ export default function CreateTeamForm({
   const createTeamMutation = api.team.admin.createTeam.useMutation({
     onSuccess: async () => {
       // Handle the new team. For example, you could redirect to the team's page
-      await apiContext.team.admin.getAllTeamsByOrganization.invalidate();
+      await apiContext.team.admin.getAllTeamsByCompanyId.invalidate();
       onCancel();
       reset();
       toast.success("New team created!");
@@ -50,7 +51,7 @@ export default function CreateTeamForm({
   async function onCreateTeam(data: TTeamForm): Promise<void> {
     await createTeamMutation.mutateAsync({
       name: data.name,
-      organizationId,
+      companyId,
     });
     // Handle the new team. For example, you could redirect to the team's page
   }
@@ -78,10 +79,16 @@ export default function CreateTeamForm({
           variant="outline"
           className="mt-2"
           onClick={onCancel}
+          disabled={createTeamMutation.isLoading}
         >
           Cancel
         </Button>
-        <Button type="submit" className="mt-2 flex-1">
+        <Button
+          type="submit"
+          className="mt-2 flex-1"
+          disabled={createTeamMutation.isLoading}
+          isLoading={createTeamMutation.isLoading}
+        >
           Create Team
         </Button>
       </div>

@@ -5,7 +5,8 @@ import {
   publicProcedure,
   protectedProcedure,
 } from "@/server/api/trpc";
-import { Priority, TaskStatus, type Task } from "@prisma/client";
+import { TaskStatus, type Task } from "@prisma/client";
+import { Priority } from "@/utils/enums";
 
 export const taskRouter = createTRPCRouter({
   createTask: protectedProcedure

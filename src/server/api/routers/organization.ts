@@ -18,12 +18,12 @@ import { createOrgWithAdminAccountFormSchema } from "@/components/auth/schema";
 import { hashPassword } from "@/utils/bcrypt";
 
 export const organizationRouter = createTRPCRouter({
-  createOrganizationWithAdminAccount: publicProcedure
+  createCompanyWithAdminAccount: publicProcedure
     .input(createOrgWithAdminAccountFormSchema)
     .mutation(async ({ input, ctx }) => {
-      const newOrganization = await ctx.prisma.organization.create({
+      const newCompany = await ctx.prisma.company.create({
         data: {
-          name: input.organization,
+          name: input.company,
         },
       });
 
@@ -34,44 +34,41 @@ export const organizationRouter = createTRPCRouter({
           firstName: input.firstName,
           lastName: input.lastName,
           email: input.email,
-          phoneNumber: input.phoneNumber,
           password: hashedPassword,
-          organization: {
+          company: {
             connect: {
-              id: newOrganization.id,
+              id: newCompany.id,
             },
           },
           role: Role.ADMIN,
+          emailVerified: false,
         },
       });
-      return { newOrganization, newAdminUser };
+      return { newCompany, newAdminUser };
     }),
 
   getAllInvitations: protectedProcedure
     .input(
       z.object({
-        organizationId: z.string().nonempty(),
+        companyId: z.string().nonempty(),
       })
     )
     .query(async ({ input, ctx }) => {
       const invitations = await ctx.prisma.invitation.findMany({
         where: {
-          organizationId: input.organizationId,
+          companyId: input.companyId,
         },
       });
 
       return invitations;
     }),
 
-  inviteUserToOrganization: protectedProcedure
+  inviteUserToCompany: protectedProcedure
     .input(
       z.object({
-        phoneNumber: z
-          .string()
-          .regex(/^1[3-9]\d{9}$/)
-          .nonempty(),
+        email: z.string().email().nonempty(),
         role: z.nativeEnum(Role),
-        organizationId: z.string().nonempty(),
+        companyId: z.string().nonempty(),
         invitedById: z.string().nonempty(),
       })
     )
@@ -91,16 +88,20 @@ export const organizationRouter = createTRPCRouter({
         firstName: z.string(),
         lastName: z.string(),
         email: z.string(),
-        phoneNumber: z.string(),
         password: z.string(),
       })
     )
     .mutation(async ({ input, ctx }) => {
       const inviteData = await ctx.prisma.invitation.findUnique({
         where: {
-          phoneNumber: input.phoneNumber,
+          email: input.email,
         },
       });
+
+
+      if (!inviteData) {
+        throw new Error("No invitation found");
+      }
 
       if (inviteData && inviteData.status === InvitationStatus.INVITED) {
         const hashedPassword = hashPassword(input.password);
@@ -110,11 +111,11 @@ export const organizationRouter = createTRPCRouter({
             firstName: input.firstName,
             lastName: input.lastName,
             email: input.email,
-            phoneNumber: input.phoneNumber,
             password: hashedPassword,
-            organization: {
+            emailVerified: false,
+            company: {
               connect: {
-                id: inviteData.organizationId,
+                id: inviteData.companyId,
               },
             },
             role: inviteData.role,
@@ -124,14 +125,16 @@ export const organizationRouter = createTRPCRouter({
         if (registeredUser) {
           await ctx.prisma.invitation.update({
             where: {
-              phoneNumber: input.phoneNumber,
+              email: input.email,
             },
             data: {
               status: InvitationStatus.REGISTERED,
             },
           });
 
-          return registeredUser;
+          return {
+            success: true,
+          };
         }
       }
     }),

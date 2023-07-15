@@ -1,3 +1,4 @@
+import * as React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/router";
 import { signIn } from "next-auth/react";
@@ -13,73 +14,70 @@ import { Input } from "@/components/ui/input";
 
 import { type TAuthType } from "./AuthContainer";
 import useTranslation from "next-translate/useTranslation";
-import { IconLink } from "../ui/icon-button";
+import { hashPassword } from "@/utils/bcrypt";
+
+const signInFormSchema = z.object({
+  email: z.string().email().nonempty(),
+  password: z
+    .string()
+    .min(8, { message: "password must be at least 8 characters" })
+    .max(50)
+    .nonempty(),
+});
+
+type SignInFormFields = z.infer<typeof signInFormSchema>;
 
 const SignInForm: FC<{
   setAuthType: Dispatch<SetStateAction<TAuthType>>;
 }> = ({ setAuthType }) => {
   const { t } = useTranslation("login");
-  const { push, locale, asPath } = useRouter();
-  const signInValidationSchema = z.object({
-    phoneNumber: z
-      .string()
-      .regex(/^1[3-9]\d{9}$/, "validations.phoneNumber")
-      .nonempty(),
-    password: z
-      .string()
-      .min(8, { message: "validations.password" })
-      .max(50)
-      .nonempty(),
-  });
+  const { push } = useRouter();
 
-  type TSignInFormFields = z.infer<typeof signInValidationSchema>;
+  const [isLoading, setIsLoading] = React.useState(false);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<TSignInFormFields>({
-    resolver: zodResolver(signInValidationSchema),
+  } = useForm<SignInFormFields>({
+    resolver: zodResolver(signInFormSchema),
   });
 
-  const onSubmit: SubmitHandler<TSignInFormFields> = (data) => {
+  const onSubmit: SubmitHandler<SignInFormFields> = (data) => {
     // onSignIn
+    setIsLoading(true);
+    const hashedPassword = hashPassword(data.password);
     signIn("credentials", {
-      phoneNumber: data.phoneNumber,
+      email: data.email,
       password: data.password,
-      callbackUrl: "/",
+      callbackUrl: "/dashboard",
       redirect: false,
       // callbackUrl: `${window.location.origin}/dashboard/projects`,
     })
       .then(async (response) => {
         if (response?.ok) {
-          // toast.success('Signed in successfully');
-          toast.success("登录成功");
+          toast.success("Signed in successfully");
           if (response.url) {
             await push(response.url);
           }
+        }
+        if (!response?.ok) {
+          toast.error("Something went wrong, kindly try again");
         }
         // const userSignedInData = response?.data;
       })
       .catch(() => {
         toast.error("Something went wrong, kindly try again");
-      });
+      })
+      .finally(() => setIsLoading(false));
   };
 
   return (
-    <div className="w-full max-w-md bg-white px-6 py-4">
-      <div className="flex w-full items-center justify-between">
-        <h1 className="h3 text-gray-800">{t("headings.signIn")}</h1>
-        <IconLink
-          variant="secondary"
-          href={asPath}
-          locale={locale === "en" ? "zh" : "en"}
-          className="uppercase"
-        >
-          {locale === "en" ? "zh" : "en"}
-        </IconLink>
-      </div>
-
-      <p className="text-gray-700">{t("paragraphs.signinDescription")}</p>
+    <div className="w-full py-4">
+      <h1 className="h1 text-gray-800">Sign in</h1>
+      <p className="text-gray-700">
+        enter your credentials to access your account
+      </p>
 
       <form
         className="mt-10 flex flex-col gap-3"
@@ -88,25 +86,22 @@ const SignInForm: FC<{
       >
         {/* Phone Number Input */}
         <div>
-          <label htmlFor="phoneNumber">{t("labels.phoneNumber")}</label>
-          <div className="relative flex">
-            <div className="rounded-l-primary flex w-14 items-center justify-center border-2 border-r-0 bg-gray-100/70">
-              <span className="label-sm text-gray-600">+86</span>
-            </div>
-            <Input
-              id="phoneNumber"
-              {...register("phoneNumber")}
-              type="tel"
-              placeholder="1XXXXXXXXX"
-              // className='rounded-l-none border-l-0 outline-none'
-              className={cn("rounded-l-none border-l-2 outline-none", {
-                "border-red-500": errors.password,
-              })}
-            />
-          </div>
-          {errors.phoneNumber && (
+          <label htmlFor="email">Email</label>
+
+          <Input
+            id="email"
+            {...register("email")}
+            type="email"
+            inputMode="email"
+            placeholder="email@mail.com"
+            // className='rounded-l-none border-l-0 outline-none'
+            className={cn("mt-0.5", {
+              "border-red-500": errors.email,
+            })}
+          />
+          {errors?.email && (
             <p className="mt-0.5 text-sm text-red-500">
-              {t(errors.phoneNumber.message as string)}
+              {errors.email?.message}
             </p>
           )}
         </div>
@@ -114,14 +109,14 @@ const SignInForm: FC<{
         {/* Password Input */}
         <div>
           <label htmlFor="password" className="block text-gray-600">
-            {t("labels.password")}
+            Password
           </label>
           <Input
             id="password"
             type="password"
             {...register("password", { required: true })}
             // placeholder='password'
-            placeholder={t("labels.password")}
+            placeholder="password"
             className={cn("mt-1", { "border-red-500": errors.password })}
           />
           {errors.password && (
@@ -134,21 +129,22 @@ const SignInForm: FC<{
         {/* Auth Buttton */}
         <Button
           type="submit"
-          disabled={Object.keys(errors).length > 0}
           className="mt-2 w-full"
+          disabled={Object.keys(errors).length > 0 || isLoading}
+          isLoading={isLoading}
         >
-          {t("buttons.signIn")}
+          Sign in
         </Button>
 
         {/* Another Auth Routes */}
-        <div className="text-center text-sm font-medium text-gray-700 sm:mb-4 sm:flex sm:items-center sm:gap-1">
-          <span>{t("paragraphs.alreadyHaveAnAccount")}</span>
+        <div className="text-center text-sm text-slate-500 sm:mb-4 sm:flex sm:items-center sm:gap-1">
+          <span>Don&apos;t have an acoount?</span>
           <button
             onClick={() => setAuthType("create-account")}
             className="flex-2 text-primary underline"
           >
             {/* Register a new organization */}
-            {t("buttons.createAnAccount")}
+            Create an account
           </button>
         </div>
       </form>

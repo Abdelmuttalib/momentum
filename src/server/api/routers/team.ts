@@ -9,13 +9,13 @@ import { Role } from "@prisma/client";
 
 const teamAdminRouter = createTRPCRouter({
   createTeam: protectedProcedure
-    .input(z.object({ name: z.string(), organizationId: z.string() }))
+    .input(z.object({ name: z.string(), companyId: z.string() }))
     .mutation(async ({ input, ctx }) => {
       const newTeam = await ctx.prisma.team.create({
         data: {
           name: input.name,
-          organization: {
-            connect: { id: input.organizationId },
+          company: {
+            connect: { id: input.companyId },
           },
         },
       });
@@ -37,22 +37,21 @@ const teamAdminRouter = createTRPCRouter({
       });
     }),
 
-  getAllTeamsByOrganization: protectedProcedure
+  getAllTeamsByCompanyId: protectedProcedure
     .input(
       z.object({
-        organizationId: z.string(),
+        companyId: z.string(),
       })
     )
     .query(async ({ input, ctx }) => {
-      const organizationsTeams = await ctx.prisma.team.findMany({
+      const companyTeams = await ctx.prisma.team.findMany({
         where: {
-          organizationId: input.organizationId,
+          companyId: input.companyId,
         },
         include: {
           users: {
             select: {
               id: true,
-              phoneNumber: true,
               firstName: true,
               lastName: true,
               email: true,
@@ -64,7 +63,7 @@ const teamAdminRouter = createTRPCRouter({
           projects: true,
         },
       });
-      return organizationsTeams;
+      return companyTeams;
     }),
 
   getTeamByTeamId: protectedProcedure
@@ -78,10 +77,11 @@ const teamAdminRouter = createTRPCRouter({
           users: {
             select: {
               id: true,
-              phoneNumber: true,
               firstName: true,
               lastName: true,
               email: true,
+              emailVerified: true,
+              image: true,
               role: true,
             },
           },
@@ -182,6 +182,27 @@ const userAdminRouter = createTRPCRouter({
         include: { users: true },
       });
       return team?.users;
+    }),
+
+  getAllCompanyMembersByCompanyId: protectedProcedure
+    .input(
+      z.object({
+        companyId: z.string(),
+        userId: z.string(),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      // get all users under this company
+      const companyMembers = await ctx.prisma.user.findMany({
+        where: {
+          companyId: input.companyId,
+          NOT: {
+            id: input.userId,
+          },
+        },
+      });
+
+      return companyMembers;
     }),
 });
 

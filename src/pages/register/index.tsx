@@ -5,26 +5,25 @@ import {
 import { LoginBackground } from "@/components/layout";
 import { useState } from "react";
 
-export type TRegisterStep = "organization" | "user";
+export type RegisterStep = "company" | "user";
 
 export default function RegisterPage() {
-  const [registerStep, setRegisterStep] =
-    useState<TRegisterStep>("organization");
+  const [registerStep, setRegisterStep] = useState<RegisterStep>("company");
 
-  const [organizationName, setOrganizationName] = useState<string>("");
+  const [companyName, setCompanyName] = useState<string>("");
 
   return (
     <LoginBackground>
       <div className="flex flex-col items-center justify-center px-4">
-        {registerStep === "organization" && (
+        {registerStep === "company" && (
           <CreateOrganizationForm
             setRegisterStep={setRegisterStep}
-            setOrganizationName={setOrganizationName}
+            setCompanyName={setCompanyName}
           />
         )}
         {registerStep === "user" && (
           <CreateAdminAccountForm
-            organizationName={organizationName}
+            companyName={companyName}
             setRegisterStep={setRegisterStep}
           />
         )}

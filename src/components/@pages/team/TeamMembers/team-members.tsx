@@ -42,7 +42,7 @@ export const AddUserDialog: FC<{ team: TTeam }> = ({ team }) => {
   const addUserToTeamMutation = api.team.admin.addUserToTeam.useMutation({
     onSuccess: async () => {
       // await apiContext.team.admin.getAllUsers.invalidate();
-      await apiContext.team.admin.getAllTeamsByOrganization.invalidate();
+      await apiContext.team.admin.getAllTeamsByCompanyId.invalidate();
       await refetchUsers();
       toggleRender(render + 1);
       toast.success("User added to team successfully");
@@ -55,7 +55,7 @@ export const AddUserDialog: FC<{ team: TTeam }> = ({ team }) => {
   const removeUserFromTeam = api.team.admin.removeUserFromTeam.useMutation({
     onSuccess: async () => {
       // await apiContext.team.admin.getAllUsers.invalidate();
-      await apiContext.team.admin.getAllTeamsByOrganization.invalidate();
+      await apiContext.team.admin.getAllTeamsByCompanyId.invalidate();
       toast.success("User removed from team successfully");
     },
     onError: () => {
@@ -188,7 +188,6 @@ export const teamMembersColumns: ColumnDef<User>[] = [
     accessorKey: "role",
     header: "Role",
     cell: ({ row: { original } }) => {
-      console.log("v: ", original);
       return (
         <Badge color={getUserRoleBadgeColor(original.role)}>
           {original.role}

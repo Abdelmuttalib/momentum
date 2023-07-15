@@ -34,7 +34,7 @@ const projectFormSchema = z.object({
   status: z.nativeEnum(ProjectStatus),
 });
 
-type TProjectForm = z.infer<typeof projectFormSchema>;
+type ProjectForm = z.infer<typeof projectFormSchema>;
 
 export function CreateProjectForm({
   setIsOpen,
@@ -52,24 +52,24 @@ export function CreateProjectForm({
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<TProjectForm>({
+  } = useForm<ProjectForm>({
     resolver: zodResolver(projectFormSchema),
   });
 
   const createProjectMutation = api.project.createProject.useMutation({
     onSuccess: async () => {
       // Handle the new team. For example, you could redirect to the team's page
-      setIsOpen(false);
-      await apiContext.project.getAllProjectsByTeam.invalidate();
-      reset();
       toast.success("New project created!");
+      await apiContext.project.getAllProjectsByTeamId.invalidate();
+      setIsOpen(false);
+      reset();
     },
     onError: () => {
       toast.error("Failed to create new project");
     },
   });
 
-  async function onCreateProject(data: TProjectForm): Promise<void> {
+  async function onCreateProject(data: ProjectForm): Promise<void> {
     await createProjectMutation.mutateAsync({
       name: data.name,
       teamId: teamId,

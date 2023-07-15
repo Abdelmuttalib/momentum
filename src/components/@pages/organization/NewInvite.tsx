@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { Role, type Organization, type User } from "@prisma/client";
+import { Role, type Company, type User } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -42,32 +42,25 @@ import { PlusIcon } from "@heroicons/react/20/solid";
 
 interface NewInviteFormProps {
   userId: User["id"];
-  organizationId: Organization["id"];
+  companyId: Company["id"];
   onCancel: () => void;
 }
 
 export const inviteUserToOrganizationFormSchema = z.object({
-  phoneNumber: z
-    .string()
-    .regex(/^1[3-9]\d{9}$/, "validations.phoneNumber")
-    .nonempty(),
+  email: z.string().email().nonempty(),
   role: z.nativeEnum(Role),
 });
 
 type NewInviteFormSchema = z.infer<typeof inviteUserToOrganizationFormSchema>;
 
-function NewInviteForm({
-  userId,
-  organizationId,
-  onCancel,
-}: NewInviteFormProps) {
+function NewInviteForm({ userId, companyId, onCancel }: NewInviteFormProps) {
   const apiContext = api.useContext();
   const form = useForm<NewInviteFormSchema>({
     resolver: zodResolver(inviteUserToOrganizationFormSchema),
   });
 
-  const inviteUserToOrganizationMutation =
-    api.organization.inviteUserToOrganization.useMutation({
+  const inviteUserToCompanyMutation =
+    api.organization.inviteUserToCompany.useMutation({
       onSuccess: async () => {
         form.reset();
         await apiContext.organization.getAllInvitations.invalidate();
@@ -80,9 +73,9 @@ function NewInviteForm({
     });
 
   async function onSubmit(data: NewInviteFormSchema) {
-    await inviteUserToOrganizationMutation.mutateAsync({
+    await inviteUserToCompanyMutation.mutateAsync({
       invitedById: userId,
-      organizationId: organizationId,
+      companyId: companyId,
       ...data,
     });
   }
@@ -92,12 +85,12 @@ function NewInviteForm({
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
         <FormField
           control={form.control}
-          name="phoneNumber"
+          name="email"
           render={({ field }) => (
             <FormItem className="space-y-0">
-              <FormLabel>Phone Number</FormLabel>
+              <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="13XXXXXXXXX" {...field} />
+                <Input placeholder="email@mail.com" {...field} />
               </FormControl>
               {/* <FormDescription>
                     This is your public display name.
@@ -150,7 +143,7 @@ function NewInviteForm({
             type="button"
             variant="outline"
             className="mt-2"
-            disabled={inviteUserToOrganizationMutation.isLoading}
+            disabled={inviteUserToCompanyMutation.isLoading}
             onClick={onCancel}
           >
             Cancel
@@ -158,8 +151,8 @@ function NewInviteForm({
           <Button
             type="submit"
             className="mt-2 flex-1 md:flex-initial"
-            disabled={inviteUserToOrganizationMutation.isLoading}
-            isLoading={inviteUserToOrganizationMutation.isLoading}
+            disabled={inviteUserToCompanyMutation.isLoading}
+            isLoading={inviteUserToCompanyMutation.isLoading}
           >
             Submit
           </Button>
@@ -207,7 +200,7 @@ const NewInviteDialog = ({
 
 interface NewInviteProps {
   userId: User["id"];
-  organizationId: Organization["id"];
+  companyId: Company["id"];
 }
 
 export default function NewInvite(props: NewInviteProps) {

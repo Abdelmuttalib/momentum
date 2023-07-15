@@ -8,7 +8,7 @@ const Auth = () => {
   const [authType, setAuthType] = useState<TAuthType>("sign-in");
 
   return (
-    <div className="flex items-center justify-center">
+    <div className="flex w-full items-center justify-center">
       {authType === "sign-in" ? (
         <SignInForm setAuthType={setAuthType} />
       ) : (

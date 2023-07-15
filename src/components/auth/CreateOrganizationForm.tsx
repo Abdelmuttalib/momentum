@@ -8,54 +8,49 @@ import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { type TRegisterStep } from "@/pages/register";
+import { type RegisterStep } from "@/pages/register";
 import { ArrowLeftIcon } from "lucide-react";
 import { api } from "@/utils/api";
 import { useRouter } from "next/router";
 
-type OrganizationFormData = {
-  name: string;
-};
+const companyNameFormSchema = z.object({
+  name: z.string().min(3, { message: "Company name is too short" }),
+});
 
-export const CreateOrganizationForm: FC<{
-  setRegisterStep: (step: TRegisterStep) => void;
-  setOrganizationName: (name: string) => void;
-}> = ({ setRegisterStep, setOrganizationName }) => {
-  const organizationNameFormSchema = z.object({
-    name: z.string().min(3, { message: "Organization name is too short" }),
-  });
+type CompanyFormData = z.infer<typeof companyNameFormSchema>;
+
+interface CreateCompanyFormProps {
+  setRegisterStep: (step: RegisterStep) => void;
+  setCompanyName: (name: string) => void;
+}
+
+export function CreateOrganizationForm({
+  setRegisterStep,
+  setCompanyName,
+}: CreateCompanyFormProps) {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<OrganizationFormData>({
-    resolver: zodResolver(organizationNameFormSchema),
+  } = useForm<CompanyFormData>({
+    resolver: zodResolver(companyNameFormSchema),
   });
 
-  function onCreateOrganization(data: OrganizationFormData) {
-    toast.success("Organization created successfully");
-    setOrganizationName(data.name);
+  const { back } = useRouter();
+
+  function onCreateCompany(data: CompanyFormData) {
+    setCompanyName(data.name);
     setRegisterStep("user");
-    // fetchAPI
-    //   .post("/admin/new/organization", data)
-    //   .then(() => {
-    //     toast.success("Organization created successfully");
-    //     setOrganizationName(data.name);
-    //     setRegisterStep("user");
-    //   })
-    //   .catch(() => {
-    //     toast.error("Couldn't create organization");
-    //   });
   }
 
   return (
-    <div className="flex w-full max-w-lg flex-col gap-5">
+    <div className="flex w-full flex-col gap-5">
       <div>
-        <h1 className="h3 text-gray-800">Create a new Organization</h1>
-        <p className="text-gray-700">choose a name for your organization</p>
+        <h1 className="h1 text-gray-800">Create a new Company</h1>
+        <p className="text-gray-700">choose a name for your company</p>
       </div>
       <form
-        onSubmit={handleSubmit(onCreateOrganization)}
+        onSubmit={handleSubmit(onCreateCompany)}
         className="w-full space-y-4"
       >
         <div>
@@ -64,22 +59,33 @@ export const CreateOrganizationForm: FC<{
             id="name"
             {...register("name")}
             type="text"
-            placeholder="organization name"
+            placeholder="company name"
           />
           {errors.name && (
             <p className="mt-0.5 text-sm text-red-500">{errors.name.message}</p>
           )}
         </div>
-        <Button>Create Organization</Button>
+        <div className="flex justify-between">
+          <Button type="button" variant="secondary" onClick={() => back()}>
+            <ArrowLeftIcon className="-ml-2 mr-1 h-4 w-4" />
+            Back
+          </Button>
+          <Button>Create Company</Button>
+        </div>
       </form>
     </div>
   );
-};
+}
 
-export const CreateAdminAccountForm: FC<{
-  organizationName: string;
-  setRegisterStep: Dispatch<SetStateAction<TRegisterStep>>;
-}> = ({ organizationName, setRegisterStep }) => {
+interface CreateAdminAccountFormProps {
+  companyName: string;
+  setRegisterStep: Dispatch<SetStateAction<RegisterStep>>;
+}
+
+export function CreateAdminAccountForm({
+  companyName,
+  setRegisterStep,
+}: CreateAdminAccountFormProps) {
   const { push } = useRouter();
   const adminAccountFormSchema = z
     .object({
@@ -94,17 +100,10 @@ export const CreateAdminAccountForm: FC<{
         .max(15)
         .nonempty(),
       email: z.string().min(4).email("kindly enter a valid email."),
-      organization: z
+      company: z
         .string()
-        .min(4, { message: "Organization name is too short" })
-        .default(organizationName),
-      phoneNumber: z
-        .string()
-        .regex(
-          /^1[3-9]\d{9}$/,
-          "Please enter a valid 10-digit phone number starting with 1 and the second digit between 3 and 9"
-        )
-        .nonempty(),
+        .min(4, { message: "Company name is too short" })
+        .default(companyName),
       password: z
         .string()
         .min(8, { message: "password must be at least 8 characters" })
@@ -121,44 +120,43 @@ export const CreateAdminAccountForm: FC<{
       message: "passwords do not match",
     });
 
-  type TAdminAccountFormData = z.infer<typeof adminAccountFormSchema>;
+  type AdminAccountFormData = z.infer<typeof adminAccountFormSchema>;
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<TAdminAccountFormData>({
+  } = useForm<AdminAccountFormData>({
     resolver: zodResolver(adminAccountFormSchema),
     defaultValues: {
-      organization: organizationName,
+      company: companyName,
     },
   });
 
-  const createOrganizationWithAdminAccountMutation =
-    api.organization.createOrganizationWithAdminAccount.useMutation({
+  const createCompanyWithAdminAccountMutation =
+    api.organization.createCompanyWithAdminAccount.useMutation({
       onSuccess: async () => {
         // Handle the new team. For example, you could redirect to the team's page
         // onSuccess();
         // reset();
         toast.success("admin account created successfully");
-        await push("/login");
+        await push("/sign-in");
       },
       onError: () => {
         toast.error("Failed to create new team");
       },
     });
 
-  async function onCreateAdminAccount(data: TAdminAccountFormData) {
+  async function onCreateAdminAccount(data: AdminAccountFormData) {
     const requestData = {
       firstName: data.firstName,
       lastName: data.lastName,
-      organization: data.organization,
-      phoneNumber: data.phoneNumber,
+      company: data.company,
       email: data.email,
       password: data.password,
     };
 
-    await createOrganizationWithAdminAccountMutation.mutateAsync(requestData);
+    await createCompanyWithAdminAccountMutation.mutateAsync(requestData);
 
     // setIsSubmitting(true);
     // axios
@@ -179,7 +177,7 @@ export const CreateAdminAccountForm: FC<{
       <div>
         <h1 className="h3 text-gray-800">Create an admin account</h1>
         <p className="text-gray-700">
-          create your admin account for your organization
+          create your admin account for your company
         </p>
       </div>
       <form
@@ -189,17 +187,32 @@ export const CreateAdminAccountForm: FC<{
       >
         <div className="w-full space-y-2">
           <div>
-            <label htmlFor="organization">Organization</label>
+            <label htmlFor="company">Company</label>
             <Input
-              id="organization"
-              {...register("organization")}
+              id="company"
+              {...register("company")}
               type="text"
-              placeholder="organization"
-              // defaultValue={organizationName}
-              value={organizationName}
+              placeholder="company"
+              value={companyName}
               disabled
+              className="bg-muted"
             />
           </div>
+          <div>
+            <label htmlFor="email">Email</label>
+            <Input
+              id="email"
+              {...register("email")}
+              type="email"
+              placeholder="email@mail.com"
+            />
+            {errors.email && (
+              <p className="mt-0.5 text-sm text-red-500">
+                {errors.email.message}
+              </p>
+            )}
+          </div>
+
           <div className="flex gap-2">
             <div>
               <label htmlFor="firstName">First Name</label>
@@ -230,43 +243,6 @@ export const CreateAdminAccountForm: FC<{
               )}
             </div>
           </div>
-
-          <div>
-            <label htmlFor="phoneNumber">Phone Number</label>
-            <div className="relative flex">
-              <div className="flex w-14 items-center justify-center rounded-l-primary border-2 border-r-0 bg-gray-100/70">
-                <span className="label-sm text-gray-600">+86</span>
-              </div>
-              <Input
-                id="phoneNumber"
-                {...register("phoneNumber")}
-                type="tel"
-                placeholder="1XXXXXXXXX"
-                // className='rounded-l-none border-l-0 outline-none'
-                className="rounded-l-none border-l-0 outline-none focus:border-l-0"
-              />
-            </div>
-            {errors.phoneNumber && (
-              <p className="mt-0.5 text-sm text-red-500">
-                {errors.phoneNumber.message}
-              </p>
-            )}
-          </div>
-          <div>
-            <label htmlFor="email">Email</label>
-            <Input
-              id="email"
-              {...register("email")}
-              type="email"
-              placeholder="email@mail.com"
-            />
-            {errors.email && (
-              <p className="mt-0.5 text-sm text-red-500">
-                {errors.email.message}
-              </p>
-            )}
-          </div>
-
           <div>
             <label htmlFor="password">Password</label>
             <Input
@@ -300,15 +276,16 @@ export const CreateAdminAccountForm: FC<{
           <Button
             type="button"
             variant="secondary"
-            onClick={() => setRegisterStep("organization")}
+            onClick={() => setRegisterStep("company")}
+            disabled={createCompanyWithAdminAccountMutation.isLoading}
           >
             <ArrowLeftIcon className="-ml-2 mr-1 h-4 w-4" />
             Back
           </Button>
           <Button
             type="submit"
-            // disabled={isSubmitting}
-            // isLoading={isSubmitting}
+            disabled={createCompanyWithAdminAccountMutation.isLoading}
+            isLoading={createCompanyWithAdminAccountMutation.isLoading}
           >
             Create Admin Account
           </Button>
@@ -316,4 +293,4 @@ export const CreateAdminAccountForm: FC<{
       </form>
     </div>
   );
-};
+}
