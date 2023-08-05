@@ -1,7 +1,7 @@
 # Moméntum
 The Open source issue tracking tool
 
-![Screenshot from 2023-07-16 06-16-35](https://github.com/Abdelmuttalib/momentum/assets/54845047/d5b8b758-959d-4770-b0f4-070e5f1c2206)
+![momentum](https://github.com/Abdelmuttalib/momentum/assets/54845047/4cd78aa9-50a6-428a-a0d8-44b0e1804156)
 
 ### Tech Stack
 
