@@ -5,9 +5,10 @@ The Open source issue tracking tool
 
 ### Tech Stack
 
+- [React.js](https://react.dev/)
 - [Next.js](https://nextjs.org)
+- [Tailwind CSS](https://tailwindcss.com)
 - [NextAuth.js](https://next-auth.js.org)
 - [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
 - [tRPC](https://trpc.io)
 - [Supabase](https://supabase.com/)
