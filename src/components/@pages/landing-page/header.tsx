@@ -1,7 +1,7 @@
 import React from "react";
 import Container from "./container";
 import { ButtonLink } from "@/components/ui/button";
-import ThemeToggle from "@/components/theme-toggle";
+// import ThemeToggle from "@/components/theme-toggle";
 
 export default function Header() {
   return (
