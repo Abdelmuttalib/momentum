@@ -1,35 +1,21 @@
 import { type AppType } from "next/app";
-import { type Session } from "next-auth";
-import { SessionProvider } from "next-auth/react";
-import { Analytics } from "@vercel/analytics/react";
+
 import { api } from "@/utils/api";
 
 import "@/styles/globals.css";
-import { Toaster } from "sonner";
-import TailwindIndicator from "@/components/tailwind-indicator";
-import GradientBackground from "@/components/GradientBackground";
+import Providers from "@/components/providers";
+import type { TNextAuthSession } from "types";
 
-const MyApp: AppType<{ session: Session | null }> = ({
+const MyApp: AppType<TNextAuthSession> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
   return (
-    <SessionProvider session={session}>
-      <Analytics />
-      <Toaster
-        position="top-right"
-        richColors
-        expand
-        visibleToasts={6}
-        closeButton
-        style={{
-          marginRight: "1.5rem",
-        }}
-      />
-      <GradientBackground />
-      <Component {...pageProps} />
-      <TailwindIndicator />
-    </SessionProvider>
+    <Providers session={session}>
+      <div className="bg-[#fefffe] text-gray-800 dark:bg-gray-900">
+        <Component {...pageProps} />
+      </div>
+    </Providers>
   );
 };
 
