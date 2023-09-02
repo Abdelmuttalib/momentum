@@ -5,13 +5,16 @@
 import { createClient } from "@supabase/supabase-js";
 import { getServerSession } from "next-auth";
 
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
 const session = await getServerSession();
 
 const supabase = createClient(
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  supabaseUrl!,
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  supabaseAnonKey!,
   {
     global: {
       headers: {
