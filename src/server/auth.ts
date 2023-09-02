@@ -14,7 +14,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 
 import bcrypt from "bcryptjs";
 import type { Company, Invitation, Role, User } from "@prisma/client";
-// import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { SupabaseAdapter } from "@auth/supabase-adapter";
 import { default as jsonwebtoken } from "jsonwebtoken";
 
@@ -45,11 +45,11 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
-  adapter: SupabaseAdapter({
-    url: process.env.NEXT_PUBLIC_SUPABASE_URL,
-    secret: process.env.SUPABASE_SERVICE_ROLE_KEY,
-  }),
-  // adapter: PrismaAdapter(prisma),
+  // adapter: SupabaseAdapter({
+  //   url: process.env.NEXT_PUBLIC_SUPABASE_URL,
+  //   secret: process.env.SUPABASE_SERVICE_ROLE_KEY,
+  // }),
+  adapter: PrismaAdapter(prisma),
   callbacks: {
     async jwt({ token, user }: { token: any; user: User }) {
       // if (user && user.phoneNumber) {
@@ -83,17 +83,17 @@ export const authOptions: NextAuthOptions = {
       };
     },
     session: ({ session, token }) => {
-      const signingSecret = process.env.SUPABASE_JWT_SECRET;
-      if (signingSecret) {
-        const payload = {
-          aud: "authenticated",
-          exp: Math.floor(new Date(session.expires).getTime() / 1000),
-          sub: token.id,
-          email: token.email,
-          role: "authenticated",
-        };
-        session.supabaseAccessToken = jsonwebtoken.sign(payload, signingSecret);
-      }
+      // const signingSecret = process.env.SUPABASE_JWT_SECRET;
+      // if (signingSecret) {
+      //   const payload = {
+      //     aud: "authenticated",
+      //     exp: Math.floor(new Date(session.expires).getTime() / 1000),
+      //     sub: token.id,
+      //     email: token.email,
+      //     role: "authenticated",
+      //   };
+      //   session.supabaseAccessToken = jsonwebtoken.sign(payload, signingSecret);
+      // }
       return {
         ...session,
         user: {
