@@ -65,9 +65,6 @@ export function getTaskStatusBadgeColor(status: TaskStatus): BadgeColor {
     case TaskStatus.IN_REVIEW:
       return "blue";
 
-    case TaskStatus.REVISION:
-      return "red";
-
     case TaskStatus.COMPLETED:
       return "green";
 

@@ -10,12 +10,12 @@ import type { GetServerSideProps } from "next";
 import { z } from "zod";
 import { api } from "@/utils/api";
 // import InvitesList from "@/components/@pages/organization/InvitesList";
-import NewInvite from "@/components/@pages/organization/NewInvite";
-import { CreateNewTeamDialog } from "../teams";
 import { DataTable } from "@/components/@pages/teams/TeamMembers/data-table";
-import { organizationTeamsColumns } from "@/components/@pages/organization/organization-teams";
 import type { Session } from "next-auth";
-import { companyInvitationsColumns } from "@/components/@pages/organization/invites/company-invitations-columns";
+import NewInvite from "@/components/@pages/company/NewInvite";
+import { companyInvitationsColumns } from "@/components/@pages/company/invites/company-invitations-columns";
+import CreateTeam from "@/components/@pages/teams/forms/create-team";
+import { organizationTeamsColumns } from "@/components/@pages/company/organization-teams";
 
 interface CompanyPageProps {
   companyData: Company;
@@ -50,7 +50,8 @@ export default function CompanyPage({
           <div className="flex flex-col gap-4">
             <div className="flex w-full items-center justify-between">
               <h2 className="h6">Company Teams</h2>
-              <CreateNewTeamDialog companyId={companyId} />
+              {/* <CreateNewTeamDialog companyId={companyId} /> */}
+              <CreateTeam />
             </div>
 
             <div>
