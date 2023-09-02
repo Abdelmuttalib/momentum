@@ -1,15 +1,20 @@
-import React, { FC } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import React from "react";
+import {
+  Tabs,
+  // TabsContent
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs";
 import { cn } from "@/utils/cn";
 import { api } from "@/utils/api";
-import { NextRouter, useRouter } from "next/router";
+import { type NextRouter, useRouter } from "next/router";
 import Link from "next/link";
-import { Project } from "@prisma/client";
+import type { Project } from "@prisma/client";
 
-interface ProjectsTabsProps {
-  logTypes: string[];
-  setSelectedLogType: (tab: string) => void;
-}
+// interface ProjectsTabsProps {
+//   logTypes: string[];
+//   setSelectedLogType: (tab: string) => void;
+// }
 
 export default function ProjectsTabs() {
   const { query }: NextRouter = useRouter();

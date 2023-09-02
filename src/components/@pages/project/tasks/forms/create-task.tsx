@@ -52,12 +52,10 @@ function CreateTaskForm({
   onSuccess,
   onCancel,
   defaultValues,
-  orderIndex,
 }: {
   onSuccess: () => void;
   onCancel: () => void;
   defaultValues: TTaskForm;
-  orderIndex: number;
 }) {
   const { query } = useRouter();
   const teamId = query.teamId as string;
@@ -369,6 +367,8 @@ export default function CreateTask({
               setIsOpen(false);
             }}
             onCancel={() => setIsOpen(false)}
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             defaultValues={{
               ...(status && { status }),
             }}

@@ -10,7 +10,6 @@ import {
 import { EllipsisVerticalIcon } from "@heroicons/react/20/solid";
 import type { Task } from "@prisma/client";
 import { Trash } from "lucide-react";
-import { useState } from "react";
 
 export default function TaskView({ task }: { task: Task }) {
   // const [isOpen, setIsOpen] = useState(false);

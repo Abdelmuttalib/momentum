@@ -1,10 +1,8 @@
-"use client";
-
 import * as React from "react";
 import {
   CaretSortIcon,
   CheckIcon,
-  PlusCircledIcon,
+  // PlusCircledIcon,
 } from "@radix-ui/react-icons";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -25,7 +23,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  // DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -44,79 +42,15 @@ import {
 import { cn } from "@/utils/cn";
 import { api } from "@/utils/api";
 import { useRouter } from "next/router";
-import { Project } from "@prisma/client";
+import type { Project, Team } from "@prisma/client";
 import Link from "next/link";
-
-const groups = [
-  {
-    label: "Personal Account",
-    teams: [
-      {
-        label: "Alicia Koch",
-        value: "personal",
-      },
-    ],
-  },
-  {
-    label: "Teams",
-    teams: [
-      {
-        label: "Acme Inc.",
-        value: "acme-inc",
-      },
-      {
-        label: "Monsters Inc.",
-        value: "monsters",
-      },
-    ],
-  },
-];
-
-const company = {
-  label: "Acme Inc.",
-  value: "acme-inc",
-
-  teams: [
-    {
-      label: "Acme Website",
-      value: "acme-website",
-    },
-    {
-      label: "Acme Dashboard",
-      value: "acme-dashboard",
-    },
-
-    {
-      label: "Acme API",
-      value: "acme-api",
-    },
-  ],
-
-  projects: [
-    {
-      label: "Acme Website",
-      value: "acme-website",
-    },
-    {
-      label: "Acme Dashboard",
-      value: "acme-dashboard",
-    },
-
-    {
-      label: "Acme API",
-      value: "acme-api",
-    },
-  ],
-};
-
-type Team = (typeof groups)[number]["teams"][number];
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<
   typeof PopoverTrigger
 >;
 
 export default function MainSwitcher() {
-  const { query, asPath } = useRouter();
+  const { query } = useRouter();
 
   const { data: teams } = api.team.getAllTeamsByCompanyId.useQuery();
 
@@ -245,9 +179,9 @@ function Switcher({
   const [open, setOpen] = React.useState(false);
   const [showNewTeamDialog, setShowNewTeamDialog] = React.useState(false);
 
-  const { query, asPath, push } = useRouter();
+  const { query, push } = useRouter();
 
-  const { teamId, projectId } = query as { teamId: string; projectId: string };
+  const { teamId } = query as { teamId: string };
 
   // <>
   // <Avatar className="mr-2 h-5 w-5">
@@ -291,6 +225,7 @@ function Switcher({
                     onSelect={() => {
                       // setSelectedTeam(team);
                       setOpen(false);
+                      // eslint-disable-next-line @typescript-eslint/no-floating-promises
                       push(`/teams/${team.id}`);
                     }}
                     className="text-sm"
@@ -349,6 +284,7 @@ function Switcher({
                     onSelect={() => {
                       // setSelectedTeam(team);
                       setOpen(false);
+                      // eslint-disable-next-line @typescript-eslint/no-floating-promises
                       push(`/teams/${teamId}/projects/${project.id}`);
                     }}
                     className="text-sm"

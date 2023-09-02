@@ -42,7 +42,7 @@ export const AddUserDialog: FC<{ team: TTeam }> = ({ team }) => {
   const addUserToTeamMutation = api.team.addUserToTeam.useMutation({
     onSuccess: async () => {
       // await apiContext.team.admin.getAllUsers.invalidate();
-      await apiContext.team.admin.getAllTeamsByCompanyId.invalidate();
+      await apiContext.team.getAllTeamsByCompanyId.invalidate();
       await refetchUsers();
       toggleRender(render + 1);
       toast.success("User added to team successfully");
@@ -55,7 +55,7 @@ export const AddUserDialog: FC<{ team: TTeam }> = ({ team }) => {
   const removeUserFromTeam = api.team.removeUserFromTeam.useMutation({
     onSuccess: async () => {
       // await apiContext.team.admin.getAllUsers.invalidate();
-      await apiContext.team.admin.getAllTeamsByCompanyId.invalidate();
+      await apiContext.team .getAllTeamsByCompanyId.invalidate();
       toast.success("User removed from team successfully");
     },
     onError: () => {

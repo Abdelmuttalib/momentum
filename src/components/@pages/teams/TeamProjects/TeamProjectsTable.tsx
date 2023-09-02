@@ -1,4 +1,5 @@
-import type { TTeam } from "../../organization/organization-teams";
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import type { TTeam } from "types";
 import { DataTable } from "../TeamMembers/data-table";
 import { teamProjectsColumns } from "./team-projects";
 

@@ -1,21 +1,24 @@
-import { useRouter } from "next/router";
-import { type ReactNode, useState } from "react";
+// import { useRouter } from "next/router";
+import {
+  type ReactNode,
+  // useState
+} from "react";
 
 import { cn } from "@/utils/cn";
 
-import { IconButton } from "@/components/ui/icon-button";
+// import { IconButton } from "@/components/ui/icon-button";
 
-import SideBar from "./SideBar";
+// import SideBar from "./SideBar";
 
-import { Bars3Icon } from "@heroicons/react/20/solid";
-import UserAccountMenu from "../user/UserMenu";
+// import { Bars3Icon } from "@heroicons/react/20/solid";
+// import UserAccountMenu from "../user/UserMenu";
 import { Button } from "../ui/button";
 import { LogOut } from "lucide-react";
 import { signOut } from "next-auth/react";
 import ThemeToggle from "../theme-toggle";
-import Link from "next/link";
-import Switcher from "../Switcher";
-import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
+// import Link from "next/link";
+// import Switcher from "../Switcher";
+// import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
 import MainSwitcher from "../Switcher";
 
 interface HeaderProps {
@@ -27,33 +30,33 @@ function Header({ pageTitle, actions }: HeaderProps) {
   // const [showSidebarMenu, setShowSidebarMenu] = useState(false);
   // const { pathname } = useRouter();
 
-  const teamPathNavLinks = [
-    {
-      label: "Overview",
-      href: "/",
-      current: true,
-    },
-    {
-      label: "Projects",
-      href: "/projects",
-      current: false,
-    },
-    {
-      label: "Teams",
-      href: "/teams",
-      current: false,
-    },
-    {
-      label: "Calendar",
-      href: "/calendar",
-      current: false,
-    },
-    {
-      label: "Reports",
-      href: "/reports",
-      current: false,
-    },
-  ];
+  // const teamPathNavLinks = [
+  //   {
+  //     label: "Overview",
+  //     href: "/",
+  //     current: true,
+  //   },
+  //   {
+  //     label: "Projects",
+  //     href: "/projects",
+  //     current: false,
+  //   },
+  //   {
+  //     label: "Teams",
+  //     href: "/teams",
+  //     current: false,
+  //   },
+  //   {
+  //     label: "Calendar",
+  //     href: "/calendar",
+  //     current: false,
+  //   },
+  //   {
+  //     label: "Reports",
+  //     href: "/reports",
+  //     current: false,
+  //   },
+  // ];
 
   return (
     <>

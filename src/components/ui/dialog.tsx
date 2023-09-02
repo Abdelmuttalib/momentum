@@ -1,9 +1,12 @@
 import * as React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { Cross2Icon, CrossCircledIcon } from "@radix-ui/react-icons";
+import {
+  Cross2Icon,
+  // CrossCircledIcon
+} from "@radix-ui/react-icons";
 
 import { cn } from "@/utils/cn";
-import { XCircleIcon } from "@heroicons/react/24/outline";
+// import { XCircleIcon } from "@heroicons/react/24/outline";
 import { Button } from "./button";
 
 const Dialog = DialogPrimitive.Root;

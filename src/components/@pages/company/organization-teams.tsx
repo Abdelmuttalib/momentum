@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import type { ColumnDef } from "@tanstack/react-table";
 import { Button, buttonVariants } from "@/components/ui/button";
-import type { Project, Team, User } from "@prisma/client";
+import type { Team, User } from "@prisma/client";
 import { api } from "@/utils/api";
 import { toast } from "sonner";
 
@@ -16,11 +16,14 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { type FC, useState, useEffect } from "react";
-import { PlusIcon } from "lucide-react";
-import { IconLink } from "@/components/ui/icon-button";
+// import { PlusIcon } from "lucide-react";
+// import { IconLink } from "@/components/ui/icon-button";
 import Link from "next/link";
 import { UserAvatar } from "@/components/user/UserMenu";
-import { UserPlusIcon, UsersIcon } from "@heroicons/react/20/solid";
+import {
+  UserPlusIcon,
+  // UsersIcon
+} from "@heroicons/react/20/solid";
 import { cn } from "@/utils/cn";
 import type { TTeam } from "types";
 

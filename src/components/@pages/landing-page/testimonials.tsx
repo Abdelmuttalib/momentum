@@ -1,50 +1,51 @@
+/* eslint-disable @next/next/no-img-element */
 import React from "react";
 import Container from "./container";
 
-const testimonials = [
-  {
-    name: "Daniella Doe",
-    role: "Mobile dev",
-    avatarSrc: "/images/avatars/avatar.webp",
-    content:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum...",
-  },
-  {
-    name: "Jane doe",
-    role: "Marketing",
-    avatarSrc: "/images/avatars/avatar-1.webp",
-    content:
-      "Lorem ipsum dolor laboriosam deleniti aperiam ab veniam sint non...",
-  },
-  {
-    name: "Yanick Doe",
-    role: "Developer",
-    avatarSrc: "/images/avatars/avatar-2.webp",
-    content:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Architecto...",
-  },
-  {
-    name: "Jane Doe",
-    role: "Mobile dev",
-    avatarSrc: "/images/avatars/avatar-3.webp",
-    content:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Architecto...",
-  },
-  {
-    name: "Andy Doe",
-    role: "Manager",
-    avatarSrc: "/images/avatars/avatar-4.webp",
-    content:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Architecto...",
-  },
-  {
-    name: "Yanndy Doe",
-    role: "Mobile dev",
-    avatarSrc: "/images/avatars/avatar-2.webp",
-    content:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Architecto...",
-  },
-];
+// const testimonials = [
+//   {
+//     name: "Daniella Doe",
+//     role: "Mobile dev",
+//     avatarSrc: "/images/avatars/avatar.webp",
+//     content:
+//       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum...",
+//   },
+//   {
+//     name: "Jane doe",
+//     role: "Marketing",
+//     avatarSrc: "/images/avatars/avatar-1.webp",
+//     content:
+//       "Lorem ipsum dolor laboriosam deleniti aperiam ab veniam sint non...",
+//   },
+//   {
+//     name: "Yanick Doe",
+//     role: "Developer",
+//     avatarSrc: "/images/avatars/avatar-2.webp",
+//     content:
+//       "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Architecto...",
+//   },
+//   {
+//     name: "Jane Doe",
+//     role: "Mobile dev",
+//     avatarSrc: "/images/avatars/avatar-3.webp",
+//     content:
+//       "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Architecto...",
+//   },
+//   {
+//     name: "Andy Doe",
+//     role: "Manager",
+//     avatarSrc: "/images/avatars/avatar-4.webp",
+//     content:
+//       "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Architecto...",
+//   },
+//   {
+//     name: "Yanndy Doe",
+//     role: "Mobile dev",
+//     avatarSrc: "/images/avatars/avatar-2.webp",
+//     content:
+//       "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Architecto...",
+//   },
+// ];
 
 export default function Testimonials() {
   return (

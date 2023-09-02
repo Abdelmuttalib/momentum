@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { Skeleton } from "@/components/ui/skeleton";
-import { TTeam } from "types";
+import type { TTeam } from "types";
 
 function OrganizationTeamLoader() {
   return (

@@ -1,16 +1,16 @@
 import { type GetStaticProps } from "next";
-import Seo from "@/components/Seo";
+// import Seo from "@/components/Seo";
 import { buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
 import { cn } from "@/utils/cn";
 import Hero from "@/components/@pages/landing-page/hero";
 import Stats from "@/components/@pages/landing-page/stats";
-import Testimonials from "@/components/@pages/landing-page/testimonials";
+// import Testimonials from "@/components/@pages/landing-page/testimonials";
 import CallToAction from "@/components/@pages/landing-page/call-to-action";
-import Blog from "@/components/@pages/landing-page/blog";
+// import Blog from "@/components/@pages/landing-page/blog";
 import Features from "@/components/@pages/landing-page/features";
 import Header from "@/components/@pages/landing-page/header";
-import Footer from "@/components/@pages/landing-page/footer";
+// import Footer from "@/components/@pages/landing-page/footer";
 
 // function Header() {
 //   return (

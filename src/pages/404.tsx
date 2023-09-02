@@ -1,15 +1,21 @@
-import { ArrowLeftIcon, HomeIcon } from "@heroicons/react/20/solid";
+import {
+  // ArrowLeftIcon,
+  HomeIcon,
+} from "@heroicons/react/20/solid";
 import * as React from "react";
 
 import Seo from "@/components/Seo";
 import { Layout } from "@/components/layout";
 import Link from "next/link";
 import { cn } from "@/utils/cn";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { useRouter } from "next/router";
+import {
+  // Button,
+  buttonVariants,
+} from "@/components/ui/button";
+// import { useRouter } from "next/router";
 
 export default function NotFoundPage() {
-  const { back } = useRouter();
+  // const { back } = useRouter();
 
   return (
     <Layout pageTitle="404">

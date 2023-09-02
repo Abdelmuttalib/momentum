@@ -9,7 +9,7 @@ import { Role, type Company } from "@prisma/client";
 import type { GetServerSideProps } from "next";
 import { z } from "zod";
 import { api } from "@/utils/api";
-import InvitesList from "@/components/@pages/organization/InvitesList";
+// import InvitesList from "@/components/@pages/organization/InvitesList";
 import NewInvite from "@/components/@pages/organization/NewInvite";
 import { CreateNewTeamDialog } from "../teams";
 import { DataTable } from "@/components/@pages/teams/TeamMembers/data-table";

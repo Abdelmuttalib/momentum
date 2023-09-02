@@ -14,7 +14,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 
 import bcrypt from "bcryptjs";
 import type { Company, Invitation, Role, User } from "@prisma/client";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
+// import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { SupabaseAdapter } from "@auth/supabase-adapter";
 import { default as jsonwebtoken } from "jsonwebtoken";
 
@@ -141,11 +141,6 @@ export const authOptions: NextAuthOptions = {
             user.password
           );
           if (isPasswordMatch) {
-            const company = await prisma.company.findUnique({
-              where: {
-                id: user.companyId,
-              },
-            });
             return Promise.resolve(user);
           }
         } else {

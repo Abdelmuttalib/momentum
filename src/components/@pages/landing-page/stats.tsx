@@ -6,6 +6,7 @@ export default function Stats() {
       <Container>
         <div className="flex-row-reverse justify-between space-y-6 text-gray-600 md:flex md:gap-6 md:space-y-0 lg:items-center lg:gap-12">
           <div className="lg:w-1/2">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/images/team-office-long.png"
               alt="image"

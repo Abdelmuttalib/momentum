@@ -1,8 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import Badge from "@/components/ui/badge";
 import LabelBadge from "@/components/ui/label-badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getTaskStatusBadgeColor } from "@/utils/getBadgeColor";
-import TaskDialog from "./task-dialog";
+// import TaskDialog from "./task-dialog";
 import type { Task } from "@prisma/client";
 import {
   type DraggableProvidedDragHandleProps,

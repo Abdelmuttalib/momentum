@@ -3,7 +3,7 @@ import { z } from "zod";
 
 import {
   createTRPCRouter,
-  publicProcedure,
+  // publicProcedure,
   protectedProcedure,
 } from "@/server/api/trpc";
 import { TaskStatus, type Task, type Label } from "@prisma/client";

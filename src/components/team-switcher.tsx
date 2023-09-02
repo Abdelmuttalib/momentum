@@ -19,7 +19,6 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { api } from "@/utils/api";
-import { useSession } from "next-auth/react";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface TeamSwitcherProps {
@@ -36,7 +35,6 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
   const { teamId } = query;
   const currentTeam = teams?.find((team) => team.id === teamId);
 
-
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
@@ -52,10 +50,12 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
           )}
         >
           <Avatar className="mr-2 h-5 w-5">
-            <AvatarImage
-              src={`https://avatar.vercel.sh/${currentTeam?.name}.png`}
-              alt={currentTeam?.name}
-            />
+            {currentTeam && (
+              <AvatarImage
+                src={`https://avatar.vercel.sh/${currentTeam.name}.png`}
+                alt={currentTeam.name}
+              />
+            )}
             <AvatarFallback className="from-primary-700 to-primary-500 mr-2 h-5 w-5 rounded-full bg-gradient-to-br"></AvatarFallback>
           </Avatar>
           <p className="max-w-[140px] truncate text-left">

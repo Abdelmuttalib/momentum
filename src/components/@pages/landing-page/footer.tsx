@@ -147,6 +147,7 @@ export default function Footer() {
                     href="#"
                     className="flex items-center space-x-3 transition hover:text-primary"
                   >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       className="h-5 w-5"
                       width="32"

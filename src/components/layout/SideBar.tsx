@@ -5,7 +5,6 @@ import {
   Cog6ToothIcon,
   UsersIcon,
 } from "@heroicons/react/20/solid";
-import { useSession } from "next-auth/react";
 import { api } from "@/utils/api";
 import UserMenu from "../user/UserMenu";
 import Link from "next/link";

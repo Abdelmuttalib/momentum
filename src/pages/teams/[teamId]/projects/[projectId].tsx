@@ -4,18 +4,21 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Layout } from "@/components/layout";
 import { prisma } from "@/server/db";
-import { TaskStatus } from "@prisma/client";
+// import { TaskStatus } from "@prisma/client";
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
 import { getServerAuthSession } from "@/server/auth";
-import ProjectSwitcher from "@/components/project-switcher";
-import TeamSwitcher from "@/components/team-switcher";
+// import ProjectSwitcher from "@/components/project-switcher";
+// import TeamSwitcher from "@/components/team-switcher";
 import CreateTask from "@/components/@pages/project/tasks/forms/create-task";
 import TaskBoard from "@/components/@pages/project/tasks/task-board";
 
 type ProjectPageProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 
-const ProjectPage = ({ project, teamId }: ProjectPageProps) => {
+const ProjectPage = ({
+  project,
+}: // teamId
+ProjectPageProps) => {
   return (
     <Layout
       // pageTitle={

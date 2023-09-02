@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import type { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import type { Project, Team, User } from "@prisma/client";
@@ -43,7 +45,7 @@ export const AddUserDialog: FC<{ team: TTeam }> = ({ team }) => {
   const addUserToTeamMutation = api.team.addUserToTeam.useMutation({
     onSuccess: async () => {
       // await apiContext.team.admin.getAllUsers.invalidate();
-      await apiContext.team.admin.getAllTeamsByCompanyId.invalidate();
+      await apiContext.team.getAllTeamsByCompanyId.invalidate();
       await refetchUsers();
       toggleRender(render + 1);
       toast.success("User added to team successfully");
@@ -56,7 +58,7 @@ export const AddUserDialog: FC<{ team: TTeam }> = ({ team }) => {
   const removeUserFromTeam = api.team.removeUserFromTeam.useMutation({
     onSuccess: async () => {
       // await apiContext.team.admin.getAllUsers.invalidate();
-      await apiContext.team.admin.getAllTeamsByCompanyId.invalidate();
+      await apiContext.team.getAllTeamsByCompanyId.invalidate();
       toast.success("User removed from team successfully");
     },
     onError: () => {

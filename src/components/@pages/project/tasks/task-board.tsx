@@ -1,33 +1,24 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import Badge from "@/components/ui/badge";
-import LabelBadge from "@/components/ui/label-badge";
 import { api } from "@/utils/api";
 import { cn } from "@/utils/cn";
-import { getTaskStatusBadgeColor } from "@/utils/getBadgeColor";
 import type {
   Project,
   Task as TaskType,
   TaskStatus,
-  Label as LabelType,
 } from "@prisma/client";
 import { useEffect, useState } from "react";
 import {
   DragDropContext,
-  Draggable,
   type DropResult,
-  Droppable,
 } from "react-beautiful-dnd";
 import { toast } from "sonner";
-import CreateTask from "./forms/create-task";
-import TaskDialog from "./task-dialog";
-import { UserAvatar } from "@/components/user/UserMenu";
-import TaskView from "./task-view";
+// import TaskView from "./task-view";
 import { TaskStatus as TaskStatusNativeEnum } from "@/utils/enums";
 import { Skeleton } from "@/components/ui/skeleton";
-import Task, { TaskLoader } from "./task";
 import TaskBoardColumn from "./task-board-column";
+import { TaskLoader } from "./task";
 
 export default function TaskBoard({ projectId }: { projectId: Project["id"] }) {
   const taskStatuses = Object.keys(TaskStatusNativeEnum) as TaskStatus[];
@@ -219,7 +210,7 @@ export default function TaskBoard({ projectId }: { projectId: Project["id"] }) {
     }
   };
 
-  const [selectedTask, setSelectedTask] = useState<TaskType | null>(null);
+  // const [selectedTask, setSelectedTask] = useState<TaskType | null>(null);
 
   if (isLoadingTasks) {
     return (
@@ -238,7 +229,7 @@ export default function TaskBoard({ projectId }: { projectId: Project["id"] }) {
 
   return (
     <DragDropContext onDragEnd={(e) => void handleOnDragEnd(e)}>
-      {selectedTask && <TaskView task={selectedTask} />}
+      {/* {selectedTask && <TaskView task={selectedTask} />} */}
       <div className="relative z-10 flex h-full min-h-[75svh] w-full min-w-fit flex-col justify-between gap-3 overflow-x-auto pb-6 lg:flex-row 2xl:flex-nowrap">
         <div
           aria-hidden="true"
