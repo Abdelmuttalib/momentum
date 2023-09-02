@@ -1,93 +1,85 @@
 import { type GetServerSideProps } from "next";
-
 import Auth from "@/components/auth/AuthContainer";
 import { LoginBackground } from "@/components/layout";
-
 import { getServerAuthSession } from "@/server/auth";
-import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/20/solid";
+import { ArrowRightIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
-import { useState } from "react";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/utils/cn";
+import { BuildingOfficeIcon } from "@heroicons/react/20/solid";
 
-const LoginPage = () => {
-  const [choice, setChoice] = useState<"login" | null>(null);
+export default function SignInPage() {
   return (
     <LoginBackground>
-      {/* <Auth /> */}
-      {choice === null ? (
-        <div className="flex flex-col gap-3">
-          <h1 className="h1">Welcome back!</h1>
-          <p className="label-sm mb-6 text-gray-500">
-            Get back to your projects quickly by logging in with your email
-          </p>
-          {/* Login */}
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={() => setChoice("login")}
+      <div className="flex flex-col">
+        <Auth />
+
+        <div className="flex w-full items-center gap-4">
+          <hr className="w-full border" />
+          <p>or</p>
+          <hr className="w-full border" />
+        </div>
+
+        <div className="mt-3 flex flex-col gap-y-3">
+          <Link
+            href="/register"
             className={cn(
-              "flex h-32 w-full items-center justify-between rounded-md px-7 text-left hover:border-black focus:outline-none sm:w-96"
+              buttonVariants({
+                variant: "outline",
+              }),
+              "group flex h-[4.5rem] w-full items-center justify-start gap-x-3 rounded-lg px-3.5 text-left hover:border-black focus:outline-none "
             )}
           >
+            <span className="rounded-md border-2 p-2.5 group-hover:border-black group-hover:bg-black group-hover:text-white">
+            <ArrowRightIcon className="h-5 w-5" />
+            </span>
             <span className="flex flex-col">
-              <span className="text-2xl font-bold">Login</span>
-              <span className="pr-3 text-sm font-medium text-gray-400">
-                Login with your credentials
+              <span className="font-semibold">Get Started</span>
+              <span className="text-gray-500">
+                Setup a new company account
+                {/* and invite your team */}
               </span>
             </span>
-            <ArrowRightIcon className="h-7 w-7" />
-          </Button>
+          </Link>
           <Link
             href="/register/user"
             className={cn(
               buttonVariants({
-                variant: "secondary",
+                variant: "outline",
               }),
-              "flex h-32 w-full items-center justify-between rounded-md px-7 text-left hover:border-black focus:outline-none sm:w-96"
+              "group flex h-[4.5rem] w-full items-center justify-start gap-x-3 rounded-lg px-3.5 text-left hover:border-black focus:outline-none"
             )}
           >
-            <span className="flex flex-col">
-              <span className="text-2xl font-bold">Register</span>
-              <span className="pr-3 text-sm font-medium text-gray-400">
-                You need to be invited to be able to register
-              </span>
+            <span className="rounded-md border-2 p-2.5 group-hover:border-black group-hover:bg-black group-hover:text-white">
+              <BuildingOfficeIcon className="h-5 w-5" />
             </span>
-            <ArrowRightIcon className="h-7 w-7" />
-          </Link>
-          <Link
-            href="/register"
-            className="hover:border-primary-100 hover:bg-primary-70 flex w-full items-center justify-between rounded-md border border-gray-200 bg-white px-4 py-8 hover:border-black sm:w-96"
-          >
             <span className="flex flex-col">
-              <span className="text-2xl font-bold">Create a Company</span>
-              <span className="pr-3 text-sm font-medium text-gray-400">
-                Get started by creating a new company account
-              </span>
+              <span className="font-semibold">I&apos;m part of a company</span>
+              <span className="text-gray-500">Join your company</span>
             </span>
-            <ArrowRightIcon className="h-7 w-7" />
           </Link>
-          {/* Register */}
-          {/* Create an Organization */}
         </div>
-      ) : (
-        <div className="w-full max-w-md">
-          <Auth />
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={() => setChoice(null)}
-          >
-            <ArrowLeftIcon className="mr-2 h-4 w-4" />
-            Back
-          </Button>
-        </div>
-      )}
+      </div>
     </LoginBackground>
   );
-};
+}
 
-export default LoginPage;
+// {/* Login */}
+// <Button
+// type="button"
+// variant="outline"
+// className={cn(
+//   "group flex h-[4.5rem] w-full items-center justify-start gap-x-3 rounded-lg px-3.5 text-left hover:border-black focus:outline-none"
+// )}
+// >
+// <span className="rounded-md border-2 p-2.5 group-hover:border-black group-hover:bg-black group-hover:text-gray-100">
+//   <LogIn className="h-5 w-5" />
+// </span>
+// <span className="flex flex-col">
+//   <span className="font-semibold">Sign in</span>
+//   <span className="text-gray-500">sign in with your credentials</span>
+// </span>
+// </Button>
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getServerAuthSession(context);
@@ -95,11 +87,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   if (session?.user) {
     return {
       redirect: {
-        destination: "/dashboard",
+        destination: "/teams",
         permanent: false,
       },
     };
   }
+
   return {
     props: {
       session,

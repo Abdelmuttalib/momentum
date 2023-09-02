@@ -192,13 +192,13 @@ export default function LandingPage() {
   return (
     <>
       <Header />
-      <main className="space-y-40 dark:bg-gray-900">
+      <main className="mb-40 space-y-40 dark:bg-gray-900">
         <Hero />
-        {/* <Features />
+        <Features />
         <Stats />
-        <Testimonials />
+        {/* <Testimonials /> */}
         <CallToAction />
-        <Blog />
+        {/* <Blog />
         <Footer /> */}
       </main>
       <footer className="px-8 py-4 text-gray-500">

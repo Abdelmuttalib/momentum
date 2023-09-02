@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, ErrorOption } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -60,26 +60,31 @@ function CreateUserAccountForm() {
   }
 
   return (
-    <div className="w-full max-w-md px-6 py-4">
-      <h1 className="h1">Get Started</h1>
+    <div className="w-full max-w-md space-y-6 px-6 py-4">
+      <div>
+        <h1 className="h3 text-gray-800 dark:text-gray-200">Get Started</h1>
 
-      <p className="text-gray-700">get started by creating your account.</p>
+        <p className="text-gray-700">get started by creating your account.</p>
+      </div>
 
       <form
-        className="mt-10 flex flex-col gap-3"
+        className="flex flex-col gap-3"
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onSubmit={handleSubmit(onSubmit)}
       >
         {/* Email Input */}
         <div>
-          <label htmlFor="email">Email</label>
+          <label htmlFor="email" className="block text-sm text-gray-600">
+            Email
+          </label>
           <Input
             id="email"
             {...register("email")}
             type="email"
             inputMode="email"
             placeholder="email@mail.com"
-            className="mt-0.5"
+            className={cn({ "border-red-500": errors.email })}
+            error={errors?.email}
           />
           {errors.email && (
             <p className="mt-0.5 text-sm text-red-500">
@@ -91,7 +96,7 @@ function CreateUserAccountForm() {
         {/* First Name Input */}
         <div className="flex w-full flex-col gap-3 sm:flex-row">
           <div className="w-full">
-            <label htmlFor="firstName" className="block text-gray-600">
+            <label htmlFor="firstName" className="block text-sm text-gray-600">
               First Name
             </label>
             <Input
@@ -99,7 +104,7 @@ function CreateUserAccountForm() {
               type="firstName"
               {...register("firstName", { required: true })}
               placeholder="first name"
-              className={cn("mt-0.5", { "border-red-500": errors.firstName })}
+              error={errors?.firstName}
             />
             {errors.firstName && (
               <p className="mt-0.5 text-sm text-red-500">
@@ -109,7 +114,7 @@ function CreateUserAccountForm() {
           </div>
 
           <div className="w-full">
-            <label htmlFor="lastName" className="block text-gray-600">
+            <label htmlFor="lastName" className="block text-sm text-gray-600">
               Last Name
             </label>
             <Input
@@ -117,7 +122,7 @@ function CreateUserAccountForm() {
               type="lastName"
               {...register("lastName", { required: true })}
               placeholder="last name"
-              className={cn("mt-0.5", { "border-red-500": errors.lastName })}
+              error={errors?.lastName}
             />
             {errors.lastName && (
               <p className="mt-0.5 text-sm text-red-500">
@@ -129,7 +134,7 @@ function CreateUserAccountForm() {
 
         {/* Password Input */}
         <div>
-          <label htmlFor="password" className="block text-gray-600">
+          <label htmlFor="password" className="block text-sm text-gray-600">
             Password
           </label>
           <Input
@@ -137,7 +142,7 @@ function CreateUserAccountForm() {
             type="password"
             {...register("password", { required: true })}
             placeholder="password"
-            className={cn("mt-0.5", { "border-red-500": errors.password })}
+            error={errors?.password}
           />
           {errors.password && (
             <p className="mt-0.5 text-sm text-red-500">
@@ -148,7 +153,10 @@ function CreateUserAccountForm() {
 
         {/* Confirm Password Input */}
         <div>
-          <label htmlFor="confirmPassword" className="block text-gray-600">
+          <label
+            htmlFor="confirmPassword"
+            className="block text-sm text-gray-600"
+          >
             Confirm Password
           </label>
           <Input
@@ -156,7 +164,7 @@ function CreateUserAccountForm() {
             type="password"
             {...register("confirmPassword", { required: true })}
             placeholder="confirm password"
-            className={cn("mt-0.5", {
+            className={cn({
               "border-red-500": errors.confirmPassword,
             })}
           />
@@ -183,7 +191,7 @@ function CreateUserAccountForm() {
         <div className=" text-sm font-medium text-gray-700 sm:mb-4 sm:flex sm:items-center sm:gap-1">
           <Button
             type="button"
-            variant="secondary"
+            variant="outline"
             onClick={() => back()}
             disabled={registerInvitedUserMutation.isLoading}
           >

@@ -5,7 +5,6 @@
  * for Docker builds.
  */
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-import nextTranslate from "next-translate-plugin";
 await import("./src/env.mjs");
 
 /** @type {import("next").NextConfig} */
@@ -23,4 +22,4 @@ const nextConfig = {
   //   useSuspense: false,
   // },
 };
-export default nextTranslate(nextConfig);
+export default nextConfig;

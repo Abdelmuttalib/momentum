@@ -1,7 +1,7 @@
 import {
   CreateAdminAccountForm,
-  CreateOrganizationForm,
-} from "@/components/auth/CreateOrganizationForm";
+  CreateCompanyForm,
+} from "@/components/auth/CreateCompanyForm";
 import { LoginBackground } from "@/components/layout";
 import { useState } from "react";
 
@@ -16,7 +16,7 @@ export default function RegisterPage() {
     <LoginBackground>
       <div className="flex flex-col items-center justify-center px-4">
         {registerStep === "company" && (
-          <CreateOrganizationForm
+          <CreateCompanyForm
             setRegisterStep={setRegisterStep}
             setCompanyName={setCompanyName}
           />

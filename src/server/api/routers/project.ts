@@ -20,11 +20,13 @@ export const projectRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
+      const companyId = ctx.session.user.company.id;
       const newProject = await ctx.prisma.project.create({
         data: {
           name: input.name,
           status: input.status,
           teamId: input.teamId,
+          companyId: companyId,
         },
       });
       return newProject;

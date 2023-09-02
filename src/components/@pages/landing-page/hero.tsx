@@ -36,7 +36,7 @@ export default function Hero() {
                 stay organized and focused.
               </p>
               <div className="flex flex-col flex-wrap justify-center gap-x-4 gap-y-2 sm:flex-row sm:gap-y-4">
-                <ButtonLink href="/" size="lg">
+                <ButtonLink href="/sign-in" size="lg">
                   Get Started
                 </ButtonLink>
 

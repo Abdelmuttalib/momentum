@@ -47,21 +47,16 @@ export const organizationRouter = createTRPCRouter({
       return { newCompany, newAdminUser };
     }),
 
-  getAllInvitations: protectedProcedure
-    .input(
-      z.object({
-        companyId: z.string().nonempty(),
-      })
-    )
-    .query(async ({ input, ctx }) => {
-      const invitations = await ctx.prisma.invitation.findMany({
-        where: {
-          companyId: input.companyId,
-        },
-      });
+  getAllInvitations: protectedProcedure.query(async ({ ctx }) => {
+    const companyId = ctx.session.user.company.id;
+    const invitations = await ctx.prisma.invitation.findMany({
+      where: {
+        companyId,
+      },
+    });
 
-      return invitations;
-    }),
+    return invitations;
+  }),
 
   inviteUserToCompany: protectedProcedure
     .input(
@@ -73,6 +68,26 @@ export const organizationRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
+      const existingUser = await ctx.prisma.user.findUnique({
+        where: {
+          email: input.email,
+        },
+      });
+
+      if (existingUser) {
+        throw new Error("User already exists");
+      }
+
+      const existingInvite = await ctx.prisma.invitation.findUnique({
+        where: {
+          email: input.email,
+        },
+      });
+
+      if (existingInvite) {
+        throw new Error("User already invited");
+      }
+
       const newInvite = await ctx.prisma.invitation.create({
         data: {
           ...input,
@@ -97,7 +112,6 @@ export const organizationRouter = createTRPCRouter({
           email: input.email,
         },
       });
-
 
       if (!inviteData) {
         throw new Error("No invitation found");

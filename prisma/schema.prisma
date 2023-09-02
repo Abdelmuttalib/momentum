@@ -2,8 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["jsonProtocol"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -81,6 +80,8 @@ model Company {
   users       User[]
   teams       Team[]
   invitations Invitation[]
+  tasks       Task[]
+  projects    Project[]
 }
 
 model Team {
@@ -90,6 +91,7 @@ model Team {
   projects  Project[]
   companyId String
   company   Company   @relation(fields: [companyId], references: [id])
+  tasks     Task[]
 }
 
 model Project {
@@ -101,6 +103,9 @@ model Project {
   tasks     Task[]
   teamId    String
   team      Team          @relation(fields: [teamId], references: [id])
+
+  companyId String // Add companyId field to relate project to company
+  company   Company @relation(fields: [companyId], references: [id])
 }
 
 enum ProjectStatus {
@@ -122,7 +127,21 @@ model Task {
   assignee    User?        @relation(fields: [assigneeId], references: [id])
   projectId   String
   project     Project      @relation(fields: [projectId], references: [id])
+  teamId      String
+  team        Team         @relation(fields: [teamId], references: [id])
+  companyId   String
+  company     Company      @relation(fields: [companyId], references: [id])
   comments    Comment[]
+  labels      Label[]      @relation("TaskLabels")
+
+  orderIndex Int
+}
+
+model Label {
+  id    String @id @default(uuid())
+  name  String
+  color String
+  tasks Task[] @relation("TaskLabels")
 }
 
 enum TaskStatus {
@@ -130,7 +149,6 @@ enum TaskStatus {
   TO_DO
   IN_PROGRESS
   IN_REVIEW
-  REVISION
   COMPLETED
   CANCELED
 }

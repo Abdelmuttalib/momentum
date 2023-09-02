@@ -1,7 +1,7 @@
 import React from "react";
 import Container from "./container";
 import { ButtonLink } from "@/components/ui/button";
-// import ThemeToggle from "@/components/theme-toggle";
+import ThemeToggle from "@/components/theme-toggle";
 
 export default function Header() {
   return (
@@ -59,7 +59,7 @@ export default function Header() {
               aria-hidden="true"
               className="fixed inset-0 z-10 h-screen w-screen origin-bottom scale-y-0 bg-white/70 backdrop-blur-2xl transition duration-500 peer-checked:origin-top peer-checked:scale-y-100 dark:bg-gray-900/70 lg:hidden"
             ></div>
-            {/* <div
+            <div
               className="invisible absolute left-0 top-full z-20 w-full origin-top translate-y-1 scale-95 flex-col flex-wrap justify-end gap-6 rounded-3xl border border-gray-100 p-8 opacity-0 shadow-2xl shadow-gray-600/10 transition-all duration-300 
                             peer-checked:visible peer-checked:scale-100 peer-checked:opacity-100 dark:border-gray-700 dark:shadow-none lg:visible lg:relative lg:flex lg:w-7/12 lg:translate-y-0 lg:scale-100 lg:flex-row lg:items-center
                             lg:gap-0 lg:border-none lg:bg-transparent lg:p-0 
@@ -83,22 +83,14 @@ export default function Header() {
                       <span>Solution</span>
                     </a>
                   </li>
-                  <li>
+                  {/* <li>
                     <a
                       href="#testimonials"
                       className="block transition hover:text-brand dark:hover:text-brand-400 md:px-4"
                     >
                       <span>Testimonials</span>
                     </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#blog"
-                      className="block transition hover:text-brand dark:hover:text-brand-400 md:px-4"
-                    >
-                      <span>Blog</span>
-                    </a>
-                  </li>
+                  </li> */}
                 </ul>
               </div>
 
@@ -111,11 +103,6 @@ export default function Header() {
                   Sign In
                 </ButtonLink>
               </div>
-            </div> */}
-            <div className="mt-12 lg:mt-0">
-              <ButtonLink href="/sign-in" variant="outline">
-                Sign In
-              </ButtonLink>
             </div>
           </div>
         </Container>

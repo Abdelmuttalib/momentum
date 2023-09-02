@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
@@ -12,8 +13,10 @@ import { prisma } from "@/server/db";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 import bcrypt from "bcryptjs";
-import type { Invitation, Role, User } from "@prisma/client";
+import type { Company, Invitation, Role, User } from "@prisma/client";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { SupabaseAdapter } from "@auth/supabase-adapter";
+import { default as jsonwebtoken } from "jsonwebtoken";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -30,9 +33,10 @@ declare module "next-auth" {
       email: string;
       image?: string;
       role: Role;
-      companyId: string;
+      // companyId: string;
       emailVerified: boolean;
       sentInvitations?: Invitation[];
+      company: Company;
     } & DefaultSession["user"];
   }
 }
@@ -41,9 +45,13 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
-  adapter: PrismaAdapter(prisma),
+  adapter: SupabaseAdapter({
+    url: process.env.NEXT_PUBLIC_SUPABASE_URL,
+    secret: process.env.SUPABASE_SERVICE_ROLE_KEY,
+  }),
+  // adapter: PrismaAdapter(prisma),
   callbacks: {
-    jwt({ token, user }: { token: any; user: User }) {
+    async jwt({ token, user }: { token: any; user: User }) {
       // if (user && user.phoneNumber) {
       //   token.phoneNumber = user.phoneNumber;
       // }
@@ -52,29 +60,53 @@ export const authOptions: NextAuthOptions = {
       // }
       // return token;
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      let company: Company;
+
+      if (user && user.companyId) {
+        company = await prisma.company.findUnique({
+          where: {
+            id: user.companyId,
+          },
+        });
+      }
       return {
         ...token,
         ...(user && user.id ? { id: user.id } : {}),
+        ...(user && user.firstName ? { firstName: user.firstName } : {}),
+        ...(user && user.lastName ? { lastName: user.lastName } : {}),
         ...(user && user.email ? { email: user.email } : {}),
         ...(user && user.emailVerified
           ? { emailVerified: user.emailVerified }
           : {}),
         ...(user && user.role ? { role: user.role } : {}),
-        ...(user && user.companyId ? { companyId: user.companyId } : {}),
+        ...(company ? { company: company } : {}),
       };
     },
     session: ({ session, token }) => {
+      const signingSecret = process.env.SUPABASE_JWT_SECRET;
+      if (signingSecret) {
+        const payload = {
+          aud: "authenticated",
+          exp: Math.floor(new Date(session.expires).getTime() / 1000),
+          sub: token.id,
+          email: token.email,
+          role: "authenticated",
+        };
+        session.supabaseAccessToken = jsonwebtoken.sign(payload, signingSecret);
+      }
       return {
         ...session,
         user: {
           ...session.user,
           ...(token && token.id ? { id: token.id } : {}),
+          ...(token && token.firstName ? { firstName: token.firstName } : {}),
+          ...(token && token.lastName ? { lastName: token.lastName } : {}),
           ...(token && token.email ? { email: token.email } : {}),
           ...(token && token.emailVerified
             ? { emailVerified: token.emailVerified }
             : {}),
           ...(token && token.role ? { role: token.role } : {}),
-          ...(token && token.companyId ? { companyId: token.companyId } : {}),
+          ...(token && token.company ? { company: token.company } : {}),
         },
       };
     },
@@ -93,6 +125,9 @@ export const authOptions: NextAuthOptions = {
           where: {
             email: credentials?.email,
           },
+          include: {
+            company: true,
+          },
         });
 
         if (!user) {
@@ -106,6 +141,11 @@ export const authOptions: NextAuthOptions = {
             user.password
           );
           if (isPasswordMatch) {
+            const company = await prisma.company.findUnique({
+              where: {
+                id: user.companyId,
+              },
+            });
             return Promise.resolve(user);
           }
         } else {

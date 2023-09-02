@@ -5,8 +5,8 @@ export default function ToastProvider() {
     <Toaster
       position="top-right"
       richColors
-      expand
-      visibleToasts={6}
+      // expand
+      // visibleToasts={6}
       closeButton
     />
   );

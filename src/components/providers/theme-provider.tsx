@@ -5,5 +5,9 @@ interface ThemeProviderProps {
 }
 
 export default function ThemeProvider({ children }: ThemeProviderProps) {
-  return <NextThemeProvider defaultTheme="light">{children}</NextThemeProvider>;
+  return (
+    <NextThemeProvider defaultTheme="system" attribute="class">
+      {children}
+    </NextThemeProvider>
+  );
 }

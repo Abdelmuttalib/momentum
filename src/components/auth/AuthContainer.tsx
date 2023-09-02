@@ -1,21 +1,9 @@
-import React, { useState } from "react";
 import SignInForm from "./SignInForm";
-import CreateAccountForm from "./CreateAccountForm";
 
-export type TAuthType = "sign-in" | "create-account";
-
-const Auth = () => {
-  const [authType, setAuthType] = useState<TAuthType>("sign-in");
-
+export default function Auth() {
   return (
-    <div className="flex w-full items-center justify-center">
-      {authType === "sign-in" ? (
-        <SignInForm setAuthType={setAuthType} />
-      ) : (
-        <CreateAccountForm setAuthType={setAuthType} />
-      )}
+    <div className="relative flex w-full items-center justify-center">
+      <SignInForm />
     </div>
   );
-};
-
-export default Auth;
+}

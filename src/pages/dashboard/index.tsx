@@ -18,7 +18,7 @@ export default function DashboardPage({ teams }: DashboardPageProps) {
           teams.map((team) => (
             <Link
               key={team.id}
-              href={`/dashboard/team/${team.id}`}
+              href={`/team/${team.id}`}
               className="dark:text-primary-100 dark:hover:text-primary-300 flex h-36 items-center justify-between rounded-lg border-2 border-gray-200 bg-white/[0.3] px-6 hover:border-gray-800 dark:border-2 dark:border-gray-800 dark:bg-gray-900"
             >
               <h3 className="h5">{team.name}</h3>
@@ -42,7 +42,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
-  const companyId = session.user.companyId;
+  const companyId = session.user.company.id;
 
   const teams = await prisma.team.findMany({
     where: {

@@ -2,9 +2,9 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 
 const defaultMeta = {
-  title: "InSpect",
-  siteName: "InSpect",
-  description: "InSpect v2.0",
+  title: "Momentum",
+  siteName: "Momentum",
+  description: "Momentum, The Open Source issue tracking tool",
   url: "",
   type: "website",
   robots: "follow, index",
@@ -52,7 +52,7 @@ export default function Seo(props: SeoProps) {
       <meta name="image" property="og:image" content={meta.image} />
       {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:site" content="@th_clarence" />
+      <meta name="twitter:site" content="@Abdelmuttalib_" />
       <meta name="twitter:title" content={meta.title} />
       <meta name="twitter:description" content={meta.description} />
       <meta name="twitter:image" content={meta.image} />
@@ -67,7 +67,7 @@ export default function Seo(props: SeoProps) {
           <meta
             name="author"
             property="article:author"
-            content="Theodorus Clarence"
+            content="Abdelmuttalib Ahmed"
           />
         </>
       )}

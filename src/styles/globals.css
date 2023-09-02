@@ -6,6 +6,37 @@
 
 @layer base {
   :root {
+    --background: 240 100% 99.2%;
+    --foreground: 210 18% 14.5%;
+
+    --muted: 210 15% 54.9%;
+    --muted-foreground: 210 18% 68.6%;
+
+    --popover: 240 100% 99.2%;
+    --popover-foreground: 210 18% 14.5%;
+
+    --card: 240 100% 99.2%;
+    --card-foreground: 210 18% 14.5%;
+
+    --border: 213 7% 93.3%;
+    --input: 245 74% 38.8%;
+
+    --primary: 245 74% 38.8%;
+    --primary-foreground: 0 0% 98.8%;
+
+    --secondary: 240 23% 91.2%;
+    --secondary-foreground: 210 9% 6.1%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --ring: 236 28% 83.9%;
+
+    --radius: 0.6rem;
+    /* 
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 
@@ -35,7 +66,7 @@
 
     --ring: 215 20.2% 65.1%;
 
-    --radius: 0.5rem;
+    --radius: 0.6rem; */
   }
 
   .dark {
@@ -75,27 +106,191 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-gray-800;
+    @apply bg-[#fefffe] tracking-tight text-gray-800 dark:bg-gray-900 dark:text-gray-200;
     font-family: "Inter", sans-serif;
   }
 
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  ul,
+  ol,
+  li,
+  blockquote,
+  hr,
+  label {
+    @apply text-gray-800 dark:text-gray-200;
+  }
+
+  .min-w-main {
+    @apply min-w-[calc(100vw-224px)];
+  }
+
+  .display-lg {
+    font-size: 6rem;
+    line-height: 120%;
+    font-weight: 600;
+    letter-spacing: -0.05em;
+  }
+  .display-md {
+    font-size: 5.334rem;
+    line-height: 120%;
+    font-weight: 600;
+    letter-spacing: -0.05em;
+  }
+  .display-sm {
+    font-size: 4.5rem;
+    line-height: 120%;
+    font-weight: 600;
+    letter-spacing: -0.05em;
+  }
+
+  /* Md */
+  .display-lg-light {
+    font-size: 6rem;
+    line-height: 120%;
+    font-weight: 500;
+    letter-spacing: -0.05em;
+  }
+  .display-md-light {
+    font-size: 5.334rem;
+    line-height: 120%;
+    font-weight: 500;
+    letter-spacing: -0.05em;
+  }
+  .display-sm-light {
+    font-size: 4.5rem;
+    line-height: 120%;
+    font-weight: 500;
+    letter-spacing: -0.05em;
+  }
+
+  /* Headings */
   .h1 {
-    @apply scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl;
+    font-size: 3.5rem;
+    line-height: 120%;
+    font-weight: 700;
+    letter-spacing: -0.05em;
   }
+  .h1-light {
+    font-size: 3.5rem;
+    line-height: 120%;
+    font-weight: 600;
+    letter-spacing: -0.05em;
+  }
+
   .h2 {
-    @apply scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0;
+    font-size: 3rem;
+    line-height: 120%;
+    font-weight: 700;
+    letter-spacing: -0.05em;
   }
+  .h2-light {
+    font-size: 3rem;
+    line-height: 120%;
+    font-weight: 600;
+    letter-spacing: -0.05em;
+  }
+
   .h3 {
-    @apply scroll-m-20 text-2xl font-semibold tracking-tight;
+    font-size: 2.3331rem;
+    line-height: 120%;
+    font-weight: 700;
+    letter-spacing: -0.05em;
   }
+  .h3-light {
+    font-size: 2.3331rem;
+    line-height: 120%;
+    font-weight: 600;
+    letter-spacing: -0.05em;
+  }
+
   .h4 {
-    @apply scroll-m-20 text-xl font-semibold tracking-tight;
+    font-size: 2rem;
+    line-height: 150%;
+    font-weight: 700;
+    letter-spacing: -0.05em;
   }
+  .h4-light {
+    font-size: 2rem;
+    line-height: 150%;
+    font-weight: 600;
+    letter-spacing: -0.05em;
+  }
+
   .h5 {
-    @apply scroll-m-20 text-lg font-semibold tracking-tight;
+    font-size: 1.5rem;
+    line-height: 150%;
+    font-weight: 700;
+    letter-spacing: -0.05em;
   }
+  .h5-light {
+    font-size: 1.5rem;
+    line-height: 150%;
+    font-weight: 600;
+    letter-spacing: -0.05em;
+  }
+
   .h6 {
-    @apply scroll-m-20 text-base font-semibold tracking-tight;
+    font-size: 1.3331rem;
+    line-height: 150%;
+    font-weight: 700;
+    letter-spacing: -0.05em;
+  }
+  .h6-light {
+    font-size: 1.3331rem;
+    line-height: 150%;
+    font-weight: 600;
+    letter-spacing: -0.05em;
+  }
+
+  /* Body/Paragraph */
+  .body-lg {
+    font-size: 1.3331rem;
+    line-height: 150%;
+  }
+
+  .body-md {
+    font-size: 1.1669rem;
+    line-height: 150%;
+  }
+
+  .body-sm {
+    font-size: 1rem;
+    line-height: 150%;
+  }
+
+  /* Caption/Label Text */
+
+  .label-lg {
+    font-size: 1.3331rem;
+    line-height: 110%;
+    font-weight: 500;
+  }
+
+  .label-md {
+    font-size: 1.1669rem;
+    line-height: 110%;
+    font-weight: 500;
+  }
+
+  .label-sm {
+    font-size: 1rem;
+    line-height: 110%;
+    font-weight: 500;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply tracking-tighter;
   }
 
   .p {
@@ -123,5 +318,19 @@
 
   .muted {
     @apply text-muted-foreground;
+  }
+
+  .link {
+    @apply font-medium underline underline-offset-4;
+  }
+
+  /* text select color */
+  ::-moz-selection {
+    /* Code for Firefox */
+    @apply bg-brand-600 text-white;
+  }
+
+  ::selection {
+    @apply bg-brand-600 text-white;
   }
 }

@@ -57,9 +57,13 @@ import { cn } from "@/utils/cn";
 export function UserAvatar({
   user,
   size = "default",
+  triggerClassName,
+  contentClassName,
 }: {
   user: UserType;
   size?: "default" | "sm";
+  triggerClassName?: string;
+  contentClassName?: string;
 }) {
   return (
     <TooltipProvider>
@@ -71,13 +75,14 @@ export function UserAvatar({
               {
                 "h-8 w-8 text-lg": size === "default",
                 "h-6 w-6": size === "sm",
-              }
+              },
+              triggerClassName
             )}
           >
             {user?.firstName ? user.firstName[0] : user.email[0]}
           </div>
         </TooltipTrigger>
-        <TooltipContent className="bg-gray-900">
+        <TooltipContent className={cn("bg-gray-900", contentClassName)}>
           <div className="text-sm">
             <p className="font-medium">
               {user.firstName} {user.lastName}

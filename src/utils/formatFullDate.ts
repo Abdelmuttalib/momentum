@@ -8,3 +8,4 @@ export function formatFullDate(date: Date | string) {
     minute: "numeric",
   });
 }
+  
