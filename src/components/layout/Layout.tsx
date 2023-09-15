@@ -1,24 +1,10 @@
-// import { useRouter } from "next/router";
-import {
-  type ReactNode,
-  // useState
-} from "react";
+import { type ReactNode } from "react";
 
 import { cn } from "@/utils/cn";
-
-// import { IconButton } from "@/components/ui/icon-button";
-
-// import SideBar from "./SideBar";
-
-// import { Bars3Icon } from "@heroicons/react/20/solid";
-// import UserAccountMenu from "../user/UserMenu";
 import { Button } from "../ui/button";
 import { LogOut } from "lucide-react";
 import { signOut } from "next-auth/react";
 import ThemeToggle from "../theme-toggle";
-// import Link from "next/link";
-// import Switcher from "../Switcher";
-// import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
 import MainSwitcher from "../Switcher";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -29,8 +15,7 @@ interface HeaderProps {
 }
 // Header
 function Header({ pageTitle, actions }: HeaderProps) {
-  // const [showSidebarMenu, setShowSidebarMenu] = useState(false);
-  const { pathname, query, asPath } = useRouter();
+  const { query, asPath } = useRouter();
   const { teamId, projectId } = query as { teamId: string; projectId: string };
 
   const companyPathNavLinks = [
@@ -117,7 +102,7 @@ function Header({ pageTitle, actions }: HeaderProps) {
             </div> */}
             </div>
 
-            <div className="mt-1.5 flex hidden items-center gap-2 sm:flex">
+            <div className="mt-1.5 hidden items-center gap-2 sm:flex">
               <ThemeToggle />
               {/* <UserAccountMenu /> */}
               <Button

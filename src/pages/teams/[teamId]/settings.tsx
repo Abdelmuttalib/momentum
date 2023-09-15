@@ -38,9 +38,8 @@ export default function TeamSettingsPage({ team }: TeamSettingsPageProps) {
   const { data: teamData } = api.team.getTeam.useQuery({
     teamId: team.id,
   });
-  console.log("ddd: ", teamData);
 
-  const apiContext = api.useContext();
+  // const apiContext = api.useContext();
 
   const updateTeamNameMutation = api.team.updateTeamName.useMutation({
     onSuccess: () => {
@@ -63,9 +62,8 @@ export default function TeamSettingsPage({ team }: TeamSettingsPageProps) {
       name,
     });
   }
-  console.log(team);
-  const { data: companyTeams, isLoading } =
-    api.team.getAllTeamsByCompanyId.useQuery();
+  // const { data: companyTeams, isLoading } =
+  //   api.team.getAllTeamsByCompanyId.useQuery();
 
   // getCompanyMembersNotInTeam: protectedProcedure
   // .input(
@@ -106,6 +104,7 @@ export default function TeamSettingsPage({ team }: TeamSettingsPageProps) {
             </div>
             <div>
               <form
+                // eslint-disable-next-line @typescript-eslint/no-misused-promises
                 onSubmit={handleSubmit(onSubmit)}
                 className="flex flex-col gap-5 divide-y-2"
               >
@@ -189,7 +188,6 @@ export const getServerSideProps: GetServerSideProps = async ({
     };
   }
 
-  const companyId = userSession?.user?.company.id;
   const teamId = params?.teamId as string;
 
   if (!teamId) {

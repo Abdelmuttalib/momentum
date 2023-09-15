@@ -1,11 +1,8 @@
 import React from "react";
 import Container from "./container";
 import { ButtonLink } from "@/components/ui/button";
-import Image from "next/image";
-import { useTheme } from "next-themes";
 
 export default function Hero() {
-  const { theme } = useTheme();
   return (
     <div className="relative flex min-h-[100svh] pb-24 pt-36" id="home">
       <Container>

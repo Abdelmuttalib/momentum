@@ -50,9 +50,9 @@ export function SettingsPageTabs() {
   );
 }
 
-interface CompanySettingsPageProps {
-  company: Company;
-}
+// interface CompanySettingsPageProps {
+//   company: Company;
+// }
 
 const companyInfoFormSchema = z.object({
   name: z.string(),
@@ -60,7 +60,7 @@ const companyInfoFormSchema = z.object({
 
 type CompanyInfoFormValues = z.infer<typeof companyInfoFormSchema>;
 
-export default function SettingsPage({ company }: CompanySettingsPageProps) {
+export default function SettingsPage() {
   return (
     <Layout pageTitle="">
       <Container>
@@ -77,13 +77,19 @@ export function CompanySettings() {
   const { data: companyData, isLoading: isLoadingCompanyData } =
     api.company.getCompany.useQuery();
 
-  const { data: invitationsData, isLoading: isLoadingInvitations } =
-    api.company.getAllInvitations.useQuery();
+  const {
+    data: invitationsData,
+    // isLoading: isLoadingInvitations
+  } = api.company.getAllInvitations.useQuery();
 
-  const { data: companyMembersData, isLoading: isLoadingCompanyMembers } =
-    api.company.getCompanyMembers.useQuery();
-  const { data: companyTeams, isLoading } =
-    api.team.getAllTeamsByCompanyId.useQuery();
+  const {
+    data: companyMembersData,
+    // isLoading: isLoadingCompanyMembers
+  } = api.company.getCompanyMembers.useQuery();
+  const {
+    data: companyTeams,
+    // isLoading
+  } = api.team.getAllTeamsByCompanyId.useQuery();
   const {
     register,
     handleSubmit,

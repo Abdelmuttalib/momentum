@@ -18,7 +18,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { User, UserAvatar } from "@/components/user/UserMenu";
+import { UserAvatar } from "@/components/user/UserMenu";
 import { api } from "@/utils/api";
 import { cn } from "@/utils/cn";
 import { Priority } from "@/utils/enums";

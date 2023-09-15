@@ -10,20 +10,14 @@ import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { type FC, useState, useEffect, ReactNode } from "react";
-// import { PlusIcon } from "lucide-react";
-// import { IconLink } from "@/components/ui/icon-button";
+import { type FC, useState, useEffect, type ReactNode } from "react";
 import Link from "next/link";
 import { UserAvatar } from "@/components/user/UserMenu";
-import {
-  UserPlusIcon,
-  // UsersIcon
-} from "@heroicons/react/20/solid";
+import { UserPlusIcon } from "@heroicons/react/20/solid";
 import { cn } from "@/utils/cn";
 import type { TTeam } from "types";
 import { UsersIcon } from "lucide-react";

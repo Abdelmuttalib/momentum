@@ -34,10 +34,10 @@ export default function CompanyPage({
   companyData,
   userSession,
 }: CompanyPageProps) {
-  const [id, companyId]: [string, string] = [
-    userSession?.user.id,
-    userSession?.user.company.id,
-  ];
+  // const [id, companyId]: [string, string] = [
+  //   userSession?.user.id,
+  //   userSession?.user.company.id,
+  // ];
 
   const companyTeams = api.team.getAllTeamsByCompanyId.useQuery();
 
