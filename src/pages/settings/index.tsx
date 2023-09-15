@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -148,6 +149,7 @@ export function CompanySettings() {
             <div className="flex flex-col gap-2 pb-8">
               <div className="py-2">
                 <form
+                  // eslint-disable-next-line @typescript-eslint/no-misused-promises
                   onSubmit={handleSubmit(onSubmit)}
                   className="flex flex-col gap-5 divide-y-2"
                 >
@@ -174,9 +176,11 @@ export function CompanySettings() {
                         }
                         error={errors?.name}
                       />
-                      <p className="absolute -bottom-5 text-xs text-gray-500">
-                        Date Created: {formatFullDate(companyData?.createdAt)}
-                      </p>
+                      {companyData?.createdAt && (
+                        <p className="absolute -bottom-5 text-xs text-gray-500">
+                          Date Created: {formatFullDate(companyData.createdAt)}
+                        </p>
+                      )}
                     </div>
                     <Button
                       type="submit"

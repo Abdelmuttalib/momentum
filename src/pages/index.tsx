@@ -4,7 +4,7 @@ import { buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
 import { cn } from "@/utils/cn";
 import Hero from "@/components/@pages/landing-page/hero";
-import Stats from "@/components/@pages/landing-page/stats";
+// import Stats from "@/components/@pages/landing-page/stats";
 // import Testimonials from "@/components/@pages/landing-page/testimonials";
 import CallToAction from "@/components/@pages/landing-page/call-to-action";
 // import Blog from "@/components/@pages/landing-page/blog";
@@ -19,46 +19,6 @@ import Header from "@/components/@pages/landing-page/header";
 //     </header>
 //   );
 // }
-
-function HeroSection() {
-  return (
-    <section className="mx-auto flex min-h-[90svh] max-w-2xl items-center text-slate-900 lg:max-w-5xl">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl lg:text-7xl">
-          The Open Source issue tracking tool.
-        </h1>
-        <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-gray-600">
-          Supercharge Your Team&apos;s Productivity. Momentum is a powerful task
-          management app designed to help your team stay organized and focused.
-        </p>
-        <div className="mt-10 flex items-center justify-center gap-x-3">
-          <Link
-            href="/sign-in"
-            className={cn(
-              buttonVariants({
-                variant: "primary",
-                size: "lg",
-              })
-            )}
-          >
-            Get Started
-          </Link>
-          <Link
-            href="/sign-in"
-            className={cn(
-              buttonVariants({
-                variant: "outline",
-                size: "lg",
-              })
-            )}
-          >
-            Sign in
-          </Link>
-        </div>
-      </div>
-    </section>
-  );
-}
 
 // function Features() {
 //   return (
