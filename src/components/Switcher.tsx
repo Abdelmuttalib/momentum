@@ -44,13 +44,20 @@ import { api } from "@/utils/api";
 import { useRouter } from "next/router";
 import type { Project, Team } from "@prisma/client";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<
   typeof PopoverTrigger
 >;
 
 export default function MainSwitcher() {
+  const { data: session } = useSession();
+
+  const company = session?.user?.company;
+
   const { query } = useRouter();
+  const { data: companyData, isLoading: isLoadingCompanyData } =
+    api.company.getCompany.useQuery();
 
   const { data: teams } = api.team.getAllTeamsByCompanyId.useQuery();
 
@@ -75,11 +82,16 @@ export default function MainSwitcher() {
   }, [teamId, projectId]);
 
   return (
-    <div className="flex items-center gap-x-2">
+    <div
+      className={cn("flex items-center gap-x-2 whitespace-nowrap", {
+        "gap-x-2": isTeamPath,
+        "gap-x-0.5": isTeamPath && isProjectPath,
+      })}
+    >
       <Link
         href="/teams"
         aria-label="logo"
-        className="flex items-center space-x-1.5"
+        className="flex max-w-[80px] items-center space-x-1.5 truncate rounded-r bg-gray-100 pr-2 dark:bg-gray-800/50 lg:max-w-fit"
       >
         {/* <div aria-hidden="true" className="flex space-x-1">
                   <div className="h-4 w-4 rounded-full bg-gray-900 dark:bg-white"></div>
@@ -88,9 +100,16 @@ export default function MainSwitcher() {
         <div className="flex h-7 w-7 items-center justify-center rounded bg-gray-900 font-semibold text-gray-100 dark:border">
           M
         </div>
-        {/* <span className="text-2xl font-bold tracking-tighter text-gray-900 dark:text-white">
-          Momentum
-        </span> */}
+        <span
+          className={cn(
+            "truncate text-xl font-semibold tracking-tighter text-gray-900 dark:text-white",
+            {
+              "hidden lg:block": isTeamPath && isProjectPath,
+            }
+          )}
+        >
+          {companyData?.name}
+        </span>
       </Link>
       {isTeamPath && (
         <span className="mx-2 text-2xl font-light text-gray-300 dark:text-gray-700">
@@ -98,7 +117,11 @@ export default function MainSwitcher() {
         </span>
       )}
       {isTeamPath && (
-        <div className="flex items-center gap-3">
+        <div
+          className={cn("flex items-center gap-3", {
+            truncate: isProjectPath,
+          })}
+        >
           <div className="flex items-center gap-2">
             <Avatar className="h-5 w-5">
               <AvatarImage
@@ -109,7 +132,15 @@ export default function MainSwitcher() {
               />
               <AvatarFallback>SC</AvatarFallback>
             </Avatar>
-            <p className="font-medium">team</p>
+            <Link href={`/teams/${currentTeam?.id}`}>
+              <p
+                className={cn("font-medium", {
+                  "max-w-[20px] truncate lg:max-w-fit": isProjectPath,
+                })}
+              >
+                {currentTeam?.name}
+              </p>
+            </Link>
           </div>
           <Switcher
             // TODO: fix types
@@ -131,7 +162,11 @@ export default function MainSwitcher() {
         </span>
       )}
       {isProjectPath && (
-        <div className="flex items-center gap-3">
+        <div
+          className={cn("flex items-center gap-3", {
+            truncate: isTeamPath && isProjectPath,
+          })}
+        >
           <div className="flex items-center gap-2">
             <Avatar className="h-5 w-5">
               <AvatarImage
@@ -142,7 +177,14 @@ export default function MainSwitcher() {
               />
               <AvatarFallback>SC</AvatarFallback>
             </Avatar>
-            <p className="font-medium">{currentProject?.name}</p>
+            <p
+              className={cn("font-medium", {
+                "max-w-[90px] truncate lg:max-w-fit":
+                  isTeamPath && isProjectPath,
+              })}
+            >
+              {currentProject?.name}
+            </p>
           </div>
           <Switcher
             // TODO: fix types

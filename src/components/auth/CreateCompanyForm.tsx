@@ -133,7 +133,7 @@ export function CreateAdminAccountForm({
   });
 
   const createCompanyWithAdminAccountMutation =
-    api.organization.createCompanyWithAdminAccount.useMutation({
+    api.company.createCompanyWithAdminAccount.useMutation({
       onSuccess: async () => {
         // Handle the new team. For example, you could redirect to the team's page
         // onSuccess();

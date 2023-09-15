@@ -18,7 +18,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { User } from "@/components/user/UserMenu";
+import { User, UserAvatar } from "@/components/user/UserMenu";
 import { api } from "@/utils/api";
 import { cn } from "@/utils/cn";
 import { Priority } from "@/utils/enums";
@@ -295,10 +295,15 @@ function CreateTaskForm({
                     <SelectItem
                       key={user.id}
                       value={user.id}
-                      className="capitalize"
+                      className="flex capitalize"
                     >
-                      <User />
-                      {/* {user.firstName} {user.lastName} */}
+                      <div className="flex items-center gap-2">
+                        <UserAvatar user={user} />
+
+                        <p className="font-medium">
+                          {user.firstName} {user.lastName}
+                        </p>
+                      </div>
                     </SelectItem>
                   ))}
                 </SelectGroup>

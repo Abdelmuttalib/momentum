@@ -50,6 +50,23 @@ export const teamRouter = createTRPCRouter({
       });
     }),
 
+  updateTeamName: protectedProcedure
+    .input(
+      z.object({
+        teamId: z.string(),
+        name: z.string(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const team = await ctx.prisma.team.update({
+        where: { id: input.teamId },
+        data: {
+          name: input.name,
+        },
+      });
+      return team;
+    }),
+
   getAllTeamsByCompanyId: protectedProcedure.query(async ({ ctx }) => {
     const companyId = ctx.session.user.company.id;
     const companyTeams = await ctx.prisma.team.findMany({
@@ -57,17 +74,7 @@ export const teamRouter = createTRPCRouter({
         companyId,
       },
       include: {
-        users: {
-          select: {
-            id: true,
-            firstName: true,
-            lastName: true,
-            email: true,
-            emailVerified: true,
-            image: true,
-            role: true,
-          },
-        },
+        users: true,
         projects: true,
         tasks: true,
       },
@@ -83,17 +90,18 @@ export const teamRouter = createTRPCRouter({
           id: input.teamId,
         },
         include: {
-          users: {
-            select: {
-              id: true,
-              firstName: true,
-              lastName: true,
-              email: true,
-              emailVerified: true,
-              image: true,
-              role: true,
-            },
-          },
+          users: true,
+          // users: {
+          //   select: {
+          //     id: true,
+          //     firstName: true,
+          //     lastName: true,
+          //     email: true,
+          //     emailVerified: true,
+          //     image: true,
+          //     role: true,
+          //   },
+          // },
         },
       });
       return team;

@@ -62,8 +62,8 @@ export default function CallToAction() {
               Get Started now
             </h1>
             <p className="text-center text-xl text-gray-600 dark:text-gray-300">
-              Be part of millions people around the world using tailus in modern
-              User Interfaces.
+              Be part of many people around the world using Momentum in modern
+              Project Management.
             </p>
             <div className="flex flex-wrap justify-center gap-6">
               <ButtonLink href="/sign-in" size="lg">

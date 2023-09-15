@@ -28,14 +28,14 @@ export default function Project({ id, name, status, createdAt }: Project) {
       href={projectLink}
       className="hover:border-primary-100 hover:bg-primary-50 group relative flex h-36 flex-col justify-between rounded-lg border-2 border-gray-200 bg-white px-6 py-4 transition-all duration-200 ease-in-out hover:border-gray-800 hover:bg-brand-100/20 dark:border-gray-800 dark:bg-gray-900 dark:hover:border-brand-300"
     >
-      <FollowLinkArrowIcon className="absolute -right-2 -top-2 mt-2 hidden bg-gray-900 text-gray-100 group-hover:mt-0 group-hover:block dark:bg-gray-200" />
+      <FollowLinkArrowIcon className="absolute -right-2 -top-2 mt-2 hidden bg-gray-900 text-gray-100 group-hover:mt-0 group-hover:block dark:bg-gray-200 dark:text-gray-900" />
       <div className="truncate">
         <span className="truncate whitespace-nowrap text-sm text-gray-600">
           Created: {formatFullDate(createdAt)}
         </span>
       </div>
       <div className="flex w-full justify-between">
-        <h3 className="h5">{name}</h3>
+        <h3 className="label-lg">{name}</h3>
         <ChevronRightIcon className="w-7" />
       </div>
       <div>

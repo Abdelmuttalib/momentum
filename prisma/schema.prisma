@@ -161,7 +161,7 @@ enum TaskPriority {
 
 model Comment {
   id        String   @id @default(uuid())
-  content   String
+  comment   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   authorId  String

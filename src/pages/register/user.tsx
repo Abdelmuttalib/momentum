@@ -16,13 +16,38 @@ import { ArrowLeftIcon } from "@heroicons/react/20/solid";
 import { api } from "@/utils/api";
 import { LoginBackground } from "@/components/layout";
 
+// const signUpValidationSchema = z
+//   .object({
+//     firstName: z.string().min(2).nonempty(),
+//     lastName: z.string().min(2).nonempty(),
+//     email: z.string().min(4).email().nonempty(),
+//     password: z.string().min(8),
+//     confirmPassword: z.string().min(8),
+//   })
+//   .refine((data) => data.password === data.confirmPassword, {
+//     path: ["confirmPassword"],
+//     message: "passwords do not match",
+//   });
+
 const signUpValidationSchema = z
   .object({
-    firstName: z.string().min(2).nonempty(),
-    lastName: z.string().min(2).nonempty(),
-    email: z.string().min(4).email().nonempty(),
-    password: z.string().min(8),
-    confirmPassword: z.string().min(8),
+    firstName: z
+      .string()
+      .min(2, "first name must be at least 2 characters")
+      .nonempty("first name cannot be empty"),
+    lastName: z
+      .string()
+      .min(2, "last name must be at least 2 characters")
+      .nonempty("last name cannot be empty"),
+    email: z
+      .string()
+      .min(4, "email must be at least 4 characters")
+      .email("invalid email format")
+      .nonempty("email cannot be empty"),
+    password: z.string().min(8, "password must be at least 8 characters"),
+    confirmPassword: z
+      .string()
+      .min(8, "confirm password must be at least 8 characters"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     path: ["confirmPassword"],
@@ -43,7 +68,7 @@ function CreateUserAccountForm() {
   });
 
   const registerInvitedUserMutation =
-    api.organization.registerInvitedUser.useMutation({
+    api.company.registerInvitedUser.useMutation({
       onSuccess: async () => {
         toast.success("Account created successfully");
         await push("/sign-in");
@@ -86,14 +111,8 @@ function CreateUserAccountForm() {
             type="email"
             inputMode="email"
             placeholder="email@mail.com"
-            className={cn({ "border-red-500": errors.email })}
             error={errors?.email}
           />
-          {errors.email && (
-            <p className="mt-0.5 text-sm text-red-500">
-              {errors.email.message}
-            </p>
-          )}
         </div>
 
         {/* First Name Input */}
@@ -109,11 +128,6 @@ function CreateUserAccountForm() {
               placeholder="first name"
               error={errors?.firstName}
             />
-            {errors.firstName && (
-              <p className="mt-0.5 text-sm text-red-500">
-                {errors.firstName.message}
-              </p>
-            )}
           </div>
 
           <div className="w-full">
@@ -127,11 +141,6 @@ function CreateUserAccountForm() {
               placeholder="last name"
               error={errors?.lastName}
             />
-            {errors.lastName && (
-              <p className="mt-0.5 text-sm text-red-500">
-                {errors.lastName.message}
-              </p>
-            )}
           </div>
         </div>
 
@@ -147,11 +156,6 @@ function CreateUserAccountForm() {
             placeholder="password"
             error={errors?.password}
           />
-          {errors.password && (
-            <p className="mt-0.5 text-sm text-red-500">
-              {errors.password.message}
-            </p>
-          )}
         </div>
 
         {/* Confirm Password Input */}
@@ -167,15 +171,13 @@ function CreateUserAccountForm() {
             type="password"
             {...register("confirmPassword", { required: true })}
             placeholder="confirm password"
-            className={cn({
-              "border-red-500": errors.confirmPassword,
-            })}
+            error={errors?.confirmPassword}
           />
-          {errors.confirmPassword && (
+          {/* {errors.confirmPassword && (
             <p className="mt-0.5 text-sm text-red-500">
               {errors?.confirmPassword?.message}
             </p>
-          )}
+          )} */}
         </div>
         <Button
           type="submit"
@@ -191,7 +193,7 @@ function CreateUserAccountForm() {
 
         {/* Another Auth Routes */}
 
-        <div className=" text-sm font-medium text-gray-700 sm:mb-4 sm:flex sm:items-center sm:gap-1">
+        {/* <div className=" text-sm font-medium text-gray-700 sm:mb-4 sm:flex sm:items-center sm:gap-1">
           <Button
             type="button"
             variant="outline"
@@ -201,7 +203,7 @@ function CreateUserAccountForm() {
             <ArrowLeftIcon className="mr-2 h-4 w-4" />
             Back
           </Button>
-        </div>
+        </div> */}
       </form>
     </div>
   );

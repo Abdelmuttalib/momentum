@@ -11,6 +11,10 @@ await import("./src/env.mjs");
 const nextConfig = {
   reactStrictMode: false,
 
+  images: {
+    domains: ["pvpgmjnmehreieyinspc.supabase.co"],
+  },
+
   /**
    * If you have `experimental: { appDir: true }` set, then you must comment the below `i18n` config
    * out.

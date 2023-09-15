@@ -55,7 +55,7 @@ export const AddUserDialog: FC<{ team: TTeam }> = ({ team }) => {
   const removeUserFromTeam = api.team.removeUserFromTeam.useMutation({
     onSuccess: async () => {
       // await apiContext.team.admin.getAllUsers.invalidate();
-      await apiContext.team .getAllTeamsByCompanyId.invalidate();
+      await apiContext.team.getAllTeamsByCompanyId.invalidate();
       toast.success("User removed from team successfully");
     },
     onError: () => {
@@ -164,14 +164,10 @@ export const AddUserDialog: FC<{ team: TTeam }> = ({ team }) => {
 };
 
 export const teamMembersColumns: ColumnDef<User>[] = [
-  {
-    accessorKey: "id",
-    header: "id",
-  },
-  {
-    accessorKey: "phoneNumber",
-    header: "Phone Number",
-  },
+  // {
+  //   accessorKey: "id",
+  //   header: "id",
+  // },
   {
     accessorKey: "firstName",
     header: "First Name",

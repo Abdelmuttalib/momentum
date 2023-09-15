@@ -7,6 +7,7 @@ import {
   createTRPCRouter,
   publicProcedure,
   protectedProcedure,
+  protectedAdminProcedure,
 } from "@/server/api/trpc";
 import {
   ProjectStatus,
@@ -17,7 +18,7 @@ import {
 import { createOrgWithAdminAccountFormSchema } from "@/components/auth/schema";
 import { hashPassword } from "@/utils/bcrypt";
 
-export const organizationRouter = createTRPCRouter({
+export const companyRouter = createTRPCRouter({
   createCompanyWithAdminAccount: publicProcedure
     .input(createOrgWithAdminAccountFormSchema)
     .mutation(async ({ input, ctx }) => {
@@ -45,6 +46,23 @@ export const organizationRouter = createTRPCRouter({
         },
       });
       return { newCompany, newAdminUser };
+    }),
+
+  updateCompanyName: protectedAdminProcedure
+    .input(
+      z.object({
+        companyId: z.string(),
+        name: z.string(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const updatedCompany = await ctx.prisma.company.update({
+        where: { id: input.companyId },
+        data: {
+          name: input.name,
+        },
+      });
+      return updatedCompany;
     }),
 
   getAllInvitations: protectedProcedure.query(async ({ ctx }) => {
@@ -195,4 +213,45 @@ export const organizationRouter = createTRPCRouter({
       });
       return updatedProject;
     }),
+
+  getCompanyMembersNotInTeam: protectedProcedure
+    .input(
+      z.object({
+        teamId: z.string(),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      const companyId = ctx.session.user.company.id;
+      const companyMembers = await ctx.prisma.user.findMany({
+        where: {
+          companyId,
+          teams: {
+            none: {
+              id: input.teamId,
+            },
+          },
+        },
+      });
+      return companyMembers;
+    }),
+
+  getCompany: protectedProcedure.query(async ({ ctx }) => {
+    const companyId = ctx.session.user.company.id;
+    const company = await ctx.prisma.company.findUnique({
+      where: {
+        id: companyId,
+      },
+    });
+    return company;
+  }),
+
+  getCompanyMembers: protectedProcedure.query(async ({ ctx }) => {
+    const companyId = ctx.session.user.company.id;
+    const companyMembers = await ctx.prisma.user.findMany({
+      where: {
+        companyId,
+      },
+    });
+    return companyMembers;
+  }),
 });

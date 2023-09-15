@@ -5,10 +5,10 @@ import ThemeToggle from "@/components/theme-toggle";
 
 export default function Header() {
   return (
-    <header className="sticky top-0 z-10 border-b bg-transparent px-8 text-slate-800 backdrop-blur backdrop-filter transition-colors duration-300">
+    <header className="sticky top-0 z-10 border-b bg-transparent text-slate-800 backdrop-blur backdrop-filter transition-colors duration-300">
       <nav className="w-full">
         <Container>
-          <div className="relative flex flex-wrap items-center justify-between gap-6 py-2 md:gap-0 md:py-4">
+          <div className="relative flex flex-wrap items-center justify-between gap-6 py-2 md:gap-0">
             <input
               aria-hidden="true"
               type="checkbox"
@@ -34,7 +34,7 @@ export default function Header() {
                 </span>
               </a>
 
-              <div className="relative flex max-h-10 items-center lg:hidden">
+              <div className="relative flex max-h-10 items-center bg-red-300 lg:hidden">
                 <label
                   role="button"
                   htmlFor="toggle_nav"
@@ -45,44 +45,52 @@ export default function Header() {
                   <div
                     aria-hidden="true"
                     id="line"
-                    className="m-auto h-0.5 w-5 rounded bg-sky-900 transition duration-300 dark:bg-gray-300"
+                    className="m-auto h-0.5 w-5 rounded bg-gray-900 transition duration-300 dark:bg-gray-300"
                   ></div>
                   <div
                     aria-hidden="true"
                     id="line2"
-                    className="m-auto mt-2 h-0.5 w-5 rounded bg-sky-900 transition duration-300 dark:bg-gray-300"
+                    className="m-auto mt-2 h-0.5 w-5 rounded bg-gray-900 transition duration-300 dark:bg-gray-300"
                   ></div>
                 </label>
               </div>
             </div>
+            {/* overlay */}
             <div
               aria-hidden="true"
-              className="fixed inset-0 z-10 h-screen w-screen origin-bottom scale-y-0 bg-white/70 backdrop-blur-2xl transition duration-500 peer-checked:origin-top peer-checked:scale-y-100 dark:bg-gray-900/70 lg:hidden"
+              className="fixed inset-0 z-10 h-screen w-screen origin-bottom scale-y-0 bg-white/90 backdrop-blur-2xl transition duration-500 peer-checked:origin-top peer-checked:scale-y-100 dark:bg-gray-900/70 lg:hidden"
             ></div>
             <div
-              className="invisible absolute left-0 top-full z-20 w-full origin-top translate-y-1 scale-95 flex-col flex-wrap justify-end gap-6 rounded-3xl border border-gray-100 p-8 opacity-0 shadow-2xl shadow-gray-600/10 transition-all duration-300 
-                            peer-checked:visible peer-checked:scale-100 peer-checked:opacity-100 dark:border-gray-700 dark:shadow-none lg:visible lg:relative lg:flex lg:w-7/12 lg:translate-y-0 lg:scale-100 lg:flex-row lg:items-center
+              className="invisible absolute left-0 top-full z-20 w-full origin-top translate-y-0 scale-95 flex-col flex-wrap justify-end gap-6 py-8 opacity-0 shadow-gray-600/10 transition-all duration-300 
+                            peer-checked:visible peer-checked:scale-100 peer-checked:opacity-100 dark:shadow-none lg:visible lg:relative lg:flex lg:w-7/12 lg:translate-y-0 lg:scale-100 lg:flex-row lg:items-center
                             lg:gap-0 lg:border-none lg:bg-transparent lg:p-0 
                             lg:opacity-100 lg:shadow-none lg:peer-checked:translate-y-0"
             >
               <div className="w-full text-gray-500 dark:text-gray-300 lg:w-auto lg:pr-4 lg:pt-0">
-                <ul className="flex flex-col gap-6 font-semibold tracking-normal lg:flex-row lg:gap-0 lg:text-sm">
-                  <li>
-                    <a
-                      href="#features"
-                      className="block transition hover:text-brand dark:hover:text-brand-400 md:px-4"
+                <ul className="flex flex-col gap-2 font-semibold tracking-normal lg:flex-row lg:gap-0 lg:text-sm">
+                  {[
+                    {
+                      label: "Features",
+                      href: "#features",
+                    },
+                    {
+                      label: "Solution",
+                      href: "#solution",
+                    },
+                  ].map(({ label, href }) => (
+                    <li
+                      key={label + href}
+                      className="px-3 py-3 hover:bg-gray-100 sm:px-0 sm:py-0 sm:hover:bg-transparent"
                     >
-                      <span>Features</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#solution"
-                      className="block transition hover:text-brand dark:hover:text-brand-400 md:px-4"
-                    >
-                      <span>Solution</span>
-                    </a>
-                  </li>
+                      <a
+                        href={href}
+                        className="block transition hover:text-brand dark:hover:text-brand-400 md:px-4"
+                      >
+                        <span>{label}</span>
+                      </a>
+                    </li>
+                  ))}
+
                   {/* <li>
                     <a
                       href="#testimonials"
@@ -98,8 +106,12 @@ export default function Header() {
                 <ThemeToggle />
               </div>
 
-              <div className="mt-12 lg:mt-0">
-                <ButtonLink href="/sign-in" variant="outline">
+              <div className="mt-8 w-full sm:w-auto lg:mt-0">
+                <ButtonLink
+                  href="/sign-in"
+                  variant="outline"
+                  className="w-full lg:w-auto"
+                >
                   Sign In
                 </ButtonLink>
               </div>

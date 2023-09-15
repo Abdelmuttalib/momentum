@@ -43,15 +43,15 @@ const TeamPage = ({ teamId, initialTeamProjects }: TeamPageProps) => {
       <Container className="flex flex-col gap-4">
         {/* <DataTableDemo /> */}
         <div className="flex w-full items-center justify-between">
-          <h2 className="h4">Team Projects</h2>
+          <h1 className="h5">Team Projects</h1>
           <CreateProjectDialog teamId={teamId} />
         </div>
         <div>
           {/* <TeamProjectsTable teamProjects={teamProjects.data} /> */}
-            <Projects
-              projects={teamProjects.data}
-              loading={teamProjects.isLoading}
-            />
+          <Projects
+            projects={teamProjects.data}
+            loading={teamProjects.isLoading}
+          />
         </div>
       </Container>
     </Layout>

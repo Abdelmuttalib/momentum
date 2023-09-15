@@ -105,6 +105,7 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-[#fefffe] tracking-tight text-gray-800 dark:bg-gray-900 dark:text-gray-200;
     font-family: "Inter", sans-serif;

@@ -3,16 +3,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { api } from "@/utils/api";
 import { cn } from "@/utils/cn";
-import type {
-  Project,
-  Task as TaskType,
-  TaskStatus,
-} from "@prisma/client";
+import type { Project, Task as TaskType, TaskStatus } from "@prisma/client";
 import { useEffect, useState } from "react";
-import {
-  DragDropContext,
-  type DropResult,
-} from "react-beautiful-dnd";
+import { DragDropContext, type DropResult } from "react-beautiful-dnd";
 import { toast } from "sonner";
 // import TaskView from "./task-view";
 import { TaskStatus as TaskStatusNativeEnum } from "@/utils/enums";
@@ -230,7 +223,7 @@ export default function TaskBoard({ projectId }: { projectId: Project["id"] }) {
   return (
     <DragDropContext onDragEnd={(e) => void handleOnDragEnd(e)}>
       {/* {selectedTask && <TaskView task={selectedTask} />} */}
-      <div className="relative z-10 flex h-full min-h-[75svh] w-full min-w-fit flex-col justify-between gap-3 overflow-x-auto pb-6 lg:flex-row 2xl:flex-nowrap">
+      <div className="relative z-10 grid h-full min-h-[75svh] w-full min-w-fit grid-cols-1 justify-between gap-3 overflow-x-auto pb-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         <div
           aria-hidden="true"
           className="absolute inset-0 -z-10 m-auto grid h-max w-full grid-cols-2 -space-x-52 opacity-10 dark:opacity-20"

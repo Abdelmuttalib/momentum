@@ -42,8 +42,10 @@ import {
 import { type User as UserType } from "@prisma/client";
 import Link from "next/link";
 import { cn } from "@/utils/cn";
+import Image from "next/image";
 
-<TooltipProvider>
+{
+  /* <TooltipProvider>
   <Tooltip>
     <TooltipTrigger asChild>
       <Button variant="outline">Hover</Button>
@@ -52,7 +54,8 @@ import { cn } from "@/utils/cn";
       <p>Add to library</p>
     </TooltipContent>
   </Tooltip>
-</TooltipProvider>;
+</TooltipProvider>; */
+}
 
 export function UserAvatar({
   user,
@@ -61,7 +64,7 @@ export function UserAvatar({
   contentClassName,
 }: {
   user: UserType;
-  size?: "default" | "sm";
+  size?: "default" | "sm" | "lg";
   triggerClassName?: string;
   contentClassName?: string;
 }) {
@@ -71,20 +74,42 @@ export function UserAvatar({
         <TooltipTrigger asChild>
           <div
             className={cn(
-              "inline-flex items-center justify-center rounded-full bg-gray-900 uppercase text-gray-100",
+              "relative inline-flex items-center justify-center rounded-full uppercase text-gray-100",
               {
                 "h-8 w-8 text-lg": size === "default",
+                "h-10 w-10 text-lg": size === "lg",
                 "h-6 w-6": size === "sm",
+                "bg-gray-900": !user?.image,
               },
               triggerClassName
             )}
           >
-            {user?.firstName ? user.firstName[0] : user.email[0]}
+            {user?.image ? (
+              <Image
+                src={user?.image}
+                alt="profile image"
+                // width={size === "sm" ? 24 : 32}
+                // height={size === "sm" ? 24 : 32}
+                layout="fill"
+                className="rounded-full object-cover"
+              />
+            ) : (
+              <>{user?.firstName ? user.firstName[0] : user.email[0]}</>
+            )}
           </div>
         </TooltipTrigger>
         <TooltipContent className={cn("bg-gray-900", contentClassName)}>
+          {/* {user?.image && (
+            <Image
+              src={user.image}
+              alt="profile image"
+              width={size === "sm" ? 24 : 32}
+              height={size === "sm" ? 24 : 32}
+            />
+          )}
+          {!user?.image && ( */}
           <div className="text-sm">
-            <p className="font-medium">
+            <p className="font-medium text-gray-100">
               {user.firstName} {user.lastName}
             </p>
             <p className="text-gray-400">{user.email}</p>
@@ -95,16 +120,14 @@ export function UserAvatar({
   );
 }
 
-export function User() {
-  const { data: session } = useSession();
-
+export function User({ user }: { user: UserType }) {
   return (
     <div className="flex h-fit w-full items-center justify-start gap-3 truncate">
       <div className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-black text-lg text-gray-100">
-        {session?.user?.firstName[0]}
+        {user?.firstName && user?.firstName[0]}
       </div>
       <p className="truncate font-medium">
-        {session?.user?.firstName} {session?.user?.lastName}
+        {user?.firstName} {user?.lastName}
       </p>
     </div>
   );

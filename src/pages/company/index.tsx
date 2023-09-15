@@ -15,7 +15,7 @@ import type { Session } from "next-auth";
 import NewInvite from "@/components/@pages/company/NewInvite";
 import { companyInvitationsColumns } from "@/components/@pages/company/invites/company-invitations-columns";
 import CreateTeam from "@/components/@pages/teams/forms/create-team";
-import { organizationTeamsColumns } from "@/components/@pages/company/organization-teams";
+import { companyTeamsColumns } from "@/components/@pages/company/organization-teams";
 
 interface CompanyPageProps {
   companyData: Company;
@@ -41,7 +41,7 @@ export default function CompanyPage({
 
   const companyTeams = api.team.getAllTeamsByCompanyId.useQuery();
 
-  const invitations = api.organization.getAllInvitations.useQuery();
+  const invitations = api.company.getAllInvitations.useQuery();
 
   return (
     <Layout pageTitle={`Company: ${companyData.name}`} className="bg-gray-50">
@@ -57,7 +57,7 @@ export default function CompanyPage({
             <div>
               {companyTeams.data && (
                 <DataTable
-                  columns={organizationTeamsColumns}
+                  columns={companyTeamsColumns}
                   data={companyTeams.data}
                 />
               )}

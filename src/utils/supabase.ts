@@ -3,12 +3,12 @@
 // Use `useSession()` or `unstable_getServerSession()` to get the NextAuth session.
 
 import { createClient } from "@supabase/supabase-js";
-import { getServerSession } from "next-auth";
+// import { getServerSession } from "next-auth";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-const session = await getServerSession();
+// const session = await getServerSession();
 
 const supabase = createClient(
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -20,7 +20,7 @@ const supabase = createClient(
       headers: {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        Authorization: `Bearer ${session?.supabaseAccessToken || ""}`,
+        // Authorization: `Bearer ${session?.supabaseAccessToken || ""}`,
       },
     },
   }

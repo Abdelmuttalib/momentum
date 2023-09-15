@@ -156,6 +156,7 @@ export const taskRouter = createTRPCRouter({
         include: {
           labels: true,
           assignee: true,
+          comments: true,
         },
         orderBy: {
           orderIndex: "asc",
@@ -263,4 +264,57 @@ export const taskRouter = createTRPCRouter({
     const labels: Label[] = await ctx.prisma.label.findMany();
     return labels;
   }),
+
+  // model Comment {
+  //   id        String   @id @default(uuid())
+  //   content   String
+  //   createdAt DateTime @default(now())
+  //   updatedAt DateTime @updatedAt
+  //   authorId  String
+  //   author    User     @relation(fields: [authorId], references: [id])
+  //   taskId    String?
+  //   task      Task?    @relation(fields: [taskId], references: [id])
+  // }
+
+  getTaskComments: protectedProcedure
+    .input(z.object({ taskId: z.string() }))
+    .query(async ({ input, ctx }) => {
+      const comments = await ctx.prisma.comment.findMany({
+        where: { taskId: input.taskId },
+        include: {
+          author: true,
+        },
+      });
+      return comments;
+    }),
+
+  addComment: protectedProcedure
+    .input(
+      z.object({
+        comment: z.string(),
+        authorId: z.string(),
+        taskId: z.string(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const newComment = await ctx.prisma.comment.create({
+        data: {
+          comment: input.comment,
+          authorId: input.authorId,
+          taskId: input.taskId,
+        },
+      });
+      return newComment;
+    }),
+
+  deleteComment: protectedProcedure
+    .input(z.object({ id: z.string(), authorId: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      if (input.authorId !== ctx.session.user.id) {
+        throw new Error("You are not the author of this comment");
+      }
+      await ctx.prisma.comment.delete({
+        where: { id: input.id },
+      });
+    }),
 });

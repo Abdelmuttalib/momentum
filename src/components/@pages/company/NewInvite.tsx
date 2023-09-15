@@ -39,10 +39,9 @@ import { api } from "@/utils/api";
 import { toast } from "sonner";
 import { type ReactNode, useState } from "react";
 import { PlusIcon } from "@heroicons/react/20/solid";
+import { useSession } from "next-auth/react";
 
 interface NewInviteFormProps {
-  userId: User["id"];
-  companyId: Company["id"];
   onCancel: () => void;
 }
 
@@ -53,17 +52,19 @@ export const inviteUserToOrganizationFormSchema = z.object({
 
 type NewInviteFormSchema = z.infer<typeof inviteUserToOrganizationFormSchema>;
 
-function NewInviteForm({ userId, companyId, onCancel }: NewInviteFormProps) {
+function NewInviteForm({ onCancel }: NewInviteFormProps) {
+  const { data: session } = useSession();
+  const [userId, companyId] = [session?.user?.id, session?.user?.company.id];
   const apiContext = api.useContext();
   const form = useForm<NewInviteFormSchema>({
     resolver: zodResolver(inviteUserToOrganizationFormSchema),
   });
 
   const inviteUserToCompanyMutation =
-    api.organization.inviteUserToCompany.useMutation({
+    api.company.inviteUserToCompany.useMutation({
       onSuccess: async () => {
         form.reset();
-        await apiContext.organization.getAllInvitations.invalidate();
+        await apiContext.company.getAllInvitations.invalidate();
         onCancel();
         toast.success("User invited successfully");
       },
@@ -74,8 +75,8 @@ function NewInviteForm({ userId, companyId, onCancel }: NewInviteFormProps) {
 
   async function onSubmit(data: NewInviteFormSchema) {
     await inviteUserToCompanyMutation.mutateAsync({
-      invitedById: userId,
-      companyId: companyId,
+      invitedById: userId as string,
+      companyId: companyId as string,
       ...data,
     });
   }
@@ -162,48 +163,18 @@ function NewInviteForm({ userId, companyId, onCancel }: NewInviteFormProps) {
   );
 }
 
-interface NewInviteDialogProps {
-  isOpen: boolean;
-  toggleModal: () => void;
-  children: ReactNode;
-}
-
-const NewInviteDialog = ({
-  isOpen,
-  toggleModal,
-  children,
-}: NewInviteDialogProps) => {
-  return (
-    <Dialog open={isOpen} onOpenChange={toggleModal}>
-      <DialogTrigger asChild>
-        <Button className="ml-2 inline-flex gap-1 whitespace-nowrap">
-          <PlusIcon className="w-5" /> New Invite
-        </Button>
-      </DialogTrigger>
-      {isOpen && (
-        <DialogContent className="bg-white">
-          <DialogHeader className="space-y-0">
-            <DialogTitle>
-              <h2 className="h5 inline">New Invite</h2>
-            </DialogTitle>
-            <DialogDescription className="body-sm inline text-gray-600">
-              <p>Invite a user to your organization.</p>
-            </DialogDescription>
-          </DialogHeader>
-
-          {children}
-        </DialogContent>
-      )}
-    </Dialog>
-  );
-};
-
 interface NewInviteProps {
-  userId: User["id"];
-  companyId: Company["id"];
+  triggerButton?: ReactNode;
 }
 
-export default function NewInvite(props: NewInviteProps) {
+export default function NewInvite({
+  triggerButton = (
+    <Button className="ml-2 inline-flex gap-1 whitespace-nowrap">
+      <PlusIcon className="w-5" /> New Invite
+    </Button>
+  ),
+  ...props
+}: NewInviteProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   function toggleModal() {
@@ -211,8 +182,22 @@ export default function NewInvite(props: NewInviteProps) {
   }
 
   return (
-    <NewInviteDialog isOpen={isOpen} toggleModal={toggleModal}>
-      <NewInviteForm {...props} onCancel={() => toggleModal()} />
-    </NewInviteDialog>
+    <Dialog open={isOpen} onOpenChange={toggleModal}>
+      <DialogTrigger asChild>{triggerButton}</DialogTrigger>
+      {isOpen && (
+        <DialogContent className="bg-white">
+          <DialogHeader className="space-y-0">
+            <DialogTitle>
+              <h2 className="h5 inline">New Invite</h2>
+            </DialogTitle>
+            <DialogDescription className="body-sm inline text-gray-600">
+              <p>Invite a user to your company.</p>
+            </DialogDescription>
+          </DialogHeader>
+
+          <NewInviteForm {...props} onCancel={() => toggleModal()} />
+        </DialogContent>
+      )}
+    </Dialog>
   );
 }

@@ -195,7 +195,7 @@ export default function LandingPage() {
       <main className="mb-40 space-y-40 dark:bg-gray-900">
         <Hero />
         <Features />
-        <Stats />
+        {/* <Stats /> */}
         {/* <Testimonials /> */}
         <CallToAction />
         {/* <Blog />

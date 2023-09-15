@@ -25,13 +25,14 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             {
               "border-error-500 dark:border-error-400": error,
             },
+
             className
           )}
           ref={ref}
           {...props}
         />
         {error && (
-          <p className="mt-0.5 bg-gray-200 text-sm lowercase text-error-500">
+          <p className="mt-0.5 text-sm lowercase text-error-500">
             {error.message}
           </p>
         )}

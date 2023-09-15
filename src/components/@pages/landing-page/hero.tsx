@@ -1,10 +1,13 @@
 import React from "react";
 import Container from "./container";
 import { ButtonLink } from "@/components/ui/button";
+import Image from "next/image";
+import { useTheme } from "next-themes";
 
 export default function Hero() {
+  const { theme } = useTheme();
   return (
-    <div className="relative flex h-[100svh] pb-24 pt-36" id="home">
+    <div className="relative flex min-h-[100svh] pb-24 pt-36" id="home">
       <Container>
         <div
           aria-hidden="true"
@@ -13,7 +16,7 @@ export default function Hero() {
           <div className="h-56 bg-gradient-to-br from-primary to-purple-400 blur-[106px] dark:from-blue-700"></div>
           <div className="h-32 bg-gradient-to-r from-brand-400 to-brand-300 blur-[106px] dark:to-brand-600"></div>
         </div>
-        <div className="relative ml-auto">
+        <div className="relative flex flex-col gap-y-6">
           <div
             aria-hidden="true"
             className="absolute left-0 right-0 mx-auto h-full w-full max-w-md rounded-full opacity-40 dark:hidden"
@@ -27,7 +30,7 @@ export default function Hero() {
               <h1 className="h2 sm:h1 md:display-sm lg:display-md xl:display-lg dark:to-primary-900 my-8 font-bold dark:bg-gradient-to-br dark:from-brand-200 dark:via-brand-400 dark:to-brand-600 dark:bg-clip-text dark:text-transparent sm:font-bold">
                 The Open Source issue tracking tool
               </h1>
-              <p className="text-gray-700 dark:text-gray-400 sm:text-lg md:px-32">
+              <p className="text-center text-lg text-gray-600 dark:text-gray-300 sm:text-xl md:px-28">
                 Supercharge Your Team&apos;s Productivity.{" "}
                 <span className="underline decoration-brand decoration-2 underline-offset-2">
                   Momentum
@@ -67,6 +70,19 @@ export default function Hero() {
             </div> */}
             </div>
           </div>
+          {/* <div className="relative h-[70svh] w-full overflow-hidden rounded-lg bg-transparent">
+            <Image
+              src={
+                theme
+                  ? `/images/app/app-board-${theme}.png`
+                  : "/images/app/app-board-light.png"
+              }
+              alt="app task board"
+              layout="fill"
+              className="rounded-lg object-contain"
+              quality={100}
+            />
+          </div> */}
           {/* logos */}
           {/* <div className="mt-12 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6">
             <div className="p-4 grayscale transition duration-200 hover:grayscale-0">

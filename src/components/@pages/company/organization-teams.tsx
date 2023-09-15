@@ -15,7 +15,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { type FC, useState, useEffect } from "react";
+import { type FC, useState, useEffect, ReactNode } from "react";
 // import { PlusIcon } from "lucide-react";
 // import { IconLink } from "@/components/ui/icon-button";
 import Link from "next/link";
@@ -26,8 +26,21 @@ import {
 } from "@heroicons/react/20/solid";
 import { cn } from "@/utils/cn";
 import type { TTeam } from "types";
+import { UsersIcon } from "lucide-react";
 
-export const AddUserDialog: FC<{ team: TTeam }> = ({ team }) => {
+export const AddUserDialog: FC<{ team: TTeam; triggerButton?: ReactNode }> = ({
+  team,
+  triggerButton = (
+    <Button
+      type="button"
+      variant="outline"
+      className="inline-flex items-center gap-1.5 whitespace-nowrap text-sm"
+    >
+      <UsersIcon className="w-[1.125rem]" />
+      Manage Team Members
+    </Button>
+  ),
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const apiContext = api.useContext();
   const { data: users } = api.team.getAllUsers.useQuery();
@@ -46,6 +59,8 @@ export const AddUserDialog: FC<{ team: TTeam }> = ({ team }) => {
       // await apiContext.team.admin.getAllUsers.invalidate();
       await apiContext.team.getAllTeamsByCompanyId.invalidate();
       await apiContext.team.getAllUsers.invalidate();
+      await apiContext.company.getCompanyMembersNotInTeam.invalidate();
+      await apiContext.team.getTeam.invalidate();
       toast.success("User added to team successfully");
     },
     onError: () => {
@@ -71,14 +86,15 @@ export const AddUserDialog: FC<{ team: TTeam }> = ({ team }) => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button
+        {triggerButton}
+        {/* <Button
           type="button"
           variant="outline"
           className="inline-flex items-center gap-1 whitespace-nowrap text-sm"
         >
-          {/*   <UsersIcon className="w-[1.125rem]" /> */}
+          <UsersIcon className="w-[1.125rem]" />
           Manage Team Members
-        </Button>
+        </Button> */}
       </DialogTrigger>
       {isOpen && (
         <DialogContent className=" bg-white sm:max-w-2xl">
@@ -86,17 +102,17 @@ export const AddUserDialog: FC<{ team: TTeam }> = ({ team }) => {
             <DialogTitle>
               <h2 className="h5 inline">Add a new Member to the Team</h2>
             </DialogTitle>
-            <DialogDescription className="body-sm inline">
+            {/* <DialogDescription className="body-sm inline">
               <p>Enter the email address of the user to invite.</p>
-            </DialogDescription>
+            </DialogDescription> */}
           </DialogHeader>
           <div>
-            <h2 className="font-semibold">All Company Members</h2>
+            <h2 className="pb-2 font-medium">All Company Members</h2>
             <div className="grid gap-4">
               {users?.map((user) => (
                 <div
                   key={user.id}
-                  className="flex flex-col gap-2 rounded-lg border-2 border-gray-200 p-4"
+                  className="flex flex-col gap-2 rounded-lg border-2 border-gray-200 p-4 dark:border-gray-800"
                 >
                   <div className="flex items-center justify-between gap-2">
                     <div>
@@ -113,7 +129,7 @@ export const AddUserDialog: FC<{ team: TTeam }> = ({ team }) => {
                             size="sm"
                             variant="outline-destructive"
                             disabled={removeUserFromTeam.isLoading}
-                            // isLoading={removeUserFromTeam.isLoading}
+                            isLoading={removeUserFromTeam.isLoading}
                             // eslint-disable-next-line @typescript-eslint/no-misused-promises
                             onClick={async () => {
                               await removeUserFromTeam.mutateAsync({
@@ -142,7 +158,7 @@ export const AddUserDialog: FC<{ team: TTeam }> = ({ team }) => {
                           className="inline-flex items-center gap-1 whitespace-nowrap"
                           size="sm"
                           disabled={addUserToTeamMutation.isLoading}
-                          // isLoading={addUserToTeamMutation.isLoading}
+                          isLoading={addUserToTeamMutation.isLoading}
                         >
                           <UserPlusIcon className="w-4" />
                           Add to Team
@@ -178,7 +194,7 @@ export const AddUserDialog: FC<{ team: TTeam }> = ({ team }) => {
 //   await deleteTeamMutation.mutateAsync({ id: teamId });
 // }
 
-export const organizationTeamsColumns: ColumnDef<Team>[] = [
+export const companyTeamsColumns: ColumnDef<Team>[] = [
   {
     accessorKey: "name",
     header: "Team Name",
@@ -211,9 +227,9 @@ export const organizationTeamsColumns: ColumnDef<Team>[] = [
       const team = original as TTeam;
       const teamUsers = team.users;
       return (
-        <div className="flex items-center gap-x-0.5">
+        <div className="flex items-center gap-x-0.5 -space-x-2">
           {teamUsers.map((user) => (
-            <UserAvatar key={user.id} user={user} />
+            <UserAvatar key={user.id} user={user} size="lg" />
             // <p key={user.id}>{user.email},</p>
           ))}
         </div>

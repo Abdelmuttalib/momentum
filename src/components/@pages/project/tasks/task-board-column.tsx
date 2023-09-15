@@ -3,6 +3,7 @@ import CreateTask from "./forms/create-task";
 import { cn } from "@/utils/cn";
 import Task from "./task";
 import { Draggable, Droppable } from "react-beautiful-dnd";
+import TaskView from "./task-view";
 
 interface TaskColumnProps {
   status: TaskStatus;
@@ -52,7 +53,7 @@ export default function TaskBoardColumn({ status, tasks }: TaskColumnProps) {
                 index={index}
               >
                 {(provided) => (
-                  <Task
+                  <TaskView
                     draggableProps={provided.draggableProps}
                     dragHandleProps={provided.dragHandleProps}
                     innerRef={provided.innerRef}
