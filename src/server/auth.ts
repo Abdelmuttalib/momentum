@@ -15,8 +15,8 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import type { Company, Invitation, Role, User } from "@prisma/client";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { SupabaseAdapter } from "@auth/supabase-adapter";
-import { default as jsonwebtoken } from "jsonwebtoken";
+// import { SupabaseAdapter } from "@auth/supabase-adapter";
+// import { default as jsonwebtoken } from "jsonwebtoken";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`

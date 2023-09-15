@@ -73,7 +73,7 @@ export default function CompanyPage({
           <div className="flex flex-col gap-4">
             <div className="flex w-full items-center justify-between">
               <h2 className="h6">Invited Users(company)</h2>
-              <NewInvite userId={id} companyId={companyId} />
+              <NewInvite />
             </div>
             <div>
               {/* <Projects projects={teamProjects} team={currentTeam} /> */}

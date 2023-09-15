@@ -6,13 +6,10 @@ import {
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { cn } from "@/utils/cn";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 import { useRouter } from "next/router";
-import { ArrowLeftIcon } from "@heroicons/react/20/solid";
 import { api } from "@/utils/api";
 import { LoginBackground } from "@/components/layout";
 
@@ -57,7 +54,7 @@ const signUpValidationSchema = z
 type CreateUserAccountForm = z.infer<typeof signUpValidationSchema>;
 
 function CreateUserAccountForm() {
-  const { back, push } = useRouter();
+  const { push } = useRouter();
 
   const {
     register,

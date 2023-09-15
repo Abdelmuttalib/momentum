@@ -96,7 +96,7 @@ export function ProfileSettings() {
     imageDecodedFileData: ArrayBuffer,
     fileType: string
   ) => {
-    const { data, error: uploadError } = await supabase.storage
+    const { error: uploadError } = await supabase.storage
       .from("user-profile-images")
       .upload(imageFilePath, imageDecodedFileData, {
         contentType: fileType,
@@ -108,7 +108,7 @@ export function ProfileSettings() {
     }
   };
 
-  const getUploadedImagePublicUrl = async (imagePath: string) => {
+  function getUploadedImagePublicUrl(imagePath: string) {
     const { data } = supabase.storage
       .from("user-profile-images")
       .getPublicUrl(imagePath);
@@ -116,7 +116,7 @@ export function ProfileSettings() {
     const { publicUrl: publicImageUrl } = data;
 
     return publicImageUrl;
-  };
+  }
 
   async function onUploadProfileImage(imageFile: ImageFile) {
     try {
@@ -154,7 +154,7 @@ export function ProfileSettings() {
         const decodedFileData = decode(base64FileData);
         await uploadImageToStorage(path, decodedFileData, imageContentType);
 
-        const publicImageUrl = await getUploadedImagePublicUrl(path);
+        const publicImageUrl = getUploadedImagePublicUrl(path);
 
         // await insertImageToDatabase(publicImageUrl, description, is_public);
 
@@ -280,6 +280,7 @@ export function ProfileSettings() {
                 <Button
                   type="button"
                   size="sm"
+                  // eslint-disable-next-line @typescript-eslint/no-misused-promises
                   onClick={async () => {
                     if (imageFile) {
                       await onUploadProfileImage(imageFile);
@@ -323,6 +324,7 @@ export function ProfileSettings() {
           <div className="flex flex-col gap-2 pb-8">
             <div className="py-2">
               <form
+                // eslint-disable-next-line @typescript-eslint/no-misused-promises
                 onSubmit={handleSubmit(onUpdateInfo)}
                 className="flex flex-col gap-5 divide-y-2"
               >
@@ -343,7 +345,7 @@ export function ProfileSettings() {
                         {...register("firstName", {
                           required: true,
                         })}
-                        defaultValue={userData?.firstName}
+                        defaultValue={userData?.firstName || ""}
                         disabled={
                           isLoadingUserData ||
                           updateUserInfoMutation.isLoading ||
@@ -367,7 +369,7 @@ export function ProfileSettings() {
                         {...register("lastName", {
                           required: true,
                         })}
-                        defaultValue={userData?.lastName}
+                        defaultValue={userData?.lastName || ""}
                         disabled={
                           isLoadingUserData ||
                           updateUserInfoMutation.isLoading ||

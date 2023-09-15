@@ -132,7 +132,7 @@ export default function MainSwitcher() {
               />
               <AvatarFallback>SC</AvatarFallback>
             </Avatar>
-            <Link href={`/teams/${currentTeam?.id}`}>
+            <Link href={`/teams/${currentTeam?.id as string}`}>
               <p
                 className={cn("font-medium", {
                   "max-w-[20px] truncate lg:max-w-fit": isProjectPath,

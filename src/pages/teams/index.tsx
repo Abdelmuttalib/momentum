@@ -6,13 +6,13 @@ import { Layout } from "@/components/layout";
 // import { columns } from "@/components/@pages/team/TeamMembersTable/payments";
 import { api } from "@/utils/api";
 import { getServerAuthSession } from "@/server/auth";
-import { DataTable } from "@/components/@pages/teams/TeamMembers/data-table";
+// import { DataTable } from "@/components/@pages/teams/TeamMembers/data-table";
 
 import Team, { TeamLoader } from "@/components/@pages/teams/TeamProjects/Team";
 import CreateTeam from "@/components/@pages/teams/forms/create-team";
 import type { TTeam } from "types";
-import { companyTeamsColumns } from "@/components/@pages/company/organization-teams";
-import { prisma } from "@/server/db";
+// import { companyTeamsColumns } from "@/components/@pages/company/organization-teams";
+// import { prisma } from "@/server/db";
 import Container from "@/components/@pages/landing-page/container";
 import Seo from "@/components/Seo";
 
