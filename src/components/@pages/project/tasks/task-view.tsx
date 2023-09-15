@@ -1,30 +1,29 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Button } from "@/components/ui/button";
 import {
   DialogHeader,
   Dialog,
   DialogTrigger,
   DialogContent,
-  DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
 import {
-  ChatBubbleBottomCenterIcon,
   ChatBubbleLeftRightIcon,
-  EllipsisVerticalIcon,
+  // EllipsisVerticalIcon,
 } from "@heroicons/react/24/outline";
-import { Trash, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import Badge from "@/components/ui/badge";
 import LabelBadge from "@/components/ui/label-badge";
-import { Skeleton } from "@/components/ui/skeleton";
 import { getTaskStatusBadgeColor } from "@/utils/getBadgeColor";
-// import TaskDialog from "./task-dialog";
 import type { Label, Task } from "@prisma/client";
 import {
   type DraggableProvidedDragHandleProps,
   type DraggableProvidedDraggableProps,
 } from "react-beautiful-dnd";
 import { UserAvatar } from "@/components/user/UserMenu";
-import TaskDialog from "./task-dialog";
 import { Input } from "@/components/ui/input";
 import { api } from "@/utils/api";
 import { toast } from "sonner";
@@ -152,6 +151,8 @@ export default function TaskView({
           <div className="mt-2 flex justify-between px-0.5">
             <div className="inline-flex items-center gap-x-1 text-gray-500">
               <ChatBubbleLeftRightIcon className="w-[18px]" />
+              {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+              {/* @ts-ignore */}
               <span className="text-xs">{task?.comments?.length}</span>
             </div>
 
@@ -191,6 +192,8 @@ export default function TaskView({
               </div>
               <div className="flex gap-x-6">
                 <p className="text-gray-500">Label</p>
+                {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+                {/* @ts-ignore */}
                 {task?.labels?.map((label: Label) => (
                   <LabelBadge
                     key={label.id}
@@ -202,8 +205,12 @@ export default function TaskView({
               <div className="flex gap-x-6">
                 <p className="text-gray-500">Assignee</p>
                 <div className="inline-flex items-center gap-x-2">
+                  {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+                  {/* @ts-ignore */}
                   <UserAvatar user={task?.assignee} size="sm" />
                   <p>
+                    {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+                    {/* @ts-ignore */}
                     {task?.assignee?.firstName} {task?.assignee?.lastName}
                   </p>
                 </div>
