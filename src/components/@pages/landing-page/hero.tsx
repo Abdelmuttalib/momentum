@@ -8,26 +8,18 @@ export default function Hero() {
       <Container>
         <div
           aria-hidden="true"
-          className="absolute inset-0 m-auto grid h-max w-full grid-cols-2 -space-x-52 opacity-40 dark:pb-32 dark:opacity-40"
+          className="absolute inset-0 m-auto grid h-max w-full grid-cols-2 -space-x-52 opacity-40 dark:pb-32 dark:opacity-20"
         >
           <div className="h-56 bg-gradient-to-br from-primary to-purple-400 blur-[106px] dark:from-blue-700"></div>
           <div className="h-32 bg-gradient-to-r from-brand-400 to-brand-300 blur-[106px] dark:to-brand-600"></div>
         </div>
         <div className="relative flex flex-col gap-y-6">
-          <div
-            aria-hidden="true"
-            className="absolute left-0 right-0 mx-auto h-full w-full max-w-md rounded-full opacity-40 dark:hidden"
-          >
-            <div className="h-full rounded-full bg-gradient-to-br from-brand-600 to-brand-400 blur-3xl dark:from-blue-700"></div>
-
-            {/* <div className="h-32 bg-gradient-to-r from-brand-400 to-brand-300 blur-[106px] dark:to-brand-600"></div> */}
-          </div>
           <div className="relative">
             <div className="mx-auto space-y-8 text-center lg:w-2/3">
-              <h1 className="h2 sm:h1 md:display-sm lg:display-md xl:display-lg dark:to-primary-900 my-8 font-bold dark:bg-gradient-to-br dark:from-brand-200 dark:via-brand-400 dark:to-brand-600 dark:bg-clip-text dark:text-transparent sm:font-bold">
+              <h1 className="h2 sm:h1 md:display-sm primary-text-gradient my-8 text-balance font-bold sm:font-bold">
                 The Open Source issue tracking tool
               </h1>
-              <p className="text-center text-lg text-gray-600 dark:text-gray-300 sm:text-xl md:px-28">
+              <p className="dark:to-primary-900 bg-gradient-to-br from-gray-800 to-gray-700 bg-clip-text  text-center text-lg text-transparent dark:from-brand-200 dark:to-gray-400 dark:bg-clip-text dark:text-gray-300 dark:text-transparent sm:text-xl md:px-28">
                 Supercharge Your Team&apos;s Productivity.{" "}
                 <span className="underline decoration-brand decoration-2 underline-offset-2">
                   Momentum

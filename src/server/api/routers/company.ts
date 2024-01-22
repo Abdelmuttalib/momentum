@@ -254,4 +254,14 @@ export const companyRouter = createTRPCRouter({
     });
     return companyMembers;
   }),
+
+  getCompanyProjects: protectedProcedure.query(async ({ ctx }) => {
+    const companyId = ctx.session.user.company.id;
+    const companyProjects = await ctx.prisma.project.findMany({
+      where: {
+        companyId,
+      },
+    });
+    return companyProjects;
+  }),
 });

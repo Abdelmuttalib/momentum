@@ -3,7 +3,6 @@ import {
   HomeIcon,
   BuildingOfficeIcon,
   Cog6ToothIcon,
-  UsersIcon,
 } from "@heroicons/react/20/solid";
 import { api } from "@/utils/api";
 import UserMenu from "../user/UserMenu";
@@ -15,6 +14,7 @@ import { cn } from "@/utils/cn";
 
 import { IconButton } from "@/components/ui/icon-button";
 import Image from "next/image";
+import { TerminalIcon, TerminalSquareIcon, UsersIcon } from "lucide-react";
 
 type DashboardLink = {
   label: string;
@@ -36,6 +36,11 @@ export const dashboardLinks: DashboardLink[] = [
   {
     label: "Teams",
     icon: <UsersIcon className="w-5 text-current" />,
+    href: "/teams",
+  },
+  {
+    label: "Projects",
+    icon: <TerminalSquareIcon className="w-5 text-current" />,
     href: "/teams",
   },
   {
@@ -70,7 +75,7 @@ export function SideBarLink({ href, icon, label, isCurrentPath }: SideBarLink) {
     <Link
       href={href}
       className={cn(
-        "group flex w-full items-center py-2 hover:text-gray-400 focus:border-gray-900 focus:bg-gray-900/80 focus:outline-transparent xl:gap-3",
+        "group flex w-full items-center rounded-md px-2.5 py-2 hover:bg-gray-800 hover:text-gray-400 focus:border-gray-900 focus:bg-gray-900/80 focus:outline-transparent xl:gap-3",
         {
           "text-gray-100 hover:text-gray-100": isCurrentPath,
           "text-gray-500": !isCurrentPath,
@@ -78,7 +83,7 @@ export function SideBarLink({ href, icon, label, isCurrentPath }: SideBarLink) {
       )}
     >
       {icon}
-      <span className="ml-1 font-semibold first-letter:uppercase">
+      <span className="ml-1 text-sm font-medium first-letter:uppercase">
         {/* {t(`pages.${text}.title`)} */}
         {label}
       </span>
@@ -90,7 +95,7 @@ export function SideBarSubLink({ href, label, isCurrentPath }: SideBarLink) {
     <Link
       href={href}
       className={cn(
-        "group flex w-full items-center rounded-lg border-r-4 border-transparent py-2.5 pl-8 text-sm font-medium hover:bg-gray-800 hover:text-gray-100 focus:outline-transparent xl:gap-3",
+        "group flex w-full items-center rounded-lg border-r-4 border-transparent px-3 py-2 text-sm font-medium hover:bg-gray-800 hover:text-gray-100 focus:outline-transparent xl:gap-3",
         {
           "rounded-r-none border-r-brand-400 bg-gray-800/50 text-gray-100":
             isCurrentPath,
@@ -117,12 +122,17 @@ const SideBar = ({ mode = "normal", setShowSidebarMenu }: SideBarProps) => {
 
   const { data: teams } = api.team.getAllTeamsByCompanyId.useQuery();
 
+  const { data: companyProjects } = api.company.getCompanyProjects.useQuery();
+
+  console.log({ companyProjects });
+  // /teams/994e6fb5-f2f2-401e-a90f-c21e31c4f594/projects/4ff90488-7bbd-4d83-b5e4-521d08fd49ed
+
   return (
     <div
       className={cn(
-        "relative bg-black px-4 text-gray-100 dark:border-r dark:bg-gray-800/10",
+        "relative bg-gray-900 px-2.5 text-gray-100 dark:bg-gray-800/10",
         {
-          "hidden h-full min-h-screen w-full flex-col xl:block xl:w-56":
+          "hidden h-full min-h-screen w-full flex-col xl:block xl:w-52":
             mode === "normal",
           "fixed inset-0 z-50 flex h-[100svh] w-full flex-col backdrop-blur-md backdrop-filter transition-colors duration-300":
             mode === "mobile",
@@ -161,6 +171,22 @@ const SideBar = ({ mode = "normal", setShowSidebarMenu }: SideBarProps) => {
                     />
                   </li>
                 ))}
+              {/* /teams/994e6fb5-f2f2-401e-a90f-c21e31c4f594/projects/4ff90488-7bbd-4d83-b5e4-521d08fd49ed */}
+              {link.label === "Projects" &&
+                companyProjects?.map((project) => {
+                  const projectPath = `/teams/${project.teamId}/projects/${project.id}`;
+
+                  return (
+                    <li key={project.id} className="w-full">
+                      <SideBarSubLink
+                        {...link}
+                        href={projectPath}
+                        label={project.name}
+                        isCurrentPath={asPath === projectPath}
+                      />
+                    </li>
+                  );
+                })}
             </li>
           ))}
         </ul>

@@ -30,15 +30,8 @@ ProjectPageProps) => {
         title={`${project?.name} | Momentum`}
         description={`${project?.name} tasks board | Momentum`}
       />
-      <Layout pageTitle="">
-        <div className="flex flex-col gap-4">
-          <div className="flex w-full items-center justify-between">
-            <h1 className="h4 dark:text-gray-200">Tasks</h1>
-            <CreateTask />
-          </div>
-
-          <div>{project?.id && <TaskBoard projectId={project.id} />}</div>
-        </div>
+      <Layout pageTitle="Board" rightSideActions={<CreateTask />}>
+        <div>{project?.id && <TaskBoard projectId={project.id} />}</div>
       </Layout>
     </>
   );

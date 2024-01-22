@@ -62,7 +62,20 @@ import {
 } from "@/components/ui/form";
 
 const signInFormSchema = z.object({
-  email: z.string().email().nonempty(),
+  email: z
+    .string()
+    .email({
+      message: "invalid email address",
+    })
+    .min(4, {
+      message: "email must be at least 4 characters",
+    })
+    .max(50, {
+      message: "email must not be more than 50 characters",
+    })
+    .nonempty({
+      message: "email is required",
+    }),
   password: z
     .string()
     .min(8, { message: "password must be at least 8 characters" })
@@ -118,14 +131,9 @@ export default function SignInForm() {
   };
 
   return (
-    <div className="w-full space-y-3 py-4">
+    <div className="w-full space-y-3 py-4 sm:space-y-7">
       <div>
-        <div className="flex items-center gap-x-2">
-          <h1 className="h4 dark:text-gray-200">Sign in</h1>
-          {/* <span className="rounded-md border-2 border-black bg-black p-1.5 text-white group-hover:border-black group-hover:bg-black group-hover:text-gray-100">
-            <LogIn className="h-5 w-5" />
-          </span> */}
-        </div>
+        <h1 className="h5-light dark:text-gray-200">Sign in</h1>
         <p className="text-gray-500">
           enter your credentials to access your account
         </p>
@@ -134,7 +142,7 @@ export default function SignInForm() {
         <form
           // eslint-disable-next-line @typescript-eslint/no-misused-promises
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col gap-1"
+          className="flex flex-col gap-5"
         >
           <FormField
             control={form.control}

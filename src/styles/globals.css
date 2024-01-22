@@ -291,7 +291,7 @@
   h4,
   h5,
   h6 {
-    @apply tracking-tighter;
+    @apply tracking-tight;
   }
 
   .p {
@@ -323,6 +323,10 @@
 
   .link {
     @apply font-medium underline underline-offset-4;
+  }
+
+  .primary-text-gradient {
+    @apply bg-gradient-to-br from-gray-800 to-gray-800 bg-clip-text text-transparent dark:bg-gradient-to-br dark:from-white dark:to-brand-300 dark:bg-clip-text dark:text-transparent;
   }
 
   /* text select color */

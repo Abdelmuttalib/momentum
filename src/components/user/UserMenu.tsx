@@ -43,6 +43,7 @@ import { type User as UserType } from "@prisma/client";
 import Link from "next/link";
 import { cn } from "@/utils/cn";
 import Image from "next/image";
+import ThemeToggle from "../theme-toggle";
 
 {
   /* <TooltipProvider>
@@ -140,16 +141,16 @@ export default function UserMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button className="flex h-fit w-full items-center justify-start gap-3 truncate border-2 border-transparent bg-transparent px-2 py-2 hover:border-gray-800 hover:bg-transparent">
+        <Button className="flex h-fit w-full items-center justify-start gap-3 truncate border-2 bg-transparent px-2 py-2 hover:border-gray-800 hover:bg-transparent">
           <div className="inline-flex h-8 w-8 items-center justify-center rounded border border-gray-600">
             {session?.user?.firstName[0]}
           </div>
-          <p className="truncate">
+          <p className="truncate text-gray-100">
             {session?.user?.firstName} {session?.user?.lastName}
           </p>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-52">
+      <DropdownMenuContent className="w-52 bg-white">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
@@ -177,6 +178,10 @@ export default function UserMenu() {
           <DropdownMenuItem>
             <Plus className="mr-2 h-4 w-4" />
             <span>New Team</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem className="space-x-4">
+            <span>Theme</span>
+            <ThemeToggle />
           </DropdownMenuItem>
         </DropdownMenuGroup>
         {/* <DropdownMenuSeparator />

@@ -14,7 +14,7 @@ export default function RegisterPage() {
 
   return (
     <LoginBackground>
-      <div className="flex flex-col items-center justify-center px-4">
+      <div className="flex w-full max-w-lg flex-col items-center justify-center px-4">
         {registerStep === "company" && (
           <CreateCompanyForm
             setRegisterStep={setRegisterStep}

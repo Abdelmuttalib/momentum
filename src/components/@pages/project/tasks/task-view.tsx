@@ -182,7 +182,7 @@ export default function TaskView({
           <div className="flex flex-col gap-4 divide-y">
             <div className="flex flex-col gap-y-4 py-3 text-sm">
               <div className="flex gap-x-6">
-                <p className="text-gray-500">Status</p>
+                <p className="font-medium text-gray-600">Status</p>
                 <Badge
                   color={getTaskStatusBadgeColor(task.status)}
                   className="capitalize"
@@ -191,7 +191,7 @@ export default function TaskView({
                 </Badge>
               </div>
               <div className="flex gap-x-6">
-                <p className="text-gray-500">Label</p>
+                <p className="font-medium text-gray-600">Label</p>
                 {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
                 {/* @ts-ignore */}
                 {task?.labels?.map((label: Label) => (
@@ -203,7 +203,7 @@ export default function TaskView({
                 ))}
               </div>
               <div className="flex gap-x-6">
-                <p className="text-gray-500">Assignee</p>
+                <p className="font-medium text-gray-600">Assignee</p>
                 <div className="inline-flex items-center gap-x-2">
                   {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
                   {/* @ts-ignore */}

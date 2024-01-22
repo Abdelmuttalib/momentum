@@ -47,7 +47,7 @@ export function CreateCompanyForm({
   return (
     <div className="flex w-full flex-col gap-5">
       <div>
-        <h1 className="h4 text-gray-800">Create a new Company</h1>
+        <h1 className="h5-light">Create a new company</h1>
         <p className="text-gray-500">choose a name for your company</p>
       </div>
       <form

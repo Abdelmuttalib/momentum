@@ -10,6 +10,8 @@ import CallToAction from "@/components/@pages/landing-page/call-to-action";
 // import Blog from "@/components/@pages/landing-page/blog";
 import Features from "@/components/@pages/landing-page/features";
 import Header from "@/components/@pages/landing-page/header";
+import Head from "next/head";
+import Seo from "@/components/Seo";
 // import Footer from "@/components/@pages/landing-page/footer";
 
 // function Header() {
@@ -151,6 +153,7 @@ function AppExplanation() {
 export default function LandingPage() {
   return (
     <>
+      <Seo title="Momentum" />
       <Header />
       <main className="mb-40 space-y-40 dark:bg-gray-900">
         <Hero />
@@ -161,29 +164,12 @@ export default function LandingPage() {
         {/* <Blog />
         <Footer /> */}
       </main>
-      <footer className="px-8 py-4 text-gray-500">
-        <p className="text-center text-sm">
+      <footer className="bg-gray-100 px-8 py-4 text-gray-500">
+        <p className="text-center text-sm md:text-base">
           Copyright © {new Date().getFullYear()} Momentum. All rights reserved.
         </p>
-        {/* Copyright © {new Date().getFullYear()} invix. All rights reserved. */}
       </footer>
     </>
-    // <>
-    //   <Seo title="Momentum" />
-    //   <div className="flex min-h-[100svh] w-full flex-col">
-    //     <Header />
-
-    //     <div>
-    //       <HeroSection />
-    //       <Features />
-    //     </div>
-    //     {/* <AppExplanation /> */}
-
-    //     <div className="mt-auto">
-    //       <Footer />
-    //     </div>
-    //   </div>
-    // </>
   );
 }
 
