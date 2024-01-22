@@ -142,7 +142,7 @@ const SideBar = ({ mode = "normal", setShowSidebarMenu }: SideBarProps) => {
       <div className="relative flex h-full flex-col overflow-y-auto py-4 lg:pl-0">
         {setShowSidebarMenu && (
           <IconButton
-            className="absolute left-4 top-6 focus:border-2 focus:border-gray-800"
+            className="absolute left-2 top-2 focus:border-2 focus:border-gray-800"
             variant="outline"
             size="sm"
             onClick={() => setShowSidebarMenu(false)}
@@ -150,7 +150,7 @@ const SideBar = ({ mode = "normal", setShowSidebarMenu }: SideBarProps) => {
             <XMarkIcon className="w-6" aria-hidden="true" />
           </IconButton>
         )}
-        <div className="flex items-center gap-2 text-center">
+        <div className="hidden items-center gap-2 text-center xl:flex">
           <Image src="/favicon.ico" alt="app icon" width={28} height={28} />
           <h5 className="font-medium">Momentum</h5>
         </div>

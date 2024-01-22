@@ -1,4 +1,4 @@
-import { type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 
 import { cn } from "@/utils/cn";
 import { Button } from "../ui/button";
@@ -9,6 +9,8 @@ import MainSwitcher from "../Switcher";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import SideBar from "./SideBar";
+import { IconButton } from "../ui/icon-button";
+import { Bars3Icon } from "@heroicons/react/20/solid";
 
 interface HeaderProps {
   pageTitle: string | ReactNode;
@@ -16,27 +18,30 @@ interface HeaderProps {
 }
 // Header
 function Header({ pageTitle, actions }: HeaderProps) {
+  const { pathname } = useRouter();
+  const [showSidebarMenu, setShowSidebarMenu] = useState(false);
+
   return (
     <>
-      {/* {showSidebarMenu && (
+      {showSidebarMenu && (
         <SideBar mode="mobile" setShowSidebarMenu={setShowSidebarMenu} />
-      )} */}
-      <header className="z-50 w-full flex-none backdrop-blur-md lg:pl-0">
+      )}
+      <header className="z-40 w-full flex-none backdrop-blur-md lg:pl-0">
         <div className="px-4 pb-1.5 lg:px-6 lg:pl-3">
           <div className="flex h-14 items-center justify-between overflow-y-hidden">
             <div className="flex w-full items-center justify-between gap-3 ">
               <div className="flex items-center gap-3">
-                {/* <IconButton
-                className={cn("bg-white focus:border-2", {
-                  block: pathname === "/",
-                  "block xl:hidden": pathname !== "/",
-                })}
-                variant="secondary"
-                size="sm"
-                onClick={() => setShowSidebarMenu(true)}
-              >
-                <Bars3Icon className="w-6" />
-              </IconButton> */}
+                <IconButton
+                  className={cn("bg-white focus:border-2", {
+                    block: pathname === "/",
+                    "block xl:hidden": pathname !== "/",
+                  })}
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => setShowSidebarMenu((prev) => !prev)}
+                >
+                  <Bars3Icon className="w-6" />
+                </IconButton>
                 <div className="block dark:text-gray-200 print:hidden">
                   <h1 className="h6-light block capitalize sm:hidden">
                     {pageTitle}
@@ -95,7 +100,7 @@ export default function Layout({
         <SideBar mode="normal" />
         {/* <MobileNav /> */}
       </aside>
-      <div className="flex h-full w-full flex-col overflow-auto rounded-l-xl bg-white dark:bg-gray-800/20">
+      <div className="flex h-full w-full flex-col overflow-auto bg-white dark:bg-gray-800/20 xl:rounded-l-xl">
         <Header pageTitle={pageTitle} actions={rightSideActions} />
         <main
           className={cn(
