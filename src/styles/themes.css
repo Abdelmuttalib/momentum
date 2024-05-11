@@ -1,0 +1,225 @@
+.theme-default {
+  --color-primary-50: 240 33.3% 97.6%; /* #F7F7FB */
+  --color-primary-100: 240 95% 92.2%; /* #D8D8FE */
+  --color-primary-200: 240 94.9% 84.7%; /* #B3B3FD */
+  --color-primary-300: 240 89.2% 74.5%; /* #8484F8 */
+  --color-primary-400: 240 89.5% 70%; /* #6E6EF7 */
+  --color-primary-500: 240 87.3% 60%; /* #4040F2 #4f46e5 */
+  --color-primary-600: 240 63.2% 51%; /* #3333D1  #4f46e5 */
+  --color-primary-700: 240 68.9% 44.1%; /* #2323BE */
+  --color-primary-800: 240 72.1% 33.7%; /* #181894 */
+  --color-primary-900: 240 73.2% 19%; /* #0D0D54 */
+
+  --color-primary: var(--color-primary-500);
+  --color-primary-hover: var(--color-primary-400);
+  --color-primary-active: var(--color-primary-600);
+  --color-primary-disabled: var(--color-primary-300);
+}
+
+.dark .theme-default {
+  --color-primary-50: 240 33.3% 97.6%; /* #F7F7FB */
+  --color-primary-100: 240 95% 92.2%; /* #D8D8FE */
+  --color-primary-200: 240 94.9% 84.7%; /* #B3B3FD */
+  --color-primary-300: 240 89.2% 74.5%; /* #8484F8 */
+  --color-primary-400: 240 89.5% 70%; /* #6E6EF7 */
+  --color-primary-500: 240 87.3% 60%; /* #4040F2 #4f46e5 */
+  --color-primary-600: 240 63.2% 51%; /* #3333D1  #4f46e5 */
+  --color-primary-700: 240 68.9% 44.1%; /* #2323BE */
+  --color-primary-800: 240 72.1% 33.7%; /* #181894 */
+  --color-primary-900: 240 73.2% 19%; /* #0D0D54 */
+
+  --color-primary: var(--color-primary-400);
+  --color-primary-hover: var(--color-primary-300);
+  --color-primary-active: var(--color-primary-500);
+  --color-primary-disabled: var(--color-primary-300);
+}
+
+.theme-emerald {
+  --color-primary-50: 151.8 81% 95.9%; /* #ecfdf5 */
+  --color-primary-100: 149.3 80.4% 90%; /* #d1fae5 */
+  --color-primary-200: 152.4 76% 80.4%; /* #a7f3d0 */
+  --color-primary-300: 156.2 71.6% 66.9%; /* #6ee7b7 */
+  --color-primary-400: 158.1 64.4% 51.6%; /* #34d399 */
+  --color-primary-500: 160.1 84.1% 39.4%; /* #10b981 */
+  --color-primary-600: 161.4 93.5% 30.4%; /* #059669 */
+  --color-primary-700: 162.9 93.5% 24.3%; /* #047857 */
+  --color-primary-800: 163.1 88.1% 19.8%; /* #065f46 */
+  --color-primary-900: 164.2 85.7% 16.5%; /* #064e3b */
+  --color-primary-950: 165.7 91.3% 9%; /* #022c22 */
+
+  --color-primary: var(--color-primary-500);
+  --color-primary-hover: var(--color-primary-400);
+  --color-primary-active: var(--color-primary-600);
+  --color-primary-disabled: var(--color-primary-300);
+}
+
+.dark .theme-emerald {
+  --color-primary-50: 151.8 81% 95.9%; /* #ecfdf5 */
+  --color-primary-100: 149.3 80.4% 90%; /* #d1fae5 */
+  --color-primary-200: 152.4 76% 80.4%; /* #a7f3d0 */
+  --color-primary-300: 156.2 71.6% 66.9%; /* #6ee7b7 */
+  --color-primary-400: 158.1 64.4% 51.6%; /* #34d399 */
+  --color-primary-500: 160.1 84.1% 39.4%; /* #10b981 */
+  --color-primary-600: 161.4 93.5% 30.4%; /* #059669 */
+  --color-primary-700: 162.9 93.5% 24.3%; /* #047857 */
+  --color-primary-800: 163.1 88.1% 19.8%; /* #065f46 */
+  --color-primary-900: 164.2 85.7% 16.5%; /* #064e3b */
+  --color-primary-950: 165.7 91.3% 9%; /* #022c22 */
+
+  --color-primary: var(--color-primary-400);
+  --color-primary-hover: var(--color-primary-300);
+  --color-primary-active: var(--color-primary-500);
+  --color-primary-disabled: var(--color-primary-300);
+}
+
+.theme-indigo {
+  --color-primary-50: 225.9 100% 96.7%; /* #eef2ff */
+  --color-primary-100: 226.5 100% 93.9%; /* #e0e7ff */
+  --color-primary-200: 228 96.5% 88.8%; /* #c7d2fe */
+  --color-primary-300: 229.7 93.5% 81.8%; /* #a5b4fc */
+  --color-primary-400: 234.5 89.5% 73.9%; /* #818cf8 */
+  --color-primary-500: 238.7 83.5% 66.7%; /* #6366f1 */
+  --color-primary-600: 243.4 75.4% 58.6%; /* #4f46e5 */
+  --color-primary-700: 244.5 57.9% 50.6%; /* #4338ca */
+  --color-primary-800: 243.7 54.5% 41.4%; /* #3730a3 */
+  --color-primary-900: 242.2 47.4% 34.3%; /* #312e81 */
+  --color-primary-950: 243.8 47.1% 20%; /* #1e1b4b */
+
+  --color-primary: var(--color-primary-500);
+  --color-primary-hover: var(--color-primary-400);
+  --color-primary-active: var(--color-primary-600);
+  --color-primary-disabled: var(--color-primary-300);
+}
+
+.dark .theme-indigo {
+  --color-primary-50: 225.9 100% 96.7%; /* #eef2ff */
+  --color-primary-100: 226.5 100% 93.9%; /* #e0e7ff */
+  --color-primary-200: 228 96.5% 88.8%; /* #c7d2fe */
+  --color-primary-300: 229.7 93.5% 81.8%; /* #a5b4fc */
+  --color-primary-400: 234.5 89.5% 73.9%; /* #818cf8 */
+  --color-primary-500: 238.7 83.5% 66.7%; /* #6366f1 */
+  --color-primary-600: 243.4 75.4% 58.6%; /* #4f46e5 */
+  --color-primary-700: 244.5 57.9% 50.6%; /* #4338ca */
+  --color-primary-800: 243.7 54.5% 41.4%; /* #3730a3 */
+  --color-primary-900: 242.2 47.4% 34.3%; /* #312e81 */
+  --color-primary-950: 243.8 47.1% 20%; /* #1e1b4b */
+
+  --color-primary: var(--color-primary-500);
+  --color-primary-hover: var(--color-primary-400);
+  --color-primary-active: var(--color-primary-600);
+  --color-primary-disabled: var(--color-primary-300);
+}
+
+.theme-rose {
+  --color-primary-50: 355.7 100% 97.3%; /* #fff1f2 */
+  --color-primary-100: 355.6 100% 94.7%; /* #ffe4e6 */
+  --color-primary-200: 352.7 96.1% 90%; /* #fecdd3 */
+  --color-primary-300: 352.6 95.7% 81.8%; /* #fda4af */
+  --color-primary-400: 351.3 94.5% 71.4%; /* #fb7185 */
+  --color-primary-500: 349.7 89.2% 60.2%; /* #f43f5e */
+  --color-primary-600: 346.8 77.2% 49.8%; /* #e11d48 */
+  --color-primary-700: 345.3 82.7% 40.8%; /* #be123c */
+  --color-primary-800: 343.4 79.7% 34.7%; /* #9f1239 */
+  --color-primary-900: 341.5 75.5% 30.4%; /* #881337 */
+  --color-primary-950: 343.1 87.7% 15.9%; /* #4c0519 */
+
+  --color-primary: var(--color-primary-500);
+  --color-primary-hover: var(--color-primary-400);
+  --color-primary-active: var(--color-primary-600);
+  --color-primary-disabled: var(--color-primary-300);
+}
+
+.dark .theme-rose {
+  --color-primary-50: 355.7 100% 97.3%; /* #fff1f2 */
+  --color-primary-100: 355.6 100% 94.7%; /* #ffe4e6 */
+  --color-primary-200: 352.7 96.1% 90%; /* #fecdd3 */
+  --color-primary-300: 352.6 95.7% 81.8%; /* #fda4af */
+  --color-primary-400: 351.3 94.5% 71.4%; /* #fb7185 */
+  --color-primary-500: 349.7 89.2% 60.2%; /* #f43f5e */
+  --color-primary-600: 346.8 77.2% 49.8%; /* #e11d48 */
+  --color-primary-700: 345.3 82.7% 40.8%; /* #be123c */
+  --color-primary-800: 343.4 79.7% 34.7%; /* #9f1239 */
+  --color-primary-900: 341.5 75.5% 30.4%; /* #881337 */
+  --color-primary-950: 343.1 87.7% 15.9%; /* #4c0519 */
+
+  --color-primary: var(--color-primary-500);
+  --color-primary-hover: var(--color-primary-400);
+  --color-primary-active: var(--color-primary-600);
+  --color-primary-disabled: var(--color-primary-300);
+}
+
+.theme-blue {
+  --color-primary-50: 225.7 100% 95.9%; /* #eaefff */
+  --color-primary-100: 226.8 100% 92%; /* #d6dfff */
+  --color-primary-200: 226.7 100% 84.1%; /* #aec0ff */
+  --color-primary-300: 226.7 100% 76.1%; /* #85a0ff */
+  --color-primary-400: 226.7 100% 68.2%; /* #5d81ff */
+  --color-primary-500: 226.7 100% 60.2%; /* #3461ff */
+  --color-primary-600: 226.7 65.9% 48.2%; /* #2a4ecc */
+  --color-primary-700: 226.7 66.3% 36.1%; /* #1f3a99 */
+  --color-primary-800: 226.7 65.9% 24.1%; /* #152766 */
+  --color-primary-900: 226.8 67.2% 12%; /* #0a1333 */
+  --color-primary-950: 228 66.7% 5.9%; /* #050919 */ /* #04060d */
+
+  --color-primary: var(--color-primary-500);
+  --color-primary-hover: var(--color-primary-400);
+  --color-primary-active: var(--color-primary-600);
+  --color-primary-disabled: var(--color-primary-300);
+}
+
+.dark .theme-blue {
+  --color-primary-50: 225.7 100% 95.9%; /* #eaefff */
+  --color-primary-100: 226.8 100% 92%; /* #d6dfff */
+  --color-primary-200: 226.7 100% 84.1%; /* #aec0ff */
+  --color-primary-300: 226.7 100% 76.1%; /* #85a0ff */
+  --color-primary-400: 226.7 100% 68.2%; /* #5d81ff */
+  --color-primary-500: 226.7 100% 60.2%; /* #3461ff */
+  --color-primary-600: 226.7 65.9% 48.2%; /* #2a4ecc */
+  --color-primary-700: 226.7 66.3% 36.1%; /* #1f3a99 */
+  --color-primary-800: 226.7 65.9% 24.1%; /* #152766 */
+  --color-primary-900: 226.8 67.2% 12%; /* #0a1333 */
+  --color-primary-950: 228 66.7% 5.9%; /* #050919 */ /* #04060d */
+
+  --color-primary: var(--color-primary-500);
+  --color-primary-hover: var(--color-primary-400);
+  --color-primary-active: var(--color-primary-600);
+  --color-primary-disabled: var(--color-primary-300);
+}
+
+.theme-orange {
+  --color-primary-50: 33.3 100% 96.5%; /* #fff7ed */
+  --color-primary-100: 34.3 100% 91.8%; /* #ffedd5 */
+  --color-primary-200: 32.1 97.7% 83.1%; /* #fed7aa */
+  --color-primary-300: 30.7 97.2% 72.4%; /* #fdba74 */
+  --color-primary-400: 27 96% 61%; /* #fb923c */
+  --color-primary-500: 24.6 95% 53.1%; /* #f97316 */
+  --color-primary-600: 20.5 90.2% 48.2%; /* #ea580c */
+  --color-primary-700: 17.5 88.3% 40.4%; /* #c2410c */
+  --color-primary-800: 15 79.1% 33.7%; /* #9a3412 */
+  --color-primary-900: 15.3 74.6% 27.8%; /* #7c2d12 */
+  --color-primary-950: 13 81.1% 14.5%; /* #431407 */
+
+  --color-primary: var(--color-primary-500);
+  --color-primary-hover: var(--color-primary-400);
+  --color-primary-active: var(--color-primary-600);
+  --color-primary-disabled: var(--color-primary-300);
+}
+
+.dark .theme-orange {
+  --color-primary-50: 33.3 100% 96.5%; /* #fff7ed */
+  --color-primary-100: 34.3 100% 91.8%; /* #ffedd5 */
+  --color-primary-200: 32.1 97.7% 83.1%; /* #fed7aa */
+  --color-primary-300: 30.7 97.2% 72.4%; /* #fdba74 */
+  --color-primary-400: 27 96% 61%; /* #fb923c */
+  --color-primary-500: 24.6 95% 53.1%; /* #f97316 */
+  --color-primary-600: 20.5 90.2% 48.2%; /* #ea580c */
+  --color-primary-700: 17.5 88.3% 40.4%; /* #c2410c */
+  --color-primary-800: 15 79.1% 33.7%; /* #9a3412 */
+  --color-primary-900: 15.3 74.6% 27.8%; /* #7c2d12 */
+  --color-primary-950: 13 81.1% 14.5%; /* #431407 */
+
+  --color-primary: var(--color-primary-400);
+  --color-primary-hover: var(--color-primary-300);
+  --color-primary-active: var(--color-primary-500);
+  --color-primary-disabled: var(--color-primary-300);
+}
