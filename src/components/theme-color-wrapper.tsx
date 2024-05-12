@@ -21,11 +21,10 @@ export function ThemeColorWrapper({
 
   // const fontSizeClass = `theme-text-sizes-${fontSize.fontSize}`;
 
-
   const [themeColor] = useThemeColor();
   const [font] = useFont();
 
-  const fontClass = `font-${font.font || "general-sans"}`;
+  const fontClass = `font-${font.font ?? "inter"}`;
 
   const [fontSize] = useFontSize();
 
