@@ -23,7 +23,7 @@ import {
   type DraggableProvidedDragHandleProps,
   type DraggableProvidedDraggableProps,
 } from "react-beautiful-dnd";
-import { UserAvatar } from "@/components/user/UserMenu";
+import { UserAvatar } from "@/components/user/user-menu";
 import { Input } from "@/components/ui/input";
 import { api } from "@/utils/api";
 import { toast } from "sonner";
@@ -32,6 +32,7 @@ import { useForm } from "react-hook-form";
 import { useSession } from "next-auth/react";
 import { formatFullDate } from "@/utils/formatFullDate";
 import { cn } from "@/utils/cn";
+import { Typography } from "@/components/ui/typography";
 
 interface TaskProps {
   task: Task;
@@ -56,8 +57,6 @@ export default function TaskView({
     api.task.getTaskComments.useQuery({
       taskId: task.id,
     });
-
-  console.log("taskComments: ", taskComments);
 
   const addCommentMutation = api.task.addComment.useMutation({
     onSuccess: async () => {
@@ -120,16 +119,22 @@ export default function TaskView({
           {...draggableProps}
           {...dragHandleProps}
           ref={innerRef}
-          className="mb-4 rounded-lg border bg-white p-4 shadow-lg hover:bg-gray-50 dark:border-gray-800 dark:bg-gray-900/50"
+          className="mb-4 rounded-lg border bg-layer p-4 hover:bg-layer-3"
           // onClick={() => setSelectedTask(task)}
         >
           <div className="flex justify-between">
-            <h3 className="mb-2 font-semibold dark:text-gray-200">
+            <Typography as="h3" variant="md/medium" className="mb-2">
               {task.title}
-            </h3>
+            </Typography>
             {/* <TaskDialog task={task} /> */}
           </div>
-          <p className="text-gray-600 dark:text-gray-500">{task.description}</p>
+          <Typography
+            as="p"
+            variant="sm/regular"
+            className="text-foreground-light"
+          >
+            {task.description}
+          </Typography>
           <div className="mt-4 flex items-center justify-between gap-2">
             {/* TODO: fix typing for labels on task */}
             {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
@@ -167,10 +172,10 @@ export default function TaskView({
       <DialogContent className="w-full max-w-2xl">
         <DialogHeader className="space-y-0">
           <DialogTitle className="flex items-center gap-x-6">
-            <h2 className="h5 inline">{task.title}</h2>
-            {/* <Button size="icon" variant="outline-destructive">
+            {task.title}
+            {/* <IconButton variant="destructive-outline">
               <Trash className="w-5" />
-            </Button> */}
+            </IconButton> */}
           </DialogTitle>
           {/* <DialogDescription className="body-sm inline text-gray-600">
             <p>Update Task information.</p>
@@ -258,7 +263,7 @@ export default function TaskView({
                           onClick={() => onDeleteComment(id, authorId)}
                           disabled={deleteCommentMuation.isLoading}
                         >
-                          <Trash2 className="w-5 text-error-500 dark:text-error-400" />
+                          <Trash2 className="text-error-500 dark:text-error-400 w-5" />
                         </button>
                       )}
                     </div>

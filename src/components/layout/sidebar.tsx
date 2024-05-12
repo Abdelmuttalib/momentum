@@ -1,11 +1,10 @@
-import { XMarkIcon } from "@heroicons/react/24/outline";
 import {
+  XMarkIcon,
   HomeIcon,
   BuildingOfficeIcon,
   Cog6ToothIcon,
-} from "@heroicons/react/20/solid";
-import { api } from "@/utils/api";
-import UserMenu from "../user/UserMenu";
+} from "@heroicons/react/24/outline";
+import UserMenu from "../user/user-menu";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import type { Dispatch, ReactNode, SetStateAction } from "react";
@@ -13,8 +12,7 @@ import type { Dispatch, ReactNode, SetStateAction } from "react";
 import { cn } from "@/utils/cn";
 
 import { IconButton } from "@/components/ui/icon-button";
-import Image from "next/image";
-import { TerminalIcon, TerminalSquareIcon, UsersIcon } from "lucide-react";
+import { TerminalSquareIcon, UsersIcon } from "lucide-react";
 
 type DashboardLink = {
   label: string;
@@ -26,7 +24,7 @@ export const dashboardLinks: DashboardLink[] = [
   {
     label: "Home",
     icon: <HomeIcon className="w-5 text-current" />,
-    href: "/teams",
+    href: "/overview",
   },
   // {
   //   label: "Overview",
@@ -38,11 +36,11 @@ export const dashboardLinks: DashboardLink[] = [
     icon: <UsersIcon className="w-5 text-current" />,
     href: "/teams",
   },
-  {
-    label: "Projects",
-    icon: <TerminalSquareIcon className="w-5 text-current" />,
-    href: "/teams",
-  },
+  // {
+  //   label: "Projects",
+  //   icon: <TerminalSquareIcon className="w-5 text-current" />,
+  //   href: "/teams",
+  // },
   {
     label: "Company",
     icon: <BuildingOfficeIcon className="w-5 text-current" />,
@@ -53,17 +51,6 @@ export const dashboardLinks: DashboardLink[] = [
     icon: <Cog6ToothIcon className="w-5 text-current" />,
     href: "/settings",
   },
-
-  // {
-  //   text: "user-management",
-  //   icon: <UsersIcon className="mx-2 my-1.5 w-5 text-current" />,
-  //   href: "/user-management",
-  // },
-  // {
-  //   text: "design-system",
-  //   icon: <HashtagIcon className="mx-2 my-1.5 w-5 text-current" />,
-  //   href: "/design-system",
-  // },
 ];
 
 type SideBarLink = DashboardLink & {
@@ -75,10 +62,10 @@ export function SideBarLink({ href, icon, label, isCurrentPath }: SideBarLink) {
     <Link
       href={href}
       className={cn(
-        "group flex w-full items-center rounded-md px-2.5 py-2 hover:bg-gray-800 hover:text-gray-400 focus:border-gray-900 focus:bg-gray-900/80 focus:outline-transparent xl:gap-3",
+        "group flex w-full items-center rounded px-4 py-2.5 hover:bg-accent-hover focus:border-gray-900 focus:outline-transparent xl:gap-3",
         {
-          "text-gray-100 hover:text-gray-100": isCurrentPath,
-          "text-gray-500": !isCurrentPath,
+          "bg-accent-hover text-foreground": isCurrentPath,
+          "text-foreground-lighter": !isCurrentPath,
         }
       )}
     >
@@ -97,7 +84,7 @@ export function SideBarSubLink({ href, label, isCurrentPath }: SideBarLink) {
       className={cn(
         "group flex w-full items-center rounded-lg border-r-4 border-transparent px-3 py-2 text-sm font-medium hover:bg-gray-800 hover:text-gray-100 focus:outline-transparent xl:gap-3",
         {
-          "rounded-r-none border-r-brand-400 bg-gray-800/50 text-gray-100":
+          "border-r-brand-400 rounded-r-none bg-gray-800/50 text-gray-100":
             isCurrentPath,
           "text-gray-600": !isCurrentPath,
         }
@@ -117,27 +104,20 @@ interface SideBarProps {
   setShowSidebarMenu?: Dispatch<SetStateAction<boolean>>;
 }
 
-const SideBar = ({ mode = "normal", setShowSidebarMenu }: SideBarProps) => {
+export default function SideBar({
+  mode = "normal",
+  setShowSidebarMenu,
+}: SideBarProps) {
   const { pathname, asPath } = useRouter();
-
-  const { data: teams } = api.team.getAllTeamsByCompanyId.useQuery();
-
-  const { data: companyProjects } = api.company.getCompanyProjects.useQuery();
-
-  console.log({ companyProjects });
-  // /teams/994e6fb5-f2f2-401e-a90f-c21e31c4f594/projects/4ff90488-7bbd-4d83-b5e4-521d08fd49ed
 
   return (
     <div
-      className={cn(
-        "relative bg-gray-900 px-2.5 text-gray-100 dark:bg-gray-800/10",
-        {
-          "hidden h-full min-h-screen w-full flex-col xl:block xl:w-52":
-            mode === "normal",
-          "fixed inset-0 z-50 flex h-[100svh] w-full flex-col backdrop-blur-md backdrop-filter transition-colors duration-300":
-            mode === "mobile",
-        }
-      )}
+      className={cn("relative bg-background px-4", {
+        "hidden h-full min-h-screen w-full flex-col xl:block xl:w-64":
+          mode === "normal",
+        "fixed inset-0 z-50 flex h-[100svh] w-full flex-col transition-colors duration-300":
+          mode === "mobile",
+      })}
     >
       <div className="relative flex h-full flex-col overflow-y-auto py-4 lg:pl-0">
         {setShowSidebarMenu && (
@@ -150,17 +130,16 @@ const SideBar = ({ mode = "normal", setShowSidebarMenu }: SideBarProps) => {
             <XMarkIcon className="w-6" aria-hidden="true" />
           </IconButton>
         )}
-        <div className="hidden items-center gap-2 text-center xl:flex">
-          <Image src="/favicon.ico" alt="app icon" width={28} height={28} />
-          <h5 className="font-medium">Momentum</h5>
+        <div className="hidden w-fit items-center gap-2 rounded bg-gradient-to-b from-primary-300 to-primary-200 px-2 py-1.5 text-center text-foreground xl:flex">
+          <h5 className="font-semibold">Momentum</h5>
         </div>
 
         {/* links */}
-        <ul className="mt-10 flex flex-col gap-1.5">
+        <ul className="mt-10 flex flex-col">
           {dashboardLinks.map((link) => (
             <li key={link.label}>
               <SideBarLink {...link} isCurrentPath={pathname === link.href} />
-              {link.label === "Teams" &&
+              {/* {link.label === "Teams" &&
                 teams?.map((team) => (
                   <li key={team.id} className="w-full">
                     <SideBarSubLink
@@ -170,9 +149,9 @@ const SideBar = ({ mode = "normal", setShowSidebarMenu }: SideBarProps) => {
                       isCurrentPath={asPath === `/teams/${team.id}`}
                     />
                   </li>
-                ))}
+                ))} */}
               {/* /teams/994e6fb5-f2f2-401e-a90f-c21e31c4f594/projects/4ff90488-7bbd-4d83-b5e4-521d08fd49ed */}
-              {link.label === "Projects" &&
+              {/* {link.label === "Projects" &&
                 companyProjects?.map((project) => {
                   const projectPath = `/teams/${project.teamId}/projects/${project.id}`;
 
@@ -186,44 +165,15 @@ const SideBar = ({ mode = "normal", setShowSidebarMenu }: SideBarProps) => {
                       />
                     </li>
                   );
-                })}
+                })} */}
             </li>
           ))}
         </ul>
 
-        <div className="mt-auto">
+        <div className="mt-auto max-w-full">
           <UserMenu />
         </div>
-
-        {/* <ul className="mt-10 flex flex-col gap-1 md:mb-44">
-          {dashboardLinks.map((link) => (
-            <li key={link.label}>
-              <SideBarLink {...link} isCurrentPath={pathname === link.href} />
-            </li>
-          ))}
-          <li>
-            <AccordionDemo subLinks={teams} />
-          </li>
-        </ul>
-        <div>
-          <h4 className="text-sm font-medium">Your Teams</h4>
-          <ul className="my-2">
-            {teams?.map((team) => (
-              <li key={team.id} className="w-full">
-                <Link
-                  href={`/team/${team.id}`}
-                  className="h-full w-full rounded bg-gray-100 px-4 py-1.5 text-sm font-medium hover:bg-gray-50"
-                >
-                  {team.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="mt-10 flex w-full justify-center gap-3 px-5 sm:hidden"></div> */}
       </div>
     </div>
   );
-};
-
-export default SideBar;
+}

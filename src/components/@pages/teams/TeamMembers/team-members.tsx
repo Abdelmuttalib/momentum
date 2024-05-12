@@ -110,7 +110,7 @@ export const AddUserDialog: FC<{ team: TTeam }> = ({ team }) => {
                           <Button
                             type="button"
                             size="sm"
-                            variant="outline-destructive"
+                            variant="destructive-outline"
                             disabled={removeUserFromTeam.isLoading}
                             isLoading={removeUserFromTeam.isLoading}
                             // eslint-disable-next-line @typescript-eslint/no-misused-promises

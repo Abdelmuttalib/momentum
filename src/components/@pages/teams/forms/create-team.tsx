@@ -7,16 +7,15 @@ import { Input } from "@/components/ui/input";
 import { api } from "@/utils/api";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
+import {
+  DialogContent,
+  DialogPortal,
+  DialogRoot,
+  DialogTitle,
+} from "@/components/ui/animated-dialog";
+import { Typography } from "@/components/ui/typography";
 
 const teamFormSchema = z.object({
   name: z.string().min(1, "Please enter a team name").nonempty(),
@@ -74,11 +73,10 @@ function CreateTeamForm({ onCancel, onSuccess }: CreateTeamFormProps) {
         inputMode="text"
         error={errors.name}
       />
-      <div className="mt-2 flex flex-col-reverse md:flex-row md:gap-2">
+      <div className="mt-7 flex flex-col-reverse border-t pt-4 md:flex-row md:gap-2">
         <Button
           type="button"
           variant="outline"
-          className="mt-2"
           onClick={onCancel}
           disabled={createTeamMutation.isLoading}
         >
@@ -86,7 +84,7 @@ function CreateTeamForm({ onCancel, onSuccess }: CreateTeamFormProps) {
         </Button>
         <Button
           type="submit"
-          className="mt-2 flex-1"
+          className="flex-1"
           disabled={createTeamMutation.isLoading}
           isLoading={createTeamMutation.isLoading}
         >
@@ -101,32 +99,55 @@ function CreateTeamForm({ onCancel, onSuccess }: CreateTeamFormProps) {
 export default function CreateTeam() {
   const [isOpen, setIsOpen] = useState(false);
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button className="ml-2 inline-flex gap-1 whitespace-nowrap">
-          <PlusIcon className="w-5" /> Create Team
-        </Button>
-      </DialogTrigger>
-      {isOpen && (
-        <DialogContent className="bg-white">
-          <DialogHeader className="space-y-0">
-            <DialogTitle>
-              <h2 className="h5 inline">Create a new Team</h2>
-            </DialogTitle>
-            <DialogDescription className="body-sm inline text-gray-600">
-              <p>
-                Teams are a great way to organize your projects and invite other
-                users
-              </p>
-            </DialogDescription>
-          </DialogHeader>
+    <>
+      <Button
+        type="button"
+        onClick={() => setIsOpen(true)}
+        leftIcon={<PlusIcon className="w-4" />}
+        className="ml-2 inline-flex gap-1 whitespace-nowrap"
+      >
+        Create Team
+      </Button>
 
-          <CreateTeamForm
-            onSuccess={() => setIsOpen(false)}
-            onCancel={() => setIsOpen(false)}
-          />
-        </DialogContent>
-      )}
-    </Dialog>
+      <DialogRoot open={isOpen} onClose={() => setIsOpen(false)}>
+        <DialogPortal>
+          <DialogContent>
+            <DialogTitle>
+              <Typography as="h2" variant="lg/semibold">
+                Create a new Team
+              </Typography>
+            </DialogTitle>
+            <Typography as="p" className="text-foreground-light">
+              Teams are a great way to organize your projects and invite other
+              users
+            </Typography>
+
+            <div className="mt-4">
+              <CreateTeamForm
+                onSuccess={() => setIsOpen(false)}
+                onCancel={() => setIsOpen(false)}
+              />
+            </div>
+            {/* <div className="mt-6">
+                <Button
+                  variant="primary"
+                  className="w-full"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Create Project
+                </Button>
+
+                <Button
+                  variant="outline"
+                  className="mt-2 w-full"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Cancel
+                </Button>
+              </div> */}
+          </DialogContent>
+        </DialogPortal>
+      </DialogRoot>
+    </>
   );
 }

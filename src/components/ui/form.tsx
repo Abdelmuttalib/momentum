@@ -13,6 +13,7 @@ import {
 
 import { Label } from "@/components/ui/label";
 import { cn } from "@/utils/cn";
+import { Typography, typographyVariants } from "./typography";
 
 const Form = FormProvider;
 
@@ -138,7 +139,7 @@ const FormDescription = React.forwardRef<
     <p
       ref={ref}
       id={formDescriptionId}
-      className={cn("text-[0.8rem] text-muted-foreground", className)}
+      className={cn("text-muted-foreground text-[0.8rem]", className)}
       {...props}
     />
   );
@@ -161,7 +162,10 @@ const FormMessage = React.forwardRef<
       ref={ref}
       id={formMessageId}
       className={cn(
-        "mt-1 rounded bg-error-50 px-2 py-0.5 text-[0.8rem] text-destructive dark:mt-0 dark:bg-transparent dark:px-0 dark:py-0 dark:text-error-400",
+        typographyVariants({
+          variant: "xs/regular",
+        }),
+        "mt-1 h-5 rounded-sm bg-red-100 px-1.5 pt-0.5 text-error dark:bg-transparent",
         className
       )}
       {...props}

@@ -1,13 +1,14 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
+
 import * as React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import {
-  Cross2Icon,
-  // CrossCircledIcon
-} from "@radix-ui/react-icons";
+import { Cross2Icon } from "@radix-ui/react-icons";
 
 import { cn } from "@/utils/cn";
-// import { XCircleIcon } from "@heroicons/react/24/outline";
-import { Button } from "./button";
+import { IconButton } from "./icon-button";
+import { typographyVariants } from "./typography";
+import type { ClassValue } from "clsx";
 
 const Dialog = DialogPrimitive.Root;
 
@@ -17,7 +18,7 @@ const DialogPortal = ({
   className,
   ...props
 }: DialogPrimitive.DialogPortalProps) => (
-  <DialogPrimitive.Portal className={cn(className)} {...props} />
+  <DialogPrimitive.Portal className={cn(className as ClassValue)} {...props} />
 );
 DialogPortal.displayName = DialogPrimitive.Portal.displayName;
 
@@ -45,16 +46,16 @@ const DialogContent = React.forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        "fixed bottom-0 right-0 z-50 flex h-4/5 w-full flex-col gap-4 overflow-y-auto border bg-gray-50 px-3 py-2 pb-20 shadow-lg duration-200 dark:bg-gray-900 sm:top-0 sm:h-full sm:rounded-l-lg md:w-full md:px-6 xl:max-w-md",
+        "fixed bottom-0 right-0 z-50 flex h-4/5 w-full flex-col gap-4 overflow-y-auto border bg-background px-3 py-2 pb-20 shadow-lg duration-200 sm:top-0 sm:h-full sm:rounded-l-lg md:w-full md:px-6 xl:max-w-md",
         className
       )}
       {...props}
     >
       {children}
       <DialogPrimitive.Close className="absolute right-2 top-2 rounded-sm ">
-        <Button size="icon" variant="outline" className="h-7 w-7">
+        <IconButton type="button" size="xs" variant="outline">
           <Cross2Icon className="h-5 w-5" />
-        </Button>
+        </IconButton>
         <span className="sr-only">Close</span>
       </DialogPrimitive.Close>
     </DialogPrimitive.Content>
@@ -95,7 +96,9 @@ const DialogTitle = React.forwardRef<
     <DialogPrimitive.Title
       ref={ref}
       className={cn(
-        "text-lg font-semibold leading-none tracking-tight",
+        typographyVariants({
+          variant: "lg/medium",
+        }),
         className
       )}
       {...props}
@@ -111,7 +114,7 @@ const DialogDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
-    className={cn("text-sm text-gray-500", className)}
+    className={cn("text-sm text-foreground-lighter", className)}
     {...props}
   />
 ));

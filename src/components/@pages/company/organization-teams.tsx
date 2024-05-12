@@ -7,20 +7,21 @@ import type { Team, User } from "@prisma/client";
 import { api } from "@/utils/api";
 import { toast } from "sonner";
 
-import {
-  Dialog,
+import CustomDialog, {
   DialogContent,
-  DialogHeader,
+  DialogPortal,
+  DialogRoot,
   DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+} from "@/components/ui/animated-dialog";
+
 import { type FC, useState, useEffect, type ReactNode } from "react";
 import Link from "next/link";
-import { UserAvatar } from "@/components/user/UserMenu";
+import { UserAvatar } from "@/components/user/user-menu";
 import { UserPlusIcon } from "@heroicons/react/20/solid";
 import { cn } from "@/utils/cn";
 import type { TTeam } from "types";
 import { UsersIcon } from "lucide-react";
+import { Typography } from "@/components/ui/typography";
 
 export const AddUserDialog: FC<{ team: TTeam; triggerButton?: ReactNode }> = ({
   team,
@@ -28,9 +29,8 @@ export const AddUserDialog: FC<{ team: TTeam; triggerButton?: ReactNode }> = ({
     <Button
       type="button"
       variant="outline"
-      className="inline-flex items-center gap-1.5 whitespace-nowrap text-sm"
+      leftIcon={<UsersIcon className="w-[1.125rem]" />}
     >
-      <UsersIcon className="w-[1.125rem]" />
       Manage Team Members
     </Button>
   ),
@@ -38,6 +38,8 @@ export const AddUserDialog: FC<{ team: TTeam; triggerButton?: ReactNode }> = ({
   const [isOpen, setIsOpen] = useState(false);
   const apiContext = api.useContext();
   const { data: users } = api.team.getAllUsers.useQuery();
+
+  const { data: companyMembers } = api.company.getCompanyMembers.useQuery();
 
   const [teamUserIds, setTeamUserIds] = useState(
     team.users.map((user: User) => user.id)
@@ -77,100 +79,205 @@ export const AddUserDialog: FC<{ team: TTeam; triggerButton?: ReactNode }> = ({
     return teamUserIds.includes(userId);
   };
 
+  function onClose() {
+    setIsOpen(false);
+  }
+
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        {triggerButton}
-        {/* <Button
-          type="button"
-          variant="outline"
-          className="inline-flex items-center gap-1 whitespace-nowrap text-sm"
-        >
-          <UsersIcon className="w-[1.125rem]" />
-          Manage Team Members
-        </Button> */}
-      </DialogTrigger>
-      {isOpen && (
-        <DialogContent className=" bg-white sm:max-w-2xl">
-          <DialogHeader className="mb-6 space-y-0">
-            <DialogTitle>
-              <h2 className="h5 inline">Add a new Member to the Team</h2>
-            </DialogTitle>
-            {/* <DialogDescription className="body-sm inline">
-              <p>Enter the email address of the user to invite.</p>
-            </DialogDescription> */}
-          </DialogHeader>
-          <div>
-            <h2 className="pb-2 font-medium">All Company Members</h2>
-            <div className="grid gap-4">
-              {users?.map((user) => (
-                <div
-                  key={user.id}
-                  className="flex flex-col gap-2 rounded-lg border-2 border-gray-200 p-4 dark:border-gray-800"
-                >
-                  <div className="flex items-center justify-between gap-2">
-                    <div>
-                      <h4 className="font-medium">{user.email}</h4>
-                      <div className="body-sm flex items-center text-gray-600">
-                        <span>{user.firstName}</span>,<span>{user.email}</span>
-                      </div>
+    <>
+      <CustomDialog
+        open={isOpen}
+        onClose={onClose}
+        triggerButton={
+          <Button
+            type="button"
+            onClick={() => setIsOpen(true)}
+            variant="outline"
+            leftIcon={<UsersIcon className="w-[1.125rem]" />}
+          >
+            Manage Team Members
+          </Button>
+        }
+        title="Add a new Member to the Team"
+        description="All Company Members"
+      >
+        <div>
+          <div className="flex flex-col gap-y-3">
+            {companyMembers?.map((user) => (
+              <div
+                key={user.id}
+                className="flex flex-col gap-2 rounded-lg border p-3"
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <div className="inline-flex items-center gap-x-2">
+                    <div className="flex items-center gap-x-0.5 -space-x-2">
+                      <UserAvatar key={user.id} user={user} size="lg" />
                     </div>
                     <div>
-                      {checkIfUserIsInTeam(user.id) ? (
-                        <div className="flex gap-2">
-                          <Button
-                            type="button"
-                            size="sm"
-                            variant="outline-destructive"
-                            disabled={removeUserFromTeam.isLoading}
-                            isLoading={removeUserFromTeam.isLoading}
-                            // eslint-disable-next-line @typescript-eslint/no-misused-promises
-                            onClick={async () => {
-                              await removeUserFromTeam.mutateAsync({
-                                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-                                teamId: team.id,
-                                userId: user.id,
-                              });
-                            }}
-                          >
-                            Remove
-                          </Button>
-                          <Button size="sm" disabled>
-                            Added
-                          </Button>
-                        </div>
-                      ) : (
+                      <Typography as="p" variant="md/medium">
+                        {user.firstName} {user.lastName}
+                      </Typography>
+                      <Typography
+                        as="p"
+                        variant="sm/regular"
+                        className="text-foreground-light"
+                      >
+                        {user.email}
+                      </Typography>
+                    </div>
+                  </div>
+                  <div>
+                    {checkIfUserIsInTeam(user.id) ? (
+                      <div className="flex gap-2">
                         <Button
+                          type="button"
+                          size="sm"
+                          variant="destructive-outline"
+                          disabled={removeUserFromTeam.isLoading}
+                          isLoading={removeUserFromTeam.isLoading}
                           // eslint-disable-next-line @typescript-eslint/no-misused-promises
                           onClick={async () => {
-                            await addUserToTeamMutation.mutateAsync({
+                            await removeUserFromTeam.mutateAsync({
                               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
                               teamId: team.id,
                               userId: user.id,
                             });
                           }}
-                          className="inline-flex items-center gap-1 whitespace-nowrap"
-                          size="sm"
-                          disabled={addUserToTeamMutation.isLoading}
-                          isLoading={addUserToTeamMutation.isLoading}
                         >
-                          <UserPlusIcon className="w-4" />
-                          Add to Team
+                          Remove
                         </Button>
-                      )}
-                    </div>
+                        <Button size="sm" disabled>
+                          Added
+                        </Button>
+                      </div>
+                    ) : (
+                      <Button
+                        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                        onClick={async () => {
+                          await addUserToTeamMutation.mutateAsync({
+                            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+                            teamId: team.id,
+                            userId: user.id,
+                          });
+                        }}
+                        className="inline-flex items-center gap-1 whitespace-nowrap"
+                        size="sm"
+                        disabled={addUserToTeamMutation.isLoading}
+                        isLoading={addUserToTeamMutation.isLoading}
+                      >
+                        <UserPlusIcon className="w-4" />
+                        Add to Team
+                      </Button>
+                    )}
                   </div>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
-          {/* <InviteUserForm
-            onSuccess={() => setIsOpen(false)}
-            onCancel={() => setIsOpen(false)}
-          /> */}
-        </DialogContent>
-      )}
-    </Dialog>
+        </div>
+      </CustomDialog>
+
+      {/* <DialogRoot open={isOpen} onClose={onClose}>
+        <DialogPortal>
+          <DialogContent className="w-full max-w-xl space-y-6">
+            <DialogTitle>
+              <Typography as="h2" variant="lg/semibold">
+                Add a new Member to the Team
+              </Typography>
+              <Typography as="p" className="text-foreground-light">
+                All Company Members
+              </Typography>
+            </DialogTitle>
+          </DialogContent>
+        </DialogPortal>
+      </DialogRoot> */}
+    </>
+    // <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    //   <DialogTrigger asChild>
+    //     {triggerButton}
+
+    //   </DialogTrigger>
+    //   {isOpen && (
+    //     <DialogContent className=" bg-white sm:max-w-2xl">
+    //       <DialogHeader className="mb-6 space-y-0">
+    //         <DialogTitle>
+    //           <h2 className="h5 inline">Add a new Member to the Team</h2>
+    //         </DialogTitle>
+    //       </DialogHeader>
+    //       <div>
+    //         <h2 className="pb-2 font-medium">All Company Members</h2>
+    //         <div className="grid gap-4">
+    //           {users?.map((user) => (
+    //             <div
+    //               key={user.id}
+    //               className="flex flex-col gap-2 rounded-lg border-2 border-gray-200 p-4 dark:border-gray-800"
+    //             >
+    //               <div className="flex items-center justify-between gap-2">
+    //                 <div className="inline-flex items-center gap-x-2">
+    //                   <div className="flex items-center gap-x-0.5 -space-x-2">
+    //                     <UserAvatar key={user.id} user={user} size="lg" />
+    //                   </div>
+    //                   <div>
+    //                     <h4 className="font-medium">{user.email}</h4>
+    //                     <div className="body-sm flex items-center text-gray-600">
+    //                       <span>{user.firstName}</span>,
+    //                       <span>{user.email}</span>
+    //                     </div>
+    //                   </div>
+    //                 </div>
+    //                 <div>
+    //                   {checkIfUserIsInTeam(user.id) ? (
+    //                     <div className="flex gap-2">
+    //                       <Button
+    //                         type="button"
+    //                         size="sm"
+    //                         variant="destructive-outline"
+    //                         disabled={removeUserFromTeam.isLoading}
+    //                         isLoading={removeUserFromTeam.isLoading}
+
+    //                         onClick={async () => {
+    //                           await removeUserFromTeam.mutateAsync({
+
+    //                             teamId: team.id,
+    //                             userId: user.id,
+    //                           });
+    //                         }}
+    //                       >
+    //                         Remove
+    //                       </Button>
+    //                       <Button size="sm" disabled>
+    //                         Added
+    //                       </Button>
+    //                     </div>
+    //                   ) : (
+    //                     <Button
+
+    //                       onClick={async () => {
+    //                         await addUserToTeamMutation.mutateAsync({
+
+    //                           teamId: team.id,
+    //                           userId: user.id,
+    //                         });
+    //                       }}
+    //                       className="inline-flex items-center gap-1 whitespace-nowrap"
+    //                       size="sm"
+    //                       disabled={addUserToTeamMutation.isLoading}
+    //                       isLoading={addUserToTeamMutation.isLoading}
+    //                     >
+    //                       <UserPlusIcon className="w-4" />
+    //                       Add to Team
+    //                     </Button>
+    //                   )}
+    //                 </div>
+    //               </div>
+    //             </div>
+    //           ))}
+    //         </div>
+    //       </div>
+
+    //     </DialogContent>
+    //   )}
+    // </Dialog>
   );
 };
 
@@ -246,7 +353,6 @@ export const companyTeamsColumns: ColumnDef<Team>[] = [
       //   },
       // });
       // async function onDeleteClick(teamId: string) {
-      //   console.log("her; ", teamId);
       //   await deleteTeamMutation.mutateAsync({ id: teamId });
       // }
       return (
@@ -267,7 +373,7 @@ export const companyTeamsColumns: ColumnDef<Team>[] = [
           {/* <Button
             type="button"
             size="sm"
-            variant="outline-destructive"
+            variant="destructive-outline"
             className="h-9"
             disabled={deleteTeamMutation.isLoading}
             isLoading={deleteTeamMutation.isLoading}

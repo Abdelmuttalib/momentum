@@ -4,6 +4,7 @@ import { cn } from "@/utils/cn";
 import Task from "./task";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import TaskView from "./task-view";
+import { Typography } from "@/components/ui/typography";
 
 interface TaskColumnProps {
   status: TaskStatus;
@@ -12,15 +13,12 @@ interface TaskColumnProps {
 
 export default function TaskBoardColumn({ status, tasks }: TaskColumnProps) {
   return (
-    <div
-      key={status}
-      className="h-full w-full overflow-hidden rounded-lg border shadow-lg dark:border-gray-800/30 dark:bg-gray-800/10"
-    >
-      <div className="flex items-center justify-between gap-3 bg-gray-50 px-4 py-3 dark:bg-transparent dark:text-gray-300">
+    <div key={status} className="h-full w-full overflow-hidden rounded-lg">
+      <div className="flex items-center justify-between gap-3 px-4 py-3">
         <div className="flex items-center gap-1">
-          <h2 className="font-medium capitalize">
+          <Typography variant="sm/medium" className="capitalize">
             {status.replace("_", " ").toLocaleLowerCase()}
-          </h2>
+          </Typography>
           <span className="rounded-full px-2.5 py-0.5 text-sm">
             {tasks.length}
           </span>
@@ -40,9 +38,10 @@ export default function TaskBoardColumn({ status, tasks }: TaskColumnProps) {
             {...provided.droppableProps}
             ref={provided.innerRef}
             className={cn(
-              "h-full min-h-[75svh] w-full space-y-4 rounded px-2.5 py-4",
+              "h-full min-h-[75svh] w-full space-y-4 rounded py-4",
               {
-                "bg-brand-100/10 dark:bg-gray-800/20": snapshot.isDraggingOver,
+                "bg-primary-100/10 dark:bg-gray-800/20":
+                  snapshot.isDraggingOver,
               }
             )}
           >

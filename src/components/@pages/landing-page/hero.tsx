@@ -1,140 +1,58 @@
 import React from "react";
 import Container from "./container";
 import { ButtonLink } from "@/components/ui/button";
+import { ArrowRightCircle } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import { Typography } from "@/components/ui/typography";
+import GradientBackground from "@/components/GradientBackground";
+import BoardExample from "./board-example";
 
 export default function Hero() {
   return (
-    <div className="relative flex min-h-[100svh] pb-24 pt-36" id="home">
-      <Container>
-        <div
+    <div className="relative flex min-h-[100svh] overflow-x-hidden pb-24 pt-36">
+      <Container className="relative isolate">
+        {/* <div
           aria-hidden="true"
           className="absolute inset-0 m-auto grid h-max w-full grid-cols-2 -space-x-52 opacity-40 dark:pb-32 dark:opacity-20"
         >
-          <div className="h-56 bg-gradient-to-br from-primary to-purple-400 blur-[106px] dark:from-blue-700"></div>
-          <div className="h-32 bg-gradient-to-r from-brand-400 to-brand-300 blur-[106px] dark:to-brand-600"></div>
-        </div>
-        <div className="relative flex flex-col gap-y-6">
-          <div className="relative">
-            <div className="mx-auto space-y-8 text-center lg:w-2/3">
-              <h1 className="h2 sm:h1 md:display-sm primary-text-gradient my-8 text-balance font-bold sm:font-bold">
-                The Open Source issue tracking tool
-              </h1>
-              <p className="dark:to-primary-900 bg-gradient-to-br from-gray-800 to-gray-700 bg-clip-text  text-center text-lg text-transparent dark:from-brand-200 dark:to-gray-400 dark:bg-clip-text dark:text-gray-300 dark:text-transparent sm:text-xl md:px-28">
+          <div className="h-56 bg-gradient-to-br from-primary to-purple-400  dark:from-blue-700"></div>
+          <div className="h-32 bg-gradient-to-r from-brand-400 to-brand-300  dark:to-brand-600"></div>
+        </div> */}
+        <GradientBackground />
+        <div className="relative grid grid-cols-1 gap-y-6 lg:grid-cols-2">
+          <div className="relative lg:pr-32">
+            <div className="mx-auto space-y-8">
+              <Typography as="h1" variant="display-lg/semibold">
+                The open source issue tracking tool
+              </Typography>
+
+              <Typography
+                as="p"
+                variant="lg/regular"
+                className="mx-auto w-full max-w-4xl text-foreground-light"
+              >
                 Supercharge Your Team&apos;s Productivity.{" "}
-                <span className="underline decoration-brand decoration-2 underline-offset-2">
+                <span className="decoration-brand underline decoration-2 underline-offset-2">
                   Momentum
                 </span>{" "}
                 is a powerful task management app designed to help your team
                 stay organized and focused.
-              </p>
-              <div className="flex flex-col flex-wrap justify-center gap-x-4 gap-y-2 sm:flex-row sm:gap-y-4">
-                <ButtonLink href="/sign-in" size="lg">
+              </Typography>
+
+              <div className="flex flex-col flex-wrap gap-x-4 gap-y-2 sm:flex-row sm:gap-y-4">
+                <ButtonLink
+                  href="/sign-in"
+                  size="lg"
+                  rightIcon={<ArrowRight className="w-[18px]" />}
+                >
                   Get Started
                 </ButtonLink>
-
-                {/* <ButtonLink href="/" size="lg" variant="outline">
-                  Learn More
-                </ButtonLink> */}
               </div>
-              {/* insights */}
-              {/* <div className="mt-16 hidden justify-between border-y border-gray-100 py-8 dark:border-gray-800 sm:flex">
-              <div className="text-left">
-                <h6 className="text-lg font-semibold text-gray-700 dark:text-white">
-                  The lowest price
-                </h6>
-                <p className="mt-2 text-gray-500">Some text here</p>
-              </div>
-              <div className="text-left">
-                <h6 className="text-lg font-semibold text-gray-700 dark:text-white">
-                  The fastest on the market
-                </h6>
-                <p className="mt-2 text-gray-500">Some text here</p>
-              </div>
-              <div className="text-left">
-                <h6 className="text-lg font-semibold text-gray-700 dark:text-white">
-                  The most loved
-                </h6>
-                <p className="mt-2 text-gray-500">Some text here</p>
-              </div>
-            </div> */}
             </div>
           </div>
-          {/* <div className="relative h-[70svh] w-full overflow-hidden rounded-lg bg-transparent">
-            <Image
-              src={
-                theme
-                  ? `/images/app/app-board-${theme}.png`
-                  : "/images/app/app-board-light.png"
-              }
-              alt="app task board"
-              layout="fill"
-              className="rounded-lg object-contain"
-              quality={100}
-            />
-          </div> */}
-          {/* logos */}
-          {/* <div className="mt-12 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6">
-            <div className="p-4 grayscale transition duration-200 hover:grayscale-0">
-              <img
-                src="./images/clients/microsoft.svg"
-                className="mx-auto h-12 w-auto"
-                loading="lazy"
-                alt="client logo"
-                width=""
-                height=""
-              />
-            </div>
-            <div className="p-4 grayscale transition duration-200 hover:grayscale-0">
-              <img
-                src="./images/clients/airbnb.svg"
-                className="mx-auto h-12 w-auto"
-                loading="lazy"
-                alt="client logo"
-                width=""
-                height=""
-              />
-            </div>
-            <div className="flex p-4 grayscale transition duration-200 hover:grayscale-0">
-              <img
-                src="./images/clients/google.svg"
-                className="m-auto h-9 w-auto"
-                loading="lazy"
-                alt="client logo"
-                width=""
-                height=""
-              />
-            </div>
-            <div className="p-4 grayscale transition duration-200 hover:grayscale-0">
-              <img
-                src="./images/clients/ge.svg"
-                className="mx-auto h-12 w-auto"
-                loading="lazy"
-                alt="client logo"
-                width=""
-                height=""
-              />
-            </div>
-            <div className="flex p-4 grayscale transition duration-200 hover:grayscale-0">
-              <img
-                src="./images/clients/netflix.svg"
-                className="m-auto h-8 w-auto"
-                loading="lazy"
-                alt="client logo"
-                width=""
-                height=""
-              />
-            </div>
-            <div className="p-4 grayscale transition duration-200 hover:grayscale-0">
-              <img
-                src="./images/clients/google-cloud.svg"
-                className="mx-auto h-12 w-auto"
-                loading="lazy"
-                alt="client logo"
-                width=""
-                height=""
-              />
-            </div>
-          </div> */}
+          <div className="lg:absolute lg:-right-36">
+            <BoardExample />
+          </div>
         </div>
       </Container>
     </div>

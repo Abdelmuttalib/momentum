@@ -2,19 +2,25 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { Layout } from "@/components/layout";
-// import { DataTable } from "@/components/@pages/team/data-table";
-// import { columns } from "@/components/@pages/team/TeamMembersTable/payments";
 import { api } from "@/utils/api";
 import { getServerAuthSession } from "@/server/auth";
-// import { DataTable } from "@/components/@pages/teams/TeamMembers/data-table";
-
-import Team, { TeamLoader } from "@/components/@pages/teams/TeamProjects/Team";
+import {
+  TeamCard,
+  TeamLoader,
+} from "@/components/@pages/teams/TeamProjects/Team";
 import CreateTeam from "@/components/@pages/teams/forms/create-team";
 import type { TTeam } from "types";
-// import { companyTeamsColumns } from "@/components/@pages/company/organization-teams";
-// import { prisma } from "@/server/db";
 import Container from "@/components/@pages/landing-page/container";
 import Seo from "@/components/Seo";
+import {
+  DialogContent,
+  DialogPortal,
+  DialogRoot,
+  DialogTitle,
+} from "@/components/ui/animated-dialog";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { Typography } from "@/components/ui/typography";
 
 type TeamsPageProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 
@@ -25,19 +31,18 @@ export default function TeamsPage({}: TeamsPageProps) {
   return (
     <>
       <Seo title="Teams | Momentum" />
-      <Layout pageTitle="">
-        <Container className="flex flex-col gap-4">
-          <div className="flex w-full items-center justify-between">
-            <h1 className="h5">Teams</h1>
-
+      <Layout pageTitle="Teams">
+        {/* <Container className="flex flex-col gap-4"> */}
+        <div className="flex flex-col gap-4">
+          <div className="flex w-full items-center justify-end">
             <CreateTeam />
           </div>
 
-          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {companyTeams &&
               companyTeams?.length > 0 &&
               companyTeams?.map((team) => (
-                <Team key={team.id} team={team as unknown as TTeam} />
+                <TeamCard key={team.id} team={team as unknown as TTeam} />
               ))}
             {isLoading && [1, 2, 3, 4, 5, 6].map((n) => <TeamLoader key={n} />)}
           </div>
@@ -54,9 +59,55 @@ export default function TeamsPage({}: TeamsPageProps) {
             <DataTable columns={companyTeamsColumns} data={companyTeams} />
           )}
         </div> */}
-        </Container>
+        </div>
+        {/* </Container> */}
       </Layout>
     </>
+  );
+}
+
+function Demo() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="w-full">
+      <Button onClick={() => setOpen(true)}>OPEN</Button>
+
+      <DialogRoot open={open} onClose={() => setOpen(false)}>
+        <DialogPortal>
+          <DialogContent>
+            <DialogTitle>
+              <h2 className="h5 inline">Create a new Project</h2>
+            </DialogTitle>
+
+            <div className="mt-2">
+              <p className="text-sm text-gray-500">
+                Projects are where you manage your team&apos;s work. Each
+                project has its own board and issues.
+              </p>
+
+              <div className="mt-6">
+                <Button
+                  variant="primary"
+                  className="w-full"
+                  onClick={() => setOpen(false)}
+                >
+                  Create Project
+                </Button>
+
+                <Button
+                  variant="outline"
+                  className="mt-2 w-full"
+                  onClick={() => setOpen(false)}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </DialogPortal>
+      </DialogRoot>
+    </div>
   );
 }
 

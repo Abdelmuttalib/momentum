@@ -213,7 +213,7 @@ export default function TaskBoard({ projectId }: { projectId: Project["id"] }) {
           className="absolute inset-0 -z-10 m-auto grid h-max w-full grid-cols-2 -space-x-52 opacity-10 dark:opacity-20"
         >
           <div className="h-56 bg-gradient-to-br from-primary to-purple-400 blur-[106px] dark:from-blue-700"></div>
-          <div className="h-56 bg-gradient-to-r from-brand-400 to-brand-300 blur-[106px] dark:to-brand-600"></div>
+          <div className="from-brand-400 to-brand-300 dark:to-brand-600 h-56 bg-gradient-to-r blur-[106px]"></div>
         </div>
         <TaskBoardLoader />
       </div>
@@ -224,13 +224,6 @@ export default function TaskBoard({ projectId }: { projectId: Project["id"] }) {
     <DragDropContext onDragEnd={(e) => void handleOnDragEnd(e)}>
       {/* {selectedTask && <TaskView task={selectedTask} />} */}
       <div className="relative z-10 grid h-full min-h-[75svh] w-full min-w-fit grid-cols-1 justify-between gap-3 overflow-x-auto pb-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 -z-10 m-auto grid h-max w-full grid-cols-2 -space-x-52 opacity-10 dark:opacity-20"
-        >
-          <div className="h-56 bg-gradient-to-br from-primary to-purple-400 blur-[106px] dark:from-blue-700"></div>
-          <div className="h-56 bg-gradient-to-r from-brand-400 to-brand-300 blur-[106px] dark:to-brand-600"></div>
-        </div>
         {currentTasks &&
           taskStatuses.map((status) => {
             const tasksForStatus = currentTasks.filter(

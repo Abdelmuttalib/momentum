@@ -155,7 +155,7 @@
 //             </Button>
 //             <Button
 //               type="button"
-//               variant="outline-destructive"
+//               variant="destructive-outline"
 //               size="sm"
 //               onClick={() => {
 //                 setImageFile(null);

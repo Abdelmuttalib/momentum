@@ -1,12 +1,12 @@
 import { cn } from "@/utils/cn";
 import Link from "next/link";
 import { Button } from "../ui/button";
-import ThemeToggle from "../theme-toggle";
 import { signOut } from "next-auth/react";
 import { LogOut } from "lucide-react";
 import MainSwitcher from "../Switcher";
 import { useRouter } from "next/router";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
+import ThemeSwitcher from "../theme-select";
 
 interface HeaderProps {
   pageTitle: string | ReactNode;
@@ -56,7 +56,7 @@ function Header({ pageTitle, actions }: HeaderProps) {
       {/* {showSidebarMenu && (
         <SideBar mode="mobile" setShowSidebarMenu={setShowSidebarMenu} />
       )} */}
-      <header className="sticky top-0 z-50 w-full flex-none border-b bg-white/[0.3] backdrop-blur-md backdrop-filter transition-colors duration-300 dark:bg-gray-900 dark:backdrop-blur-none dark:backdrop-filter-none print:hidden lg:pl-0">
+      <header className="sticky top-0 z-50 w-full flex-none border-b bg-white/[0.3] backdrop-blur-md backdrop-filter transition-colors duration-300 dark:bg-gray-900 dark:backdrop-blur-none dark:backdrop-filter-none lg:pl-0 print:hidden">
         <div className="px-4 pb-1.5 lg:px-6 lg:pl-3">
           <div className="flex h-14 items-center justify-between overflow-y-hidden">
             <div className="flex w-full items-center justify-between gap-3 ">
@@ -102,7 +102,7 @@ function Header({ pageTitle, actions }: HeaderProps) {
             </div>
 
             <div className="mt-1.5 hidden items-center gap-2 sm:flex">
-              <ThemeToggle />
+              <ThemeSwitcher />
               {/* <UserAccountMenu /> */}
               <Button
                 variant="secondary"
@@ -143,7 +143,7 @@ function Header({ pageTitle, actions }: HeaderProps) {
                         {label}
                       </Link>
                       {current && (
-                        <span className="absolute -bottom-1 left-0 right-0 mx-auto h-[3px] w-12 bg-brand-500 dark:bg-brand-400"></span>
+                        <span className="absolute -bottom-1 left-0 right-0 mx-auto h-[3px] w-12 bg-primary-500 dark:bg-primary-400"></span>
                       )}
                     </li>
                   </ul>
@@ -177,7 +177,7 @@ function Header({ pageTitle, actions }: HeaderProps) {
                         {label}
                       </Link>
                       {current && (
-                        <span className="absolute -bottom-1 left-0 right-0 mx-auto h-[3px] w-12 bg-brand-500 dark:bg-brand-400"></span>
+                        <span className="absolute -bottom-1 left-0 right-0 mx-auto h-[3px] w-12 bg-primary-500 dark:bg-primary-400"></span>
                       )}
                     </li>
                   </ul>
@@ -210,7 +210,7 @@ function Header({ pageTitle, actions }: HeaderProps) {
                         {label}
                       </Link>
                       {current && (
-                        <span className="absolute -bottom-1 left-0 right-0 mx-auto h-[3px] w-12 bg-brand-500 dark:bg-brand-400"></span>
+                        <span className="absolute -bottom-1 left-0 right-0 mx-auto h-[3px] w-12 bg-primary-500 dark:bg-primary-400"></span>
                       )}
                     </li>
                   </ul>

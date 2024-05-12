@@ -1,8 +1,5 @@
 import { type GetStaticProps } from "next";
 // import Seo from "@/components/Seo";
-import { buttonVariants } from "@/components/ui/button";
-import Link from "next/link";
-import { cn } from "@/utils/cn";
 import Hero from "@/components/@pages/landing-page/hero";
 // import Stats from "@/components/@pages/landing-page/stats";
 // import Testimonials from "@/components/@pages/landing-page/testimonials";
@@ -10,8 +7,8 @@ import CallToAction from "@/components/@pages/landing-page/call-to-action";
 // import Blog from "@/components/@pages/landing-page/blog";
 import Features from "@/components/@pages/landing-page/features";
 import Header from "@/components/@pages/landing-page/header";
-import Head from "next/head";
 import Seo from "@/components/Seo";
+import Footer from "@/components/@pages/landing-page/footer";
 // import Footer from "@/components/@pages/landing-page/footer";
 
 // function Header() {
@@ -155,17 +152,16 @@ export default function LandingPage() {
     <>
       <Seo title="Momentum" />
       <Header />
-      <main className="mb-40 space-y-40 dark:bg-gray-900">
+      <main className="mb-40 space-y-40">
         <Hero />
-        <Features />
+        {/* <Features /> */}
         {/* <Stats /> */}
         {/* <Testimonials /> */}
-        <CallToAction />
-        {/* <Blog />
-        <Footer /> */}
+        {/* <CallToAction /> */}
+        {/* <Footer /> */}
       </main>
-      <footer className="bg-gray-100 px-8 py-4 text-gray-500">
-        <p className="text-center text-sm md:text-base">
+      <footer className="border-t px-8 py-4">
+        <p className="text-center text-sm text-foreground-light md:text-base">
           Copyright © {new Date().getFullYear()} Momentum. All rights reserved.
         </p>
       </footer>

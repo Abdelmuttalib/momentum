@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { Button } from "@/components/ui/button";
 import {
   DialogHeader,
   Dialog,
@@ -15,6 +14,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import UpdateTaskForm from "./forms/Update-task";
 import type { Task } from "@prisma/client";
+import { IconButton } from "@/components/ui/icon-button";
 
 export default function TaskDialog({ task }: { task: Task }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -41,27 +41,22 @@ export default function TaskDialog({ task }: { task: Task }) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button
+        <IconButton
           type="button"
-          size="icon"
           variant="outline"
           className="h-fit w-fit rounded border-none bg-transparent p-0 dark:bg-transparent"
         >
           <EllipsisVerticalIcon className="h-5 w-5" />
-        </Button>
+        </IconButton>
       </DialogTrigger>
       {isOpen && (
         <DialogContent>
           <DialogHeader className="space-y-0">
             <DialogTitle className="flex items-center gap-x-6">
               <h2 className="h5 inline">Update Task</h2>
-              <Button
-                size="icon"
-                variant="outline-destructive"
-                onClick={onDeleteTask}
-              >
+              <IconButton variant="destructive-outline" onClick={onDeleteTask}>
                 <Trash className="w-5" />
-              </Button>
+              </IconButton>
             </DialogTitle>
             <DialogDescription className="body-sm inline text-gray-600">
               <p>Update Task information.</p>
