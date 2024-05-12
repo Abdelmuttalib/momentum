@@ -83,8 +83,7 @@ export function TeamLoader() {
 
 export function TeamCard({ team }: TeamProps) {
   const { id, name, users, projects } = team;
-  const { asPath } = useRouter();
-  const projectLink = `${asPath}/${id}`;
+  const projectLink = `/teams/${id}`;
 
   return (
     <Link href={projectLink}>

@@ -20,9 +20,14 @@ export function FollowLinkArrowIcon({ className }: { className?: string }) {
   );
 }
 
-export default function Project({ id, name, status, createdAt }: Project) {
-  const { asPath } = useRouter();
-  const projectLink = `${asPath}/projects/${id}`;
+export default function Project({
+  id,
+  name,
+  status,
+  createdAt,
+  teamId,
+}: Project) {
+  const projectLink = `/teams/${teamId}/projects/${id}`;
 
   return (
     <Link

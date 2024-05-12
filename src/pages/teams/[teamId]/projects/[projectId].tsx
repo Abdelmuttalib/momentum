@@ -31,9 +31,7 @@ ProjectPageProps) => {
         description={`${project?.name} tasks board | Momentum`}
       />
       <Layout pageTitle="Board" rightSideActions={<CreateTask />}>
-        <div className="bg-gray-200 dark:bg-background md:px-4">
-          {project?.id && <TaskBoard projectId={project.id} />}
-        </div>
+        <div>{project?.id && <TaskBoard projectId={project.id} />}</div>
       </Layout>
     </>
   );
