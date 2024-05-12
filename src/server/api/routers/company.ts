@@ -246,11 +246,16 @@ export const companyRouter = createTRPCRouter({
   }),
 
   getCompanyMembers: protectedProcedure.query(async ({ ctx }) => {
+    const currentUserId = ctx.session.user.id;
     const companyId = ctx.session.user.company.id;
     const companyMembers = await ctx.prisma.user.findMany({
       where: {
         companyId,
+        id: {
+          not: currentUserId,
+        },
       },
+      include: { teams: true },
     });
     return companyMembers;
   }),
