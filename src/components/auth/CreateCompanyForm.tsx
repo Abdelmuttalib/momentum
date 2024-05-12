@@ -13,6 +13,7 @@ import { ArrowLeftIcon } from "lucide-react";
 import { api } from "@/utils/api";
 import { useRouter } from "next/router";
 import { Label } from "../ui/label";
+import { Typography } from "../ui/typography";
 
 const companyNameFormSchema = z.object({
   name: z.string().min(3, { message: "company name is too short" }),
@@ -47,7 +48,9 @@ export function CreateCompanyForm({
   return (
     <div className="flex w-full flex-col gap-5">
       <div>
-        <h1 className="h5-light">Create a new company</h1>
+        <Typography as="h1" variant="xl/medium">
+          Create a new company
+        </Typography>
         <p className="text-gray-500">choose a name for your company</p>
       </div>
       <form
@@ -65,8 +68,11 @@ export function CreateCompanyForm({
           />
         </div>
         <div className="flex justify-between">
-          <Button type="button" variant="outline" onClick={() => back()}>
-            <ArrowLeftIcon className="-ml-2 mr-1 h-4 w-4" />
+          <Button
+            variant="outline"
+            onClick={() => back()}
+            leftIcon={<ArrowLeftIcon className="-ml-1 h-4 w-4" />}
+          >
             Back
           </Button>
           <Button type="submit">Create Company</Button>

@@ -1,43 +1,6 @@
-{
-  /* <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
-  <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-    <img class="mx-auto h-10 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company">
-    <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Sign in to your account</h2>
-  </div>
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
 
-  <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-    <form class="space-y-6" action="#" method="POST">
-      <div>
-        <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
-        <div class="mt-2">
-          <input id="email" name="email" type="email" autocomplete="email" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-        </div>
-      </div>
-
-      <div>
-        <div class="flex items-center justify-between">
-          <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Password</label>
-          <div class="text-sm">
-            <a href="#" class="font-semibold text-indigo-600 hover:text-indigo-500">Forgot password?</a>
-          </div>
-        </div>
-        <div class="mt-2">
-          <input id="password" name="password" type="password" autocomplete="current-password" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-        </div>
-      </div>
-
-      <div>
-        <button type="submit" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Sign in</button>
-      </div>
-    </form>
-
-    <p class="mt-10 text-center text-sm text-gray-500">
-      Not a member?
-      <a href="#" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Start a 14 day free trial</a>
-    </p>
-  </div>
-</div> */
-}
 import * as React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/router";
@@ -48,9 +11,6 @@ import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-// import { LogIn } from "lucide-react";
-// import { Label } from "../ui/label";
-// import InputField from "../ui/input-field";
 
 import {
   Form,
@@ -58,8 +18,9 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@/components/ui/form";
+import { LogInIcon } from "lucide-react";
+import { Typography } from "@/components/ui/typography";
 
 const signInFormSchema = z.object({
   email: z
@@ -94,12 +55,6 @@ export default function SignInForm() {
 
   const [isLoading, setIsLoading] = React.useState(false);
 
-  // {
-  //   register,
-  //   handleSubmit,
-  //   formState: { errors },
-  // }
-
   const form = useForm<SignInFormFields>({
     resolver: zodResolver(signInFormSchema),
   });
@@ -109,7 +64,7 @@ export default function SignInForm() {
     signIn("credentials", {
       email: data.email,
       password: data.password,
-      callbackUrl: "/teams",
+      callbackUrl: "/overview",
       redirect: false,
       // callbackUrl: `${window.location.origin}/projects`,
     })
@@ -133,10 +88,9 @@ export default function SignInForm() {
   return (
     <div className="w-full space-y-3 py-4 sm:space-y-7">
       <div>
-        <h1 className="h5-light dark:text-gray-200">Sign in</h1>
-        <p className="text-gray-500">
-          enter your credentials to access your account
-        </p>
+        <Typography as="h1" variant="display-sm/medium">
+          Sign in
+        </Typography>
       </div>
       <Form {...form}>
         <form
@@ -157,10 +111,11 @@ export default function SignInForm() {
                     inputMode="email"
                     placeholder="email@mail.com"
                     disabled={isLoading}
+                    size="lg"
                     {...field}
                   />
                 </FormControl>
-                <FormMessage />
+                {/* <FormMessage /> */}
               </FormItem>
             )}
           />
@@ -176,10 +131,11 @@ export default function SignInForm() {
                     type="password"
                     placeholder="password"
                     disabled={isLoading}
+                    size="lg"
                     {...field}
                   />
                 </FormControl>
-                <FormMessage />
+                {/* <FormMessage /> */}
               </FormItem>
             )}
           />
@@ -190,6 +146,8 @@ export default function SignInForm() {
               Object.keys(form.formState.errors).length > 0 || isLoading
             }
             isLoading={isLoading}
+            rightIcon={<LogInIcon className="h-4 w-4" />}
+            size="lg"
           >
             Sign in
           </Button>

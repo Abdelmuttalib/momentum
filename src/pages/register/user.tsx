@@ -1,8 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  useForm,
-  //  ErrorOption
-} from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -11,20 +8,10 @@ import { Input } from "@/components/ui/input";
 
 import { useRouter } from "next/router";
 import { api } from "@/utils/api";
-import { LoginBackground } from "@/components/layout";
-
-// const signUpValidationSchema = z
-//   .object({
-//     firstName: z.string().min(2).nonempty(),
-//     lastName: z.string().min(2).nonempty(),
-//     email: z.string().min(4).email().nonempty(),
-//     password: z.string().min(8),
-//     confirmPassword: z.string().min(8),
-//   })
-//   .refine((data) => data.password === data.confirmPassword, {
-//     path: ["confirmPassword"],
-//     message: "passwords do not match",
-//   });
+import { AuthLayout } from "@/components/layout";
+import { FormLabel } from "@/components/ui/form-label";
+import { Typography } from "@/components/ui/typography";
+import Seo from "@/components/Seo";
 
 const signUpValidationSchema = z
   .object({
@@ -85,112 +72,106 @@ function CreateUserAccountForm() {
   }
 
   return (
-    <div className="w-full max-w-md space-y-6 px-6 py-4">
-      <div>
-        <h1 className="h3 text-gray-800 dark:text-gray-200">Get Started</h1>
+    <>
+      <Seo title="Join your company" />
 
-        <p className="text-gray-700">get started by creating your account.</p>
-      </div>
-
-      <form
-        className="flex flex-col gap-3"
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        {/* Email Input */}
+      <div className="w-full max-w-md space-y-6 px-6 py-4">
         <div>
-          <label htmlFor="email" className="block text-sm text-gray-600">
-            Email
-          </label>
-          <Input
-            id="email"
-            {...register("email")}
-            type="email"
-            inputMode="email"
-            placeholder="email@mail.com"
-            error={errors?.email}
-          />
+          <Typography as="h1" variant="xl/medium">
+            Get Started
+          </Typography>
+
+          <Typography className="text-foreground-light">
+            get started by creating your account.
+          </Typography>
         </div>
 
-        {/* First Name Input */}
-        <div className="flex w-full flex-col gap-3 sm:flex-row">
-          <div className="w-full">
-            <label htmlFor="firstName" className="block text-sm text-gray-600">
-              First Name
-            </label>
+        <form
+          className="flex flex-col gap-4"
+          // eslint-disable-next-line @typescript-eslint/no-misused-promises
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          {/* Email Input */}
+          <div>
+            <FormLabel htmlFor="email">Email</FormLabel>
             <Input
-              id="firstName"
-              type="firstName"
-              {...register("firstName", { required: true })}
-              placeholder="first name"
-              error={errors?.firstName}
+              id="email"
+              {...register("email")}
+              type="email"
+              inputMode="email"
+              placeholder="email@mail.com"
+              error={errors?.email}
             />
           </div>
 
-          <div className="w-full">
-            <label htmlFor="lastName" className="block text-sm text-gray-600">
-              Last Name
-            </label>
+          {/* First Name Input */}
+          <div className="flex w-full flex-col gap-4 sm:flex-row">
+            <div className="w-full">
+              <FormLabel htmlFor="firstName">First Name</FormLabel>
+              <Input
+                id="firstName"
+                type="firstName"
+                {...register("firstName", { required: true })}
+                placeholder="first name"
+                error={errors?.firstName}
+              />
+            </div>
+
+            <div className="w-full">
+              <FormLabel htmlFor="lastName">Last Name</FormLabel>
+              <Input
+                id="lastName"
+                type="lastName"
+                {...register("lastName", { required: true })}
+                placeholder="last name"
+                error={errors?.lastName}
+              />
+            </div>
+          </div>
+
+          {/* Password Input */}
+          <div>
+            <FormLabel htmlFor="password">Password</FormLabel>
             <Input
-              id="lastName"
-              type="lastName"
-              {...register("lastName", { required: true })}
-              placeholder="last name"
-              error={errors?.lastName}
+              id="password"
+              type="password"
+              {...register("password", { required: true })}
+              placeholder="password"
+              error={errors?.password}
             />
           </div>
-        </div>
 
-        {/* Password Input */}
-        <div>
-          <label htmlFor="password" className="block text-sm text-gray-600">
-            Password
-          </label>
-          <Input
-            id="password"
-            type="password"
-            {...register("password", { required: true })}
-            placeholder="password"
-            error={errors?.password}
-          />
-        </div>
-
-        {/* Confirm Password Input */}
-        <div>
-          <label
-            htmlFor="confirmPassword"
-            className="block text-sm text-gray-600"
-          >
-            Confirm Password
-          </label>
-          <Input
-            id="confirmPassword"
-            type="password"
-            {...register("confirmPassword", { required: true })}
-            placeholder="confirm password"
-            error={errors?.confirmPassword}
-          />
-          {/* {errors.confirmPassword && (
+          {/* Confirm Password Input */}
+          <div>
+            <FormLabel htmlFor="confirmPassword">Confirm Password</FormLabel>
+            <Input
+              id="confirmPassword"
+              type="password"
+              {...register("confirmPassword", { required: true })}
+              placeholder="confirm password"
+              error={errors?.confirmPassword}
+            />
+            {/* {errors.confirmPassword && (
             <p className="mt-0.5 text-sm text-red-500">
               {errors?.confirmPassword?.message}
             </p>
           )} */}
-        </div>
-        <Button
-          type="submit"
-          disabled={
-            Object.keys(errors).length > 0 ||
-            registerInvitedUserMutation.isLoading
-          }
-          isLoading={registerInvitedUserMutation.isLoading}
-          className="mt-2 w-full"
-        >
-          Create Account
-        </Button>
+          </div>
+          <Button
+            type="submit"
+            disabled={
+              Object.keys(errors).length > 0 ||
+              registerInvitedUserMutation.isLoading
+            }
+            isLoading={registerInvitedUserMutation.isLoading}
+            className="mt-2 w-full"
+          >
+            Create Account
+          </Button>
 
-        {/* Another Auth Routes */}
+          {/* Another Auth Routes */}
 
-        {/* <div className=" text-sm font-medium text-gray-700 sm:mb-4 sm:flex sm:items-center sm:gap-1">
+          {/* <div className=" text-sm font-medium text-gray-700 sm:mb-4 sm:flex sm:items-center sm:gap-1">
           <Button
             type="button"
             variant="outline"
@@ -201,15 +182,16 @@ function CreateUserAccountForm() {
             Back
           </Button>
         </div> */}
-      </form>
-    </div>
+        </form>
+      </div>
+    </>
   );
 }
 
 export default function RegisterUserPage() {
   return (
-    <LoginBackground>
+    <AuthLayout>
       <CreateUserAccountForm />
-    </LoginBackground>
+    </AuthLayout>
   );
 }
