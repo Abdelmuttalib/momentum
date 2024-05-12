@@ -1,7 +1,6 @@
 import React from "react";
 import Container from "./container";
 import { ButtonLink } from "@/components/ui/button";
-import { ArrowRightCircle } from "lucide-react";
 import { ArrowRight } from "lucide-react";
 import { Typography } from "@/components/ui/typography";
 import GradientBackground from "@/components/GradientBackground";

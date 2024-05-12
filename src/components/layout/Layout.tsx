@@ -91,12 +91,12 @@ export default function Layout({
   className,
 }: LayoutProps) {
   return (
-    <div className="fixed left-0 top-0 flex h-full min-h-[100svh] w-screen min-w-full overflow-auto bg-gray-900 antialiased dark:bg-gray-800/10">
+    <div className="fixed left-0 top-0 flex h-full min-h-[100svh] w-screen min-w-full overflow-auto antialiased">
       <aside>
         <SideBar mode="normal" />
         {/* <MobileNav /> */}
       </aside>
-      <div className="flex h-full w-full flex-col overflow-auto bg-background">
+      <div className="flex h-full w-full flex-col overflow-auto">
         <Header pageTitle={pageTitle} actions={rightSideActions} />
         <main
           className={cn(
