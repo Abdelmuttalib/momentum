@@ -43,7 +43,7 @@ import { type User as UserType } from "@prisma/client";
 import Link from "next/link";
 import { cn } from "@/utils/cn";
 import Image from "next/image";
-import ThemeToggle from "../theme-toggle";
+import ThemeSwitcher from "../theme-select";
 
 {
   /* <TooltipProvider>
@@ -141,65 +141,55 @@ export default function UserMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button className="flex h-fit w-full items-center justify-start gap-3 truncate border-2 bg-transparent px-2 py-2 hover:border-gray-800 hover:bg-transparent">
+        <Button
+          type="button"
+          className="flex h-fit items-center justify-start gap-3 truncate border-2 bg-transparent px-2 py-2 hover:border-gray-800 hover:bg-transparent"
+        >
           <div className="inline-flex h-8 w-8 items-center justify-center rounded border border-gray-600">
             {session?.user?.firstName[0]}
           </div>
-          <p className="truncate text-gray-100">
+          {/* <p className="truncate text-gray-100">
             {session?.user?.firstName} {session?.user?.lastName}
-          </p>
+          </p> */}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-52 bg-white">
+      <DropdownMenuContent className="w-52">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem onClick={() => void push("/profile")}>
-            <UserIcon className="mr-2 h-4 w-4" />
+            <UserIcon className="mr-2 h-5 w-5" />
             <span>Profile</span>
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => void push("/settings")}>
-            <Settings className="mr-2 h-4 w-4" />
+            <Settings className="mr-2 h-5 w-5" />
             <span>Settings</span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem onClick={() => void push("/teams")}>
-            <Users className="mr-2 h-4 w-4" />
+            <Users className="mr-2 h-5 w-5" />
             <span>Teams</span>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link href="/company">
-              <UserPlus className="mr-2 h-4 w-4" />
+              <UserPlus className="mr-2 h-5 w-5" />
               <span>Invite users</span>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <Plus className="mr-2 h-4 w-4" />
+            <Plus className="mr-2 h-5 w-5" />
             <span>New Team</span>
           </DropdownMenuItem>
-          <DropdownMenuItem className="space-x-4">
+          {/* <DropdownMenuItem className="space-x-4">
             <span>Theme</span>
-            <ThemeToggle />
-          </DropdownMenuItem>
+            <ThemeSwitcher />
+          </DropdownMenuItem> */}
         </DropdownMenuGroup>
-        {/* <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <Github className="mr-2 h-4 w-4" />
-          <span>GitHub</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <LifeBuoy className="mr-2 h-4 w-4" />
-          <span>Support</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem disabled>
-          <Cloud className="mr-2 h-4 w-4" />
-          <span>API</span>
-        </DropdownMenuItem> */}
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => void signOut()}>
-          <LogOut className="mr-2 h-4 w-4" />
+          <LogOut className="mr-2 h-5 w-5" />
           <span>Log out</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
