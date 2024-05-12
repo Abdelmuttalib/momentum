@@ -2,7 +2,7 @@ import Container from "@/components/@pages/landing-page/container";
 import { Layout } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { FormLabel } from "@/components/ui/form-label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getServerAuthSession } from "@/server/auth";
 import { api } from "@/utils/api";
@@ -22,6 +22,14 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { SettingsPageTabs } from ".";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const profileFormSchema = z.object({
   firstName: z.string(),
@@ -199,6 +207,127 @@ export function ProfileSettings() {
   }
   return (
     <Container className="flex flex-col gap-10 py-3 sm:py-7">
+      {/* <div className="border-b border-gray-900/10 pb-12">
+        <h2 className="text-base font-semibold leading-7 text-gray-900">
+          Personal Information
+        </h2>
+        <p className="mt-1 text-sm leading-6 text-gray-600">
+          Use a permanent address where you can receive mail.
+        </p>
+
+        <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+          <div className="col-span-full">
+            <label
+              htmlFor="photo"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
+              Photo
+            </label>
+            <div className="relative mt-2 flex items-center gap-x-3 sm:col-span-3">
+              {userData?.image ? (
+                <div className="relative h-20 w-20">
+                  <Image
+                    src={userData?.image}
+                    alt="profile image"
+                    layout="fill"
+                    className="rounded-full object-cover"
+                  />
+                </div>
+              ) : (
+                <svg
+                  className="h-20 w-20 text-gray-300"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              )}
+
+              <button
+                type="button"
+                className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+              >
+                Change
+              </button>
+            </div>
+          </div>
+          <div className="sm:col-span-3">
+            <FormLabel htmlFor="firstName">First name</FormLabel>
+            <Input
+              id="firstName"
+              inputMode="text"
+              type="text"
+              placeholder="first name"
+              {...register("firstName", {
+                required: true,
+              })}
+              defaultValue={userData?.firstName || ""}
+              disabled={
+                isLoadingUserData ||
+                updateUserInfoMutation.isLoading ||
+                uploading
+              }
+              error={errors?.firstName}
+            />
+          </div>
+
+          <div className="sm:col-span-3">
+            <FormLabel htmlFor="last-name">Last name</FormLabel>
+            <Input type="text" name="last-name" id="last-name" disabled />
+          </div>
+
+          <div className="sm:col-span-4">
+            <FormLabel htmlFor="email">Email address</FormLabel>
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              disabled
+              defaultValue={userData?.email || ""}
+            />
+          </div>
+
+          <div className="sm:col-span-3">
+            <FormLabel htmlFor="country">Country</FormLabel>
+            <Select
+              // {...field}
+              // onValueChange={(value) => field.onChange(value as TaskStatus)}
+              value="Mexico"
+              defaultValue="Country"
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Country" defaultValue="Country" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="Philippines">Philippines</SelectItem>
+                  <SelectItem value="United States">United States</SelectItem>
+                  <SelectItem value="Canada">Canada</SelectItem>
+                  <SelectItem value="Mexico">Mexico</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="sm:col-span-2 sm:col-start-1">
+            <FormLabel htmlFor="city">City</FormLabel>
+            <div className="mt-2">
+              <Input
+                type="text"
+                name="city"
+                id="city"
+                disabled
+                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              />
+            </div>
+          </div>
+        </div>
+      </div> */}
       <div className="w-full">
         <h1 className="h5">Profile Settings</h1>
       </div>
@@ -210,7 +339,7 @@ export function ProfileSettings() {
             {/* upload */}
 
             <div className="flex flex-col items-center gap-y-2 sm:flex-row sm:gap-x-4 lg:flex-col">
-              <div className="group relative h-24 w-24">
+              <div className="group relative h-24 w-24 md:h-32 md:w-32">
                 {isLoadingUserData && (
                   <Skeleton className="h-full w-full rounded-full" />
                 )}
@@ -235,7 +364,7 @@ export function ProfileSettings() {
                 <label
                   htmlFor="image"
                   className={cn(
-                    "dark:hover:bg-bray-800 flex h-24 w-24 cursor-pointer flex-col items-center justify-center rounded-full border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600",
+                    "dark:hover:bg-bray-800 flex h-24 w-24 cursor-pointer flex-col items-center justify-center rounded-full border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600 md:h-32 md:w-32",
                     {
                       "absolute hidden group-hover:flex group-hover:bg-gray-50/50":
                         userData?.image && !isLoadingUserData,
@@ -276,10 +405,9 @@ export function ProfileSettings() {
                   />
                 </label>
               </div>
-              <div className="mx-1 flex w-full flex-col gap-y-1.5 sm:w-auto">
+              <div className="flex w-fit flex-col gap-y-1.5">
                 <Button
                   type="button"
-                  size="sm"
                   // eslint-disable-next-line @typescript-eslint/no-misused-promises
                   onClick={async () => {
                     if (imageFile) {
@@ -295,15 +423,14 @@ export function ProfileSettings() {
                   isLoading={
                     uploading || updateUserProfileImageMutation.isLoading
                   }
-                  className="inline-flex w-full items-center gap-x-1"
+                  className="inline-flex items-center gap-x-1"
+                  leftIcon={<Upload className="h-4 w-4" />}
                 >
-                  <Upload className="h-4 w-4" />
                   Upload
                 </Button>
                 <Button
                   type="button"
-                  variant="outline-destructive"
-                  size="sm"
+                  variant="destructive-outline"
                   onClick={() => {
                     setImageFile(null);
                     setInputImagePreviewUrl(null);
@@ -313,8 +440,8 @@ export function ProfileSettings() {
                     !inputImagePreviewUrl ||
                     updateUserProfileImageMutation.isLoading
                   }
+                  leftIcon={<XMarkIcon className="h-4 w-4" />}
                 >
-                  <XMarkIcon className="h-4 w-4" />
                   Remove Image
                 </Button>
               </div>
@@ -331,12 +458,12 @@ export function ProfileSettings() {
                 <div className="flex w-full flex-col space-y-4">
                   <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-end lg:w-fit lg:space-y-4">
                     <div className="relative w-full">
-                      <Label
+                      <FormLabel
                         htmlFor="firstName"
                         className="text-sm font-medium text-gray-700"
                       >
                         First Name
-                      </Label>
+                      </FormLabel>
                       <Input
                         id="firstName"
                         inputMode="text"
@@ -355,12 +482,12 @@ export function ProfileSettings() {
                       />
                     </div>
                     <div className="relative w-full">
-                      <Label
+                      <FormLabel
                         htmlFor="lastName"
                         className="text-sm font-medium text-gray-700"
                       >
                         Last Name
-                      </Label>
+                      </FormLabel>
                       <Input
                         id="lastName"
                         inputMode="text"

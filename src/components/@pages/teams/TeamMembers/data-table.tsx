@@ -38,19 +38,19 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="overflow-hidden rounded-lg border-2 border-gray-200 bg-white dark:border-gray-800/60 dark:bg-gray-800/30">
-        <Table className="bg-transparent">
+      <div className="overflow-hidden rounded-lg border bg-layer">
+        <Table className="border bg-transparent">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow
                 key={headerGroup.id}
-                className="rounded-primary-lg h-12 border-b-2 border-gray-200 bg-gray-50 text-left text-gray-600 hover:bg-gray-50 dark:border-gray-800/30 dark:bg-gray-800/30 dark:text-gray-200"
+                className="h-12 rounded border-b bg-layer-2 text-left hover:bg-layer-2"
               >
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead
                       key={header.id}
-                      className="whitespace-nowrap px-5 py-4 text-gray-600 dark:text-gray-200"
+                      className="whitespace-nowrap px-5 py-4 text-foreground-light"
                     >
                       {header.isPlaceholder
                         ? null
@@ -70,7 +70,7 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  className="rounded-b-primary-lg h-16 font-medium hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800/10"
+                  className="h-16 rounded-b font-medium text-foreground"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className="px-5">

@@ -18,7 +18,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { UserAvatar } from "@/components/user/UserMenu";
+import { UserAvatar } from "@/components/user/user-menu";
 import { api } from "@/utils/api";
 import { cn } from "@/utils/cn";
 import { Priority } from "@/utils/enums";
@@ -35,6 +35,8 @@ import { z } from "zod";
 import CreateLabel from "./create-label";
 import { PlusIcon } from "lucide-react";
 import { TaskStatus } from "@prisma/client";
+import { IconButton } from "@/components/ui/icon-button";
+import { FormLabel } from "@/components/ui/form-label";
 
 const taskFormSchema = z.object({
   title: z.string().min(1, "Please enter a team name").nonempty(),
@@ -119,9 +121,7 @@ function CreateTaskForm({
           type="text"
           {...register("title")}
           placeholder="task title"
-          variant="outline"
           inputMode="text"
-          className={cn("h-16 border-b bg-white text-2xl text-gray-800")}
           error={errors.title}
         />
       </div>
@@ -220,7 +220,7 @@ function CreateTaskForm({
 
         <div className="flex items-center gap-x-2">
           <div>
-            <Label htmlFor="labels">Label: </Label>
+            <FormLabel htmlFor="labels">Label: </FormLabel>
             <Controller
               name="labels"
               control={control}
@@ -232,7 +232,7 @@ function CreateTaskForm({
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select labels" />
                   </SelectTrigger>
-                  <SelectContent className="bg-white">
+                  <SelectContent className="bg-layer">
                     <SelectGroup>
                       {taskLabels?.map((taskLabel) => (
                         <SelectItem
@@ -242,7 +242,7 @@ function CreateTaskForm({
                         >
                           <span className="flex items-center gap-x-1.5 capitalize">
                             <span
-                              className="h-2 w-2 rounded"
+                              className="h-3 w-3 rounded-sm"
                               style={{
                                 backgroundColor: taskLabel.color,
                               }}
@@ -256,9 +256,9 @@ function CreateTaskForm({
                           </Badge> */}
                         </SelectItem>
                       ))}
-                      <div className="my-2 -ml-1">
+                      {/* <div className="my-2 -ml-1">
                         <CreateLabel />
-                      </div>
+                      </div> */}
                     </SelectGroup>
                   </SelectContent>
                 </Select>
@@ -350,13 +350,16 @@ export default function CreateTask({
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         {type === "default" ? (
-          <Button className="ml-2 inline-flex gap-1 whitespace-nowrap">
-            <PlusIcon className="w-5" /> Create Task
+          <Button
+            className="ml-2 inline-flex gap-1 whitespace-nowrap"
+            leftIcon={<PlusIcon className="w-5" />}
+          >
+            Create Task
           </Button>
         ) : (
-          <Button size="icon" variant="outline" className="h-7 w-7">
+          <IconButton variant="outline" className="h-7 w-7">
             <PlusIcon className="h-4 w-4" />
-          </Button>
+          </IconButton>
         )}
       </DialogTrigger>
       {isOpen && (

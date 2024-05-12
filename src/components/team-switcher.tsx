@@ -56,7 +56,7 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
                 alt={currentTeam.name}
               />
             )}
-            <AvatarFallback className="from-primary-700 to-primary-500 mr-2 h-5 w-5 rounded-full bg-gradient-to-br"></AvatarFallback>
+            <AvatarFallback className="mr-2 h-5 w-5 rounded-full bg-gradient-to-br from-primary-700 to-primary-500"></AvatarFallback>
           </Avatar>
           <p className="max-w-[140px] truncate text-left">
             {currentTeam?.name}
@@ -68,7 +68,7 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
         {teams?.map((team) => (
           <Link key={team.id} href={`/teams/${team.id}`}>
             <DropdownMenuItem
-              className="whitespace-nowrap px-2 py-2.5 text-sm font-medium focus:bg-brand-100/50"
+              className="whitespace-nowrap px-2 py-2.5 text-sm font-medium focus:bg-primary-100/50"
               // onClick={() => void signOut()}
             >
               <Avatar className="mr-2 h-5 w-5">
@@ -76,7 +76,7 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
                   src={`https://avatar.vercel.sh/monsters.png`}
                   alt={team.name}
                 />
-                <AvatarFallback className="mr-2 h-6 w-6 rounded-full bg-gradient-to-br from-brand-700 to-brand-500"></AvatarFallback>
+                <AvatarFallback className="from-brand-700 to-brand-500 mr-2 h-6 w-6 rounded-full bg-gradient-to-br"></AvatarFallback>
               </Avatar>
               <p className="truncate whitespace-nowrap">{team.name}</p>
               <Check

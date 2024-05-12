@@ -1,16 +1,11 @@
 import { useState, type ReactNode } from "react";
 
 import { cn } from "@/utils/cn";
-import { Button } from "../ui/button";
-import { LogOut } from "lucide-react";
-import { signOut } from "next-auth/react";
-import ThemeToggle from "../theme-toggle";
-import MainSwitcher from "../Switcher";
-import Link from "next/link";
 import { useRouter } from "next/router";
-import SideBar from "./SideBar";
+import SideBar from "./sidebar";
 import { IconButton } from "../ui/icon-button";
 import { Bars3Icon } from "@heroicons/react/20/solid";
+import { Typography } from "@/components/ui/typography";
 
 interface HeaderProps {
   pageTitle: string | ReactNode;
@@ -28,13 +23,13 @@ function Header({ pageTitle, actions }: HeaderProps) {
       )}
       <header className="z-40 w-full flex-none backdrop-blur-md lg:pl-0">
         <div className="px-4 pb-1.5 lg:px-6 lg:pl-3">
-          <div className="flex h-14 items-center justify-between overflow-y-hidden">
+          <div className="flex h-16 items-center justify-between overflow-y-hidden">
             <div className="flex w-full items-center justify-between gap-3 ">
               <div className="flex items-center gap-3">
                 <IconButton
-                  className={cn("bg-white focus:border-2", {
-                    block: pathname === "/",
-                    "block xl:hidden": pathname !== "/",
+                  className={cn("", {
+                    flex: pathname === "/",
+                    "flex xl:hidden": pathname !== "/",
                   })}
                   variant="secondary"
                   size="sm"
@@ -43,13 +38,14 @@ function Header({ pageTitle, actions }: HeaderProps) {
                   <Bars3Icon className="w-6" />
                 </IconButton>
                 <div className="block dark:text-gray-200 print:hidden">
-                  <h1 className="h6-light block capitalize sm:hidden">
+                  <Typography
+                    as="h1"
+                    variant="xl/semibold"
+                    className="capitalize"
+                  >
                     {pageTitle}
-                  </h1>
-                  <h1 className="h5-light hidden capitalize sm:block">
-                    {pageTitle}
-                  </h1>
-                </div>{" "}
+                  </Typography>
+                </div>
               </div>
             </div>
 
@@ -95,12 +91,12 @@ export default function Layout({
   className,
 }: LayoutProps) {
   return (
-    <div className="fixed left-0 top-0 flex h-full min-h-[100svh] w-screen min-w-full overflow-auto bg-gray-900 antialiased dark:bg-gray-800/10">
+    <div className="fixed left-0 top-0 flex h-full min-h-[100svh] w-screen min-w-full overflow-auto antialiased">
       <aside>
         <SideBar mode="normal" />
         {/* <MobileNav /> */}
       </aside>
-      <div className="flex h-full w-full flex-col overflow-auto bg-white dark:bg-gray-800/20 xl:rounded-l-xl">
+      <div className="flex h-full w-full flex-col overflow-auto">
         <Header pageTitle={pageTitle} actions={rightSideActions} />
         <main
           className={cn(

@@ -43,18 +43,15 @@ export default function TeamSettingsPage({ team }: TeamSettingsPageProps) {
 
   const updateTeamNameMutation = api.team.updateTeamName.useMutation({
     onSuccess: () => {
-      console.log("success");
       toast.success("Team name updated successfully");
       // apiContext.team.getTeamById.refetch();
     },
     onError: () => {
-      console.log("error");
       toast.error("Something went wrong");
     },
   });
 
   async function onSubmit(data: TeamInfoFormValues) {
-    console.log(data);
     const { name } = data;
 
     await updateTeamNameMutation.mutateAsync({
@@ -90,8 +87,6 @@ export default function TeamSettingsPage({ team }: TeamSettingsPageProps) {
     api.company.getCompanyMembersNotInTeam.useQuery({
       teamId: team.id,
     });
-
-  console.log("companyMembersNotInTeam: ", companyMembersNotInTeam);
 
   return (
     <Layout pageTitle="">

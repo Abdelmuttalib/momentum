@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import { cn } from "@/utils/cn";
-import { dashboardLinks } from "./SideBar";
+import { dashboardLinks } from "./sidebar";
 
 export function MainNav() {
   const { pathname } = useRouter();

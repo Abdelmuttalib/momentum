@@ -4,7 +4,7 @@ import NextNProgress from "nextjs-progressbar";
 
 import ThemeProvider from "./theme-provider";
 import ToastProvider from "./toast-provider";
-import TailwindIndicator from "../tailwind-indicator";
+import TailwindIndicator, { UICustomizer } from "../tailwind-indicator";
 import { SessionProvider } from "next-auth/react";
 import type { TNextAuthSession } from "types";
 
@@ -21,6 +21,7 @@ export default function Providers({ session, children }: ProvidersProps) {
           <ToastProvider />
           {/* loader progress bar */}
           <NextNProgress color="#4740ea" height={4} />
+          <UICustomizer />
           <TailwindIndicator />
           {children}
         </ThemeProvider>

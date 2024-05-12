@@ -7,14 +7,12 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 
-import {
-  Dialog,
+import CustomDialog, {
   DialogContent,
-  DialogDescription,
-  DialogHeader,
+  DialogPortal,
+  DialogRoot,
   DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+} from "@/components/ui/animated-dialog";
 
 import { Input } from "@/components/ui/input";
 import {
@@ -40,6 +38,7 @@ import { toast } from "sonner";
 import { type ReactNode, useState } from "react";
 import { PlusIcon } from "@heroicons/react/20/solid";
 import { useSession } from "next-auth/react";
+import { Typography } from "@/components/ui/typography";
 
 interface NewInviteFormProps {
   onCancel: () => void;
@@ -83,12 +82,15 @@ function NewInviteForm({ onCancel }: NewInviteFormProps) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex flex-col gap-y-3"
+      >
         <FormField
           control={form.control}
           name="email"
           render={({ field }) => (
-            <FormItem className="space-y-0">
+            <FormItem className="space-y-1">
               <FormLabel>Email</FormLabel>
               <FormControl>
                 <Input placeholder="email@mail.com" {...field} />
@@ -104,7 +106,7 @@ function NewInviteForm({ onCancel }: NewInviteFormProps) {
           control={form.control}
           name="role"
           render={({ field }) => (
-            <FormItem className="space-y-0">
+            <FormItem className="w-full space-y-1">
               <FormLabel>Role</FormLabel>
               <FormControl>
                 <Select
@@ -114,7 +116,7 @@ function NewInviteForm({ onCancel }: NewInviteFormProps) {
                   <SelectTrigger className="w-full text-gray-800">
                     <SelectValue placeholder="Select a status" />
                   </SelectTrigger>
-                  <SelectContent className="bg-white">
+                  <SelectContent>
                     <SelectGroup>
                       {Object.values(Role).map((status) => (
                         <SelectItem
@@ -139,11 +141,10 @@ function NewInviteForm({ onCancel }: NewInviteFormProps) {
           )}
         />
 
-        <div className="flex flex-col-reverse md:flex-row md:justify-end md:gap-2">
+        <div className="mt-2 flex flex-col-reverse md:flex-row md:justify-end md:gap-2">
           <Button
             type="button"
             variant="outline"
-            className="mt-2"
             disabled={inviteUserToCompanyMutation.isLoading}
             onClick={onCancel}
           >
@@ -151,7 +152,7 @@ function NewInviteForm({ onCancel }: NewInviteFormProps) {
           </Button>
           <Button
             type="submit"
-            className="mt-2 flex-1 md:flex-initial"
+            className="flex-1 md:flex-initial"
             disabled={inviteUserToCompanyMutation.isLoading}
             isLoading={inviteUserToCompanyMutation.isLoading}
           >
@@ -177,27 +178,32 @@ export default function NewInvite({
 }: NewInviteProps) {
   const [isOpen, setIsOpen] = useState(false);
 
-  function toggleModal() {
-    setIsOpen((prev) => !prev);
+  function onClose() {
+    setIsOpen(false);
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={toggleModal}>
-      <DialogTrigger asChild>{triggerButton}</DialogTrigger>
-      {isOpen && (
-        <DialogContent className="bg-white">
-          <DialogHeader className="space-y-0">
-            <DialogTitle>
-              <h2 className="h5 inline">New Invite</h2>
-            </DialogTitle>
-            <DialogDescription className="body-sm inline text-gray-600">
-              <p>Invite a user to your company.</p>
-            </DialogDescription>
-          </DialogHeader>
-
-          <NewInviteForm {...props} onCancel={() => toggleModal()} />
-        </DialogContent>
-      )}
-    </Dialog>
+    <>
+      <CustomDialog
+        open={isOpen}
+        onClose={onClose}
+        triggerButton={
+          <Button
+            type="button"
+            onClick={() => setIsOpen(true)}
+            leftIcon={<PlusIcon className="w-5" />}
+            className="ml-2 inline-flex gap-1 whitespace-nowrap"
+          >
+            New Invite
+          </Button>
+        }
+        title="New Invite"
+        description="Invite a user to your company"
+      >
+        <div className="mt-4">
+          <NewInviteForm {...props} onCancel={onClose} />
+        </div>
+      </CustomDialog>
+    </>
   );
 }

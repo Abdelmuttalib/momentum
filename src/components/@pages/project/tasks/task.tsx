@@ -11,7 +11,7 @@ import {
   type DraggableProvidedDragHandleProps,
   type DraggableProvidedDraggableProps,
 } from "react-beautiful-dnd";
-import { UserAvatar } from "@/components/user/UserMenu";
+import { UserAvatar } from "@/components/user/user-menu";
 import TaskDialog from "./task-dialog";
 
 interface TaskProps {

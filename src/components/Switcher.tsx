@@ -45,6 +45,7 @@ import { useRouter } from "next/router";
 import type { Project, Team } from "@prisma/client";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { IconButton } from "./ui/icon-button";
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<
   typeof PopoverTrigger
@@ -240,16 +241,15 @@ function Switcher({
     <Dialog open={showNewTeamDialog} onOpenChange={setShowNewTeamDialog}>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button
+          <IconButton
             variant="outline"
             role="combobox"
-            size="icon"
             aria-expanded={open}
             aria-label="Select a team"
             className={cn("w-fit rounded-md border-transparent", className)}
           >
             <CaretSortIcon className="h-5 w-5 shrink-0 opacity-50" />
-          </Button>
+          </IconButton>
         </PopoverTrigger>
         <PopoverContent className="relative flex w-full max-w-2xl flex-col p-2 md:flex-row">
           <span className="absolute right-1 top-1 rounded-md border px-1.5 text-sm">

@@ -58,7 +58,7 @@ export default function ProjectSwitcher({
               src={`https://avatar.vercel.sh/${currentProject.name}.png`}
               alt={currentProject.name}
             />
-            <AvatarFallback className="from-primary-700 to-primary-500 mr-2 h-5 w-5 rounded-full bg-gradient-to-br"></AvatarFallback>
+            <AvatarFallback className="mr-2 h-5 w-5 rounded-full bg-gradient-to-br from-primary-700 to-primary-500"></AvatarFallback>
           </Avatar>
           <p className="max-w-[140px] truncate font-medium">
             {currentProject.name}
@@ -74,7 +74,7 @@ export default function ProjectSwitcher({
               href={`/teams/${teamId}/projects/${project.id}`}
             >
               <DropdownMenuItem
-                className="whitespace-nowrap px-2 py-2.5 font-medium focus:bg-brand-100/50"
+                className="whitespace-nowrap px-2 py-2.5 font-medium focus:bg-primary-100/50"
                 // onClick={() => void signOut()}
               >
                 <Avatar className="mr-2 h-5 w-5">
@@ -82,7 +82,7 @@ export default function ProjectSwitcher({
                     src={`https://avatar.vercel.sh/${project.name}.png`}
                     alt={project.name}
                   />
-                  <AvatarFallback className="from-primary-700 to-primary-500 mr-2 h-5 w-5 rounded-full bg-gradient-to-br"></AvatarFallback>
+                  <AvatarFallback className="mr-2 h-5 w-5 rounded-full bg-gradient-to-br from-primary-700 to-primary-500"></AvatarFallback>
                 </Avatar>
                 <p className="truncate whitespace-nowrap">{project.name}</p>
                 <Check

@@ -9,7 +9,7 @@ interface ProjectsProps {
 
 export default function Projects({ projects, loading }: ProjectsProps) {
   return (
-    <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+    <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
       {!loading &&
         projects?.map((project) => <Project key={project.id} {...project} />)}
       {loading &&
