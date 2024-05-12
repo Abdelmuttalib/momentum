@@ -393,6 +393,8 @@
     --color-border-hover: var(--color-gray-300);
     --color-border-light-hover: var(--color-gray-200);
 
+    --color-input-border: var(--color-gray-300);
+
     /* Shadows */
     --shadow-sm: 0px 4px 8px rgba(0, 0, 0, 0.04);
     --shadow-md: 0px 8px 16px rgba(0, 0, 0, 0.08);
@@ -451,6 +453,8 @@
     --color-border-lighter: var(--color-gray-750);
     --color-border-hover: var(--color-gray-600);
     --color-border-light-hover: var(--color-gray-500);
+
+    --color-input-border: var(--color-gray-650);
 
     --color-success: var(--color-green-400);
     --color-success-light: var(--color-green-500);

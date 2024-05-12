@@ -148,6 +148,8 @@ module.exports = {
           "light-hover": "hsl(var(--color-border-light-hover))",
         },
 
+        "input-border": "hsl(var(--color-input-border))",
+
         info: {
           DEFAULT: "hsl(var(--color-info))",
           light: "hsl(var(--color-info-light))",
