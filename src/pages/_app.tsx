@@ -34,9 +34,7 @@ const MyApp: AppType<TNextAuthSession> = ({
   return (
     <ThemeColorWrapper defaultTheme={themeColor.colorName}>
       <Providers session={session}>
-        <div className={`bg-[#fefffe] text-gray-800 dark:bg-gray-900`}>
-          <Component {...pageProps} />
-        </div>
+        <Component {...pageProps} />
       </Providers>
     </ThemeColorWrapper>
   );
