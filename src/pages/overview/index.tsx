@@ -1,5 +1,6 @@
-import Projects from "@/components/@pages/teams/TeamProjects/Projects";
+import Projects, { ProjectsView } from "@/components/@pages/teams/TeamProjects/Projects";
 import { TeamCard } from "@/components/@pages/teams/TeamProjects/Team";
+import { LayoutContainer } from "@/components/container";
 import { Layout } from "@/components/layout";
 import Seo from "@/components/Seo";
 import { Typography } from "@/components/ui/typography";
@@ -36,15 +37,12 @@ export default function OverviewPage({ companyId }: { companyId: string }) {
               ))}
             </div>
           </div>
-          <div className="space-y-4">
+          <LayoutContainer className="space-y-4">
             <Typography as="h2" variant="xl/medium">
               Projects
             </Typography>
-            <Projects
-              projects={companyProjects}
-              loading={isLoadingCompanyProjects}
-            />
-          </div>
+            <ProjectsView />
+          </LayoutContainer>
         </div>
       </Layout>
     </>

@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { cn } from "@/utils/cn";
-import { cva, VariantProps } from "class-variance-authority";
+import { cva, type VariantProps } from "class-variance-authority";
 import type { FieldError } from "react-hook-form";
 
 const inputVariants = cva(
@@ -10,7 +10,7 @@ const inputVariants = cva(
     variants: {
       variant: {
         default:
-          "ring-1 ring-inset shadow-sm ring-input-border text-sm bg-layer px-3 py-2 text-foreground placeholder-foreground-muted outline-none hover:bg-layer-2 dark:hover:bg-layer-3 focus:ring-primary focus:bg-layer-2",
+          "ring-1 ring-inset shadow-sm ring-input-border text-sm px-3 py-2 text-foreground placeholder-foreground-muted outline-none dark:bg-layer-2 dark:hover:bg-layer-3 focus:ring-primary focus:bg-layer-2 focus:ring-offset-2 focus:ring-offset-primary-100",
         transparent:
           "bg-transparent text-foreground placeholder-foreground-muted hover:bg-layer focus:ring-transparent",
       },

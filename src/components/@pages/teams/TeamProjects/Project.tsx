@@ -7,7 +7,7 @@ import {
 import { useRouter } from "next/router";
 import Badge from "@/components/ui/badge";
 import { getProjectStatusBadgeColor } from "@/utils/getBadgeColor";
-import { formatFullDate } from "@/utils/formatFullDate";
+import { formatFullDate } from "@/utils/date";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/utils/cn";
 import { Typography } from "@/components/ui/typography";
@@ -32,7 +32,7 @@ export default function Project({
   return (
     <Link
       href={projectLink}
-      className="card group relative flex h-36 flex-col justify-between rounded border-2 border-border text-foreground"
+      className="card group relative flex h-36 flex-col justify-between rounded border border-border text-foreground"
     >
       <div className="truncate">
         <Typography
@@ -66,7 +66,6 @@ export function ProjectLoader() {
       </div>
       <div className="flex w-full justify-between">
         <Skeleton className="h-6 w-36" />
-
         <Skeleton className="h-6 w-6" />
       </div>
       <div>

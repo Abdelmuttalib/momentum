@@ -6,6 +6,7 @@ import SideBar from "./sidebar";
 import { IconButton } from "../ui/icon-button";
 import { Bars3Icon } from "@heroicons/react/20/solid";
 import { Typography } from "@/components/ui/typography";
+import { LayoutContainer } from "../container";
 
 interface HeaderProps {
   pageTitle: string | ReactNode;
@@ -22,7 +23,7 @@ function Header({ pageTitle, actions }: HeaderProps) {
         <SideBar mode="mobile" setShowSidebarMenu={setShowSidebarMenu} />
       )}
       <header className="z-40 w-full flex-none backdrop-blur-md lg:pl-0">
-        <div className="px-4 pb-1.5 lg:px-6 lg:pl-3">
+        <LayoutContainer>
           <div className="flex h-16 items-center justify-between overflow-y-hidden">
             <div className="flex w-full items-center justify-between gap-3 ">
               <div className="flex items-center gap-3">
@@ -53,7 +54,7 @@ function Header({ pageTitle, actions }: HeaderProps) {
               {actions}
             </div>
           </div>
-        </div>
+        </LayoutContainer>
       </header>
     </>
   );
@@ -100,7 +101,7 @@ export default function Layout({
         <Header pageTitle={pageTitle} actions={rightSideActions} />
         <main
           className={cn(
-            "relative w-full flex-grow px-3 pb-10 pt-2 lg:px-6 ",
+            "relative w-full flex-grow pb-10 pt-2",
             className
           )}
         >

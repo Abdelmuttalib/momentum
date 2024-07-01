@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Button } from "@/components/ui/button";
-import { Input, inputVariants } from "@/components/ui/input";
+import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Layout } from "@/components/layout";
 import Container from "@/components/@pages/landing-page/container";
@@ -10,7 +10,7 @@ import { type GetServerSideProps } from "next";
 import { api } from "@/utils/api";
 import { z } from "zod";
 import { toast } from "sonner";
-import { formatFullDate } from "@/utils/formatFullDate";
+import { formatFullDate } from "@/utils/date";
 import { companyInvitationsColumns } from "@/components/@pages/company/invites/company-invitations-columns";
 import { DataTable } from "@/components/@pages/teams/TeamMembers/data-table";
 import NewInvite from "@/components/@pages/company/NewInvite";
@@ -21,6 +21,87 @@ import { PlusIcon } from "@heroicons/react/20/solid";
 import { useSession } from "next-auth/react";
 import { FormLabel } from "@/components/ui/form-label";
 import { Typography } from "@/components/ui/typography";
+import { useRouter } from "next/router";
+import Link from "next/link";
+import { cn } from "@/utils/cn";
+
+export function SettingsLayoutContainer({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={cn("px-2 sm:px-4 md:px-6 w-full max-w-3xl mx-auto", className)}>{children}</div>
+  );
+}
+
+export function SettingsContentLayout({
+  children,
+  actions,
+  title,
+  description,
+}: {
+  children: React.ReactNode;
+  actions: React.ReactNode;
+  title: string;
+  description: string;
+}) {
+  const { pathname } = useRouter();
+
+  return (
+    <Layout pageTitle="Settings">
+      <div>
+        <div className="flex flex-col">
+          <SettingsLayoutContainer className="w-full">
+            <ul className="relative flex w-full border-b text-sm">
+              {settingsPaths.map((path) => {
+                const isActive = path.href === pathname;
+                return (
+                  <li
+                    key={path.label}
+                    className={`${isActive ? "border-b-2 border-primary" : ""}`}
+                  >
+                    <Link
+                      href={path.href}
+                      className={`${
+                        isActive ? "text-foreground" : "text-foreground-lighter"
+                      } mb-2 block rounded-md px-3.5 py-2.5 hover:bg-accent-hover/70`}
+                    >
+                      {path.label}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </SettingsLayoutContainer>
+          <SettingsLayoutContainer>
+            <div className="flex w-full items-end justify-between py-8">
+              <div className="space-y-0.5">
+                <Typography as="h3" variant="xl/medium">
+                  {title}
+                </Typography>
+                <Typography
+                  as="p"
+                  variant="sm/regular"
+                  className="text-foreground-lighter"
+                >
+                  {title}
+                </Typography>
+              </div>
+              <div>
+                {actions ?? <Button variant="primary">Save Changes</Button>}
+              </div>
+            </div>
+          </SettingsLayoutContainer>
+        </div>
+        {/* <Container>{children}</Container> */}
+        <SettingsLayoutContainer className="">{children}</SettingsLayoutContainer>
+      </div>
+    </Layout>
+  );
+}
 
 export function SettingsPageTabs() {
   return (
@@ -56,10 +137,52 @@ const companyInfoFormSchema = z.object({
 
 type CompanyInfoFormValues = z.infer<typeof companyInfoFormSchema>;
 
+export const settingsPaths = [
+  {
+    label: "General",
+    href: "/settings/general",
+  },
+  // { label: "Account", href: "/dashboard/settings/account" },
+  {
+    label: "Company",
+    href: "/settings/company",
+  },
+  {
+    label: "Appearance",
+    href: "/settings/appearance",
+  },
+];
+
 export default function SettingsPage() {
+  const { pathname } = useRouter();
+
   return (
     <Layout pageTitle="Settings">
       {/* <Container> */}
+      <div className="h-full w-full bg-red-300">
+        <div className="w-full">
+          <ul className="relative flex w-full border-b text-sm">
+            {settingsPaths.map((path) => {
+              const isActive = path.href === pathname;
+              return (
+                <li
+                  key={path.label}
+                  className={`${isActive ? "border-b-2 border-primary" : ""}`}
+                >
+                  <Link
+                    href={path.href}
+                    className={`${
+                      isActive ? "text-foreground" : "text-foreground-lighter"
+                    } mb-2 block rounded-md px-3.5 py-2.5 hover:bg-accent-hover/70`}
+                  >
+                    {path.label}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      </div>
       <CompanySettings />
       <ProfileSettings />
       {/* </Container> */}

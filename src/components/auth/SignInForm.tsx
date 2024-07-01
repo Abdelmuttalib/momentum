@@ -111,7 +111,6 @@ export default function SignInForm() {
                     inputMode="email"
                     placeholder="email@mail.com"
                     disabled={isLoading}
-                    size="lg"
                     {...field}
                   />
                 </FormControl>
@@ -131,7 +130,6 @@ export default function SignInForm() {
                     type="password"
                     placeholder="password"
                     disabled={isLoading}
-                    size="lg"
                     {...field}
                   />
                 </FormControl>
@@ -147,7 +145,6 @@ export default function SignInForm() {
             }
             isLoading={isLoading}
             rightIcon={<LogInIcon className="h-4 w-4" />}
-            size="lg"
           >
             Sign in
           </Button>

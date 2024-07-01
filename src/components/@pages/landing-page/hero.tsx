@@ -1,6 +1,6 @@
 import React from "react";
 import Container from "./container";
-import { ButtonLink } from "@/components/ui/button";
+import { Button, ButtonLink } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { Typography } from "@/components/ui/typography";
 import GradientBackground from "@/components/GradientBackground";
@@ -41,15 +41,14 @@ export default function Hero() {
               <div className="flex flex-col flex-wrap gap-x-4 gap-y-2 sm:flex-row sm:gap-y-4">
                 <ButtonLink
                   href="/sign-in"
-                  size="lg"
-                  rightIcon={<ArrowRight className="w-[18px]" />}
+                  iconRight={<ArrowRight className="w-4" />}
                 >
                   Get Started
                 </ButtonLink>
               </div>
             </div>
           </div>
-          <div className="lg:absolute lg:-right-36">
+          <div className="lg:absolute lg:-right-36 h-[35rem] overflow-hidden">
             <BoardExample />
           </div>
         </div>

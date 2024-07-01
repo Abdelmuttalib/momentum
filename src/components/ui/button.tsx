@@ -37,10 +37,10 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
-        default: "px-4 py-2.5",
+        default: "px-4 h-10",
         xs: "px-2.5 py-1",
         sm: "px-3 py-1.5",
-        lg: "px-5 py-3.5 text-base",
+        lg: "px-5 h-11 text-base",
       },
     },
     defaultVariants: {
@@ -101,24 +101,24 @@ export interface ButtonLinkProps
     VariantProps<typeof buttonVariants> {
   className?: string;
   children?: React.ReactNode;
-  leftIcon?: React.ReactNode;
-  rightIcon?: React.ReactNode;
+  iconLeft?: React.ReactNode;
+  iconRight?: React.ReactNode;
 }
 
 const ButtonLink = React.forwardRef<HTMLAnchorElement, ButtonLinkProps>(
-  ({ className, variant, leftIcon, rightIcon, size, ...props }, ref) => {
+  ({ className, variant, iconLeft, iconRight, size, ...props }, ref) => {
     return (
       <Link
         className={cn(buttonVariants({ variant, size, className }), {
           "inline-flex items-center justify-center gap-x-2":
-            leftIcon || rightIcon,
+            iconLeft || iconRight,
         })}
         ref={ref}
         {...props}
       >
-        {leftIcon ? <>{leftIcon}</> : null}
+        {iconLeft ? <>{iconLeft}</> : null}
         {props.children}
-        {rightIcon ? <>{rightIcon}</> : null}
+        {iconRight ? <>{iconRight}</> : null}
       </Link>
     );
   }

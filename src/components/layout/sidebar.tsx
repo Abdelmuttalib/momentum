@@ -12,7 +12,7 @@ import type { Dispatch, ReactNode, SetStateAction } from "react";
 import { cn } from "@/utils/cn";
 
 import { IconButton } from "@/components/ui/icon-button";
-import { TerminalSquareIcon, UsersIcon } from "lucide-react";
+import { UsersIcon } from "lucide-react";
 
 type DashboardLink = {
   label: string;
@@ -26,11 +26,7 @@ export const dashboardLinks: DashboardLink[] = [
     icon: <HomeIcon className="w-5 text-current" />,
     href: "/overview",
   },
-  // {
-  //   label: "Overview",
-  //   icon: <RectangleGroupIcon className="w-6 text-current" />,
-  //   href: "/overview",
-  // },
+  
   {
     label: "Teams",
     icon: <UsersIcon className="w-5 text-current" />,
@@ -112,8 +108,8 @@ export default function SideBar({
 
   return (
     <div
-      className={cn("relative bg-background px-4", {
-        "hidden h-full min-h-screen w-full flex-col xl:block xl:w-64":
+      className={cn("relative bg-foreground dark:bg-background px-4", {
+        "hidden h-full min-h-screen w-full flex-col xl:block xl:w-60":
           mode === "normal",
         "fixed inset-0 z-50 flex h-[100svh] w-full flex-col transition-colors duration-300":
           mode === "mobile",
@@ -130,8 +126,8 @@ export default function SideBar({
             <XMarkIcon className="w-6" aria-hidden="true" />
           </IconButton>
         )}
-        <div className="hidden w-fit items-center gap-2 rounded bg-gradient-to-b from-primary-300 to-primary-200 px-2 py-1.5 text-center text-foreground xl:flex">
-          <h5 className="font-semibold">Momentum</h5>
+        <div className="hidden w-fit xl:flex">
+          <h5 className="font-medium text-white text-xl">Momentum</h5>
         </div>
 
         {/* links */}
