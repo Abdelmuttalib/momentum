@@ -60,7 +60,7 @@ const Badge = ({
   return (
     <span
       className={cn(
-        "whitespace-nowrap rounded-full border px-3 py-1 text-xs font-medium",
+        "whitespace-nowrap rounded-full border px-2.5 py-1 text-xs font-medium lowercase",
         {
           "border-primary-600/10 bg-primary-200/70 text-primary-900 dark:opacity-80":
             color === "primary",

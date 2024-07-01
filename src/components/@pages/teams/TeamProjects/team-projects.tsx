@@ -18,7 +18,7 @@ import { type FC, useState, useEffect } from "react";
 import { PlusIcon } from "lucide-react";
 import Badge from "@/components/ui/badge";
 import { getProjectStatusBadgeColor } from "@/utils/getBadgeColor";
-import { formatFullDate } from "@/utils/formatFullDate";
+import { formatFullDate } from "@/utils/date";
 
 type TTeam = Team & {
   users: User[];

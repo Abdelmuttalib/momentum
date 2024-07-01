@@ -30,7 +30,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { useSession } from "next-auth/react";
-import { formatFullDate } from "@/utils/formatFullDate";
+import { formatFullDate } from "@/utils/date";
 import { cn } from "@/utils/cn";
 import { Typography } from "@/components/ui/typography";
 

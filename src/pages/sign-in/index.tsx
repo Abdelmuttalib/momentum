@@ -16,12 +16,14 @@ export default function SignInPage() {
       <Seo title="Sign in" />
 
       <AuthLayout>
-        <div className="flex w-full max-w-lg flex-col rounded-lg p-9 px-12">
-          <Auth />
+        <div className="flex w-full max-w-md flex-col rounded-lg p-9 px-12">
+          <div className="relative flex">
+            <Auth />
+          </div>
 
           <div className="flex w-full items-center gap-4">
             <hr className="w-full border" />
-            <p>or</p>
+            <Typography>or</Typography>
             <hr className="w-full border" />
           </div>
 

@@ -1,5 +1,5 @@
 import Badge from "@/components/ui/badge";
-import { formatFullDate } from "@/utils/formatFullDate";
+import { formatFullDate } from "@/utils/date";
 import { getUserRoleBadgeColor } from "@/utils/getBadgeColor";
 import type { Invitation } from "@prisma/client";
 import type { ColumnDef } from "@tanstack/react-table";
@@ -23,7 +23,7 @@ export const companyInvitationsColumns: ColumnDef<Invitation>[] = [
     cell: ({ row: { original } }) => {
       const invitation = original;
       return (
-        <Badge color={getUserRoleBadgeColor(invitation?.role)}>
+        <Badge color={getUserRoleBadgeColor(invitation?.role)} className="rounded">
           {invitation?.role}
         </Badge>
       );

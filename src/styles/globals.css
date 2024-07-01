@@ -318,6 +318,7 @@
 
     --font-xs: 0.75rem; /* 12px */
     --font-sm: 0.875rem; /* 14px */
+    /* 15px font */
     --font-base: 1rem; /* 16px */
     --font-md: 1rem; /* 16px */
     --font-lg: 1.125rem; /* 18px */
@@ -442,10 +443,10 @@
     --color-text-muted-dark: var(--color-gray-700);
     --color-text-muted-darker: var(--color-gray-700);
 
-    --color-primary: var(--color-primary-400);
+    /* --color-primary: var(--color-primary-400);
     --color-primary-hover: var(--color-primary-300);
     --color-primary-active: var(--color-primary-500);
-    --color-primary-disabled: var(--color-primary-300);
+    --color-primary-disabled: var(--color-primary-300); */
 
     /* Borders */
     --color-border: var(--color-gray-700);
