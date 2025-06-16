@@ -87,11 +87,14 @@ model Company {
 model Team {
   id        String    @id @default(uuid())
   name      String
+  description String?
   users     User[]
   projects  Project[]
   companyId String
   company   Company   @relation(fields: [companyId], references: [id])
   tasks     Task[]
+  // createdAt DateTime      @default(now())
+  // updatedAt DateTime      @updatedAt
 }
 
 model Project {
