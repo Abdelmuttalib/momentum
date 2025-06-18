@@ -1,8 +1,7 @@
-import Container from "@/components/@pages/landing-page/container";
-import { Layout } from "@/components/layout";
+import Container from "@/components/views/landing-page/container";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { FormLabel } from "@/components/ui/form-label";
+import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getServerAuthSession } from "@/server/auth";
 import { api } from "@/utils/api";
@@ -22,18 +21,10 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { SettingsPageTabs } from ".";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { AppLayout } from "@/components/layout/app-layout";
 
 const profileFormSchema = z.object({
-  firstName: z.string(),
-  lastName: z.string(),
+  name: z.string(),
   image: z.any(),
 });
 
@@ -42,7 +33,7 @@ type ProfileFormValues = z.infer<typeof profileFormSchema>;
 export function UploadIcon({ className }: { className?: ClassValue }) {
   return (
     <svg
-      className={cn("mb-4 h-8 w-8 text-gray-500 dark:text-gray-400", className)}
+      className={cn("mb-4 h-8 w-8 text-muted-foreground", className)}
       aria-hidden="true"
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
@@ -61,9 +52,9 @@ export function UploadIcon({ className }: { className?: ClassValue }) {
 
 export default function SettingsProfilePage() {
   return (
-    <Layout pageTitle="">
+    <AppLayout>
       <SettingsPageTabs />
-    </Layout>
+    </AppLayout>
   );
 }
 
@@ -73,11 +64,7 @@ export function ProfileSettings() {
   const { data: session } = useSession();
   const user = session?.user;
   const apiContext = api.useContext();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<ProfileFormValues>();
+  const form = useForm<ProfileFormValues>();
   const [uploading, setUploading] = useState(false);
   const [inputImagePreviewUrl, setInputImagePreviewUrl] = useState<
     string | null
@@ -157,7 +144,7 @@ export function ProfileSettings() {
 
         const fileName = nanoid();
         const ext = imageContentType?.split("/")[1];
-        const path = `${fileName}.${ext as string}`;
+        const path = `${fileName}.${ext}`;
 
         const decodedFileData = decode(base64FileData);
         await uploadImageToStorage(path, decodedFileData, imageContentType);
@@ -167,7 +154,7 @@ export function ProfileSettings() {
         // await insertImageToDatabase(publicImageUrl, description, is_public);
 
         await updateUserProfileImageMutation.mutateAsync({
-          userId: user?.id as string,
+          userId: user?.id,
           image: publicImageUrl,
         });
       };
@@ -180,7 +167,7 @@ export function ProfileSettings() {
 
   const { data: userData, isLoading: isLoadingUserData } =
     api.user.getUser.useQuery({
-      userId: user?.id as string,
+      userId: user?.id,
     });
 
   const updateUserInfoMutation = api.user.updateUserInfo.useMutation({
@@ -197,12 +184,11 @@ export function ProfileSettings() {
     if (inputImagePreviewUrl || imageFile) {
       await onUploadProfileImage(imageFile);
     }
-    const { firstName, lastName } = data;
+    const { name } = data;
 
     await updateUserInfoMutation.mutateAsync({
-      userId: user?.id as string,
-      firstName,
-      lastName,
+      userId: user?.id,
+      name,
     });
   }
   return (
@@ -211,7 +197,7 @@ export function ProfileSettings() {
         <h2 className="text-base font-semibold leading-7 text-gray-900">
           Personal Information
         </h2>
-        <p className="mt-1 text-sm leading-6 text-gray-600">
+        <p className="mt-1 text-sm leading-6 text-muted-foreground">
           Use a permanent address where you can receive mail.
         </p>
 
@@ -257,32 +243,32 @@ export function ProfileSettings() {
             </div>
           </div>
           <div className="sm:col-span-3">
-            <FormLabel htmlFor="firstName">First name</FormLabel>
+            <Label htmlFor="name">Name</Label>
             <Input
-              id="firstName"
+              id="name"
               inputMode="text"
               type="text"
               placeholder="first name"
-              {...register("firstName", {
+              {...form.register("name", {
                 required: true,
               })}
-              defaultValue={userData?.firstName || ""}
+              defaultValue={userData?.name || ""}
               disabled={
                 isLoadingUserData ||
                 updateUserInfoMutation.isLoading ||
                 uploading
               }
-              error={errors?.firstName}
+              data-invalid={form.formState.errors?.name}
             />
           </div>
 
           <div className="sm:col-span-3">
-            <FormLabel htmlFor="last-name">Last name</FormLabel>
+            <Label htmlFor="last-name">Last name</Label>
             <Input type="text" name="last-name" id="last-name" disabled />
           </div>
 
           <div className="sm:col-span-4">
-            <FormLabel htmlFor="email">Email address</FormLabel>
+            <Label htmlFor="email">Email address</Label>
             <Input
               id="email"
               name="email"
@@ -293,7 +279,7 @@ export function ProfileSettings() {
           </div>
 
           <div className="sm:col-span-3">
-            <FormLabel htmlFor="country">Country</FormLabel>
+            <Label htmlFor="country">Country</Label>
             <Select
               // {...field}
               // onValueChange={(value) => field.onChange(value as TaskStatus)}
@@ -315,7 +301,7 @@ export function ProfileSettings() {
           </div>
 
           <div className="sm:col-span-2 sm:col-start-1">
-            <FormLabel htmlFor="city">City</FormLabel>
+            <Label htmlFor="city">City</Label>
             <div className="mt-2">
               <Input
                 type="text"
@@ -377,14 +363,14 @@ export function ProfileSettings() {
                   )}
                 >
                   <div className="flex flex-col items-center justify-center pb-6 pt-5">
-                    <Upload className="h-6 w-6 text-gray-500 dark:text-gray-400" />
+                    <Upload className="h-6 w-6 text-muted-foreground dark:text-gray-400" />
                   </div>
                   <input
                     id="image"
                     type="file"
                     className="hidden"
                     accept="image/png, image/jpg, image/jpeg"
-                    // {...register("image", { required: true })}
+                    // {...form.register("image", { required: true })}
                     onChange={(e) => {
                       const imageFileValue = e.target.files;
                       if (!imageFileValue) setInputImagePreviewUrl(null);
@@ -424,8 +410,8 @@ export function ProfileSettings() {
                     uploading || updateUserProfileImageMutation.isLoading
                   }
                   className="inline-flex items-center gap-x-1"
-                  leftIcon={<Upload className="h-4 w-4" />}
                 >
+                  <Upload className="h-4 w-4" />
                   Upload
                 </Button>
                 <Button
@@ -440,8 +426,8 @@ export function ProfileSettings() {
                     !inputImagePreviewUrl ||
                     updateUserProfileImageMutation.isLoading
                   }
-                  leftIcon={<XMarkIcon className="h-4 w-4" />}
                 >
+                  <XMarkIcon className="h-4 w-4" />
                   Remove Image
                 </Button>
               </div>
@@ -452,57 +438,28 @@ export function ProfileSettings() {
             <div className="py-2">
               <form
                 // eslint-disable-next-line @typescript-eslint/no-misused-promises
-                onSubmit={handleSubmit(onUpdateInfo)}
+                onSubmit={form.handleSubmit(onUpdateInfo)}
                 className="flex flex-col gap-5 divide-y-2"
               >
                 <div className="flex w-full flex-col space-y-4">
                   <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-end lg:w-fit lg:space-y-4">
                     <div className="relative w-full">
-                      <FormLabel
-                        htmlFor="firstName"
-                        className="text-sm font-medium text-gray-700"
-                      >
-                        First Name
-                      </FormLabel>
+                      <Label htmlFor="name">Name</Label>
                       <Input
-                        id="firstName"
+                        id="name"
                         inputMode="text"
                         type="text"
-                        placeholder="first name"
-                        {...register("firstName", {
+                        placeholder="name"
+                        {...form.register("name", {
                           required: true,
                         })}
-                        defaultValue={userData?.firstName || ""}
+                        defaultValue={userData?.name || ""}
                         disabled={
                           isLoadingUserData ||
                           updateUserInfoMutation.isLoading ||
                           uploading
                         }
-                        error={errors?.firstName}
-                      />
-                    </div>
-                    <div className="relative w-full">
-                      <FormLabel
-                        htmlFor="lastName"
-                        className="text-sm font-medium text-gray-700"
-                      >
-                        Last Name
-                      </FormLabel>
-                      <Input
-                        id="lastName"
-                        inputMode="text"
-                        type="text"
-                        placeholder="last name"
-                        {...register("lastName", {
-                          required: true,
-                        })}
-                        defaultValue={userData?.lastName || ""}
-                        disabled={
-                          isLoadingUserData ||
-                          updateUserInfoMutation.isLoading ||
-                          uploading
-                        }
-                        error={errors?.lastName}
+                        data-invalid={form.formState.errors?.name?.message}
                       />
                     </div>
                   </div>

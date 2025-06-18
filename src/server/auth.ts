@@ -28,8 +28,7 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
-      firstName: string;
-      lastName: string;
+      name: string;
       email: string;
       image?: string;
       role: Role;
@@ -72,8 +71,7 @@ export const authOptions: NextAuthOptions = {
       return {
         ...token,
         ...(user && user.id ? { id: user.id } : {}),
-        ...(user && user.firstName ? { firstName: user.firstName } : {}),
-        ...(user && user.lastName ? { lastName: user.lastName } : {}),
+        ...(user && user.name ? { name: user.name } : {}),
         ...(user && user.email ? { email: user.email } : {}),
         ...(user && user.emailVerified
           ? { emailVerified: user.emailVerified }
@@ -99,8 +97,7 @@ export const authOptions: NextAuthOptions = {
         user: {
           ...session.user,
           ...(token && token.id ? { id: token.id } : {}),
-          ...(token && token.firstName ? { firstName: token.firstName } : {}),
-          ...(token && token.lastName ? { lastName: token.lastName } : {}),
+          ...(token && token.name ? { name: token.name } : {}),
           ...(token && token.email ? { email: token.email } : {}),
           ...(token && token.emailVerified
             ? { emailVerified: token.emailVerified }

@@ -43,7 +43,8 @@ import { type User as UserType } from "@prisma/client";
 import Link from "next/link";
 import { cn } from "@/utils/cn";
 import Image from "next/image";
-import ThemeSwitcher from "../theme-select";
+import { getUserName } from "@/utils/user";
+import { type Session } from "next-auth";
 
 {
   /* <TooltipProvider>
@@ -64,11 +65,15 @@ export function UserAvatar({
   triggerClassName,
   contentClassName,
 }: {
-  user: UserType;
+  user: UserType | Session["user"];
   size?: "default" | "sm" | "lg";
   triggerClassName?: string;
   contentClassName?: string;
 }) {
+  if (!user) {
+    return null;
+  }
+
   return (
     <TooltipProvider>
       <Tooltip>
@@ -85,7 +90,7 @@ export function UserAvatar({
               triggerClassName
             )}
           >
-            {user?.image ? (
+            {user && user?.image ? (
               <Image
                 src={user?.image}
                 alt="profile image"
@@ -95,11 +100,11 @@ export function UserAvatar({
                 className="rounded-full object-cover"
               />
             ) : (
-              <>{user?.firstName ? user.firstName[0] : user.email[0]}</>
+              <>{user?.name ? user.name[0] : user.email[0]}</>
             )}
           </div>
         </TooltipTrigger>
-        <TooltipContent className={cn("bg-gray-900", contentClassName)}>
+        <TooltipContent className={cn("", contentClassName)}>
           {/* {user?.image && (
             <Image
               src={user.image}
@@ -110,9 +115,7 @@ export function UserAvatar({
           )}
           {!user?.image && ( */}
           <div className="text-sm">
-            <p className="font-medium text-gray-100">
-              {user.firstName} {user.lastName}
-            </p>
+            <p className="font-medium text-gray-100">{user.name}</p>
             <p className="text-gray-400">{user.email}</p>
           </div>
         </TooltipContent>
@@ -125,11 +128,9 @@ export function User({ user }: { user: UserType }) {
   return (
     <div className="flex h-fit w-full items-center justify-start gap-3 truncate">
       <div className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-black text-lg text-gray-100">
-        {user?.firstName && user?.firstName[0]}
+        {user?.name && user?.name[0]}
       </div>
-      <p className="truncate font-medium">
-        {user?.firstName} {user?.lastName}
-      </p>
+      <p className="truncate font-medium">{user?.name}</p>
     </div>
   );
 }
@@ -138,19 +139,20 @@ export default function UserMenu() {
   const { data: session } = useSession();
   const { push } = useRouter();
 
+  const userName = getUserName(session?.user);
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
           type="button"
-          className="flex h-fit items-center justify-start gap-3 truncate border-2 bg-transparent px-2 py-2 hover:border-gray-800 hover:bg-transparent"
+          variant="ghost"
+          className="border-foreground-lighter inline-flex h-12 max-w-full items-center gap-x-2 truncate border text-muted-foreground hover:border-white"
         >
-          <div className="inline-flex h-8 w-8 items-center justify-center rounded border border-gray-600">
-            {session?.user?.firstName[0]}
-          </div>
-          {/* <p className="truncate text-gray-100">
-            {session?.user?.firstName} {session?.user?.lastName}
-          </p> */}
+          <span>
+            <UserAvatar user={session?.user} size="sm" />
+          </span>
+          <span className="truncate">{userName}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-52">

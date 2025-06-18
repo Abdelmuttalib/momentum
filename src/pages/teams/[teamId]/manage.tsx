@@ -1,9 +1,14 @@
-import { Layout } from "@/components/layout";
+import { AppLayout } from "@/components/layout/app-layout";
+import { Seo } from "@/components/seo";
 
 export default function TeamManagePage() {
   return (
-    <Layout pageTitle="">
-      <div className="flex flex-1 flex-col"></div>
-    </Layout>
+    <>
+      <Seo title="Teams" />
+
+      <AppLayout>
+        <div className="flex flex-1 flex-col"></div>
+      </AppLayout>
+    </>
   );
 }

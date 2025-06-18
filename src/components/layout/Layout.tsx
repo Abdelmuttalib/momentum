@@ -66,13 +66,12 @@ const Footer = () => {
   return (
     <footer className="mt-auto w-full border-t px-4 py-4 text-gray-700 lg:px-6">
       <div className="w-full text-center md:text-left">
-        <h5 className="label-sm mb-1">
+        <Typography as="h5" variant="sm/normal" className="mb-1">
           Momentum
-          {/* {{ app.name }} */}
-        </h5>
-        <p className="text-xs text-gray-600">
+        </Typography>
+        <Typography as="h5" variant="sm/normal" className="mb-1">
           Copyright © {new Date().getFullYear()} invix. All rights reserved.
-        </p>
+        </Typography>
       </div>
     </footer>
   );
@@ -99,12 +98,7 @@ export default function Layout({
       </aside>
       <div className="flex h-full w-full flex-col overflow-auto">
         <Header pageTitle={pageTitle} actions={rightSideActions} />
-        <main
-          className={cn(
-            "relative w-full flex-grow pb-10 pt-2",
-            className
-          )}
-        >
+        <main className={cn("relative w-full flex-grow pb-10 pt-2", className)}>
           {children}
         </main>
         {/* <Footer /> */}

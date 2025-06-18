@@ -3,8 +3,8 @@
 
 import React from "react";
 import { type FieldError } from "react-hook-form";
-import { Input } from "./input";
-import { Label } from "./label";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 interface InputFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
@@ -29,7 +29,7 @@ export default function InputField({
       </Label>
       <Input id={name} {...rest} error={error} />
       {error && (
-        <p className="text-error-500 mt-0.5 text-sm lowercase">
+        <p className="mt-0.5 text-sm lowercase text-destructive">
           {error.message}
         </p>
       )}

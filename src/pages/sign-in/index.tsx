@@ -1,5 +1,4 @@
 import { type GetServerSideProps } from "next";
-import Auth from "@/components/auth/AuthContainer";
 import { getServerAuthSession } from "@/server/auth";
 import { ArrowRightIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
@@ -7,8 +6,9 @@ import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/utils/cn";
 import { BuildingOfficeIcon } from "@heroicons/react/20/solid";
 import { Typography } from "@/components/ui/typography";
-import { AuthLayout } from "@/components/layout";
-import Seo from "@/components/Seo";
+import { AuthLayout } from "@/components/layout/auth-layout";
+import { Seo } from "@/components/seo";
+import { SignInForm } from "@/components/views/auth/forms/sign-in";
 
 export default function SignInPage() {
   return (
@@ -18,12 +18,12 @@ export default function SignInPage() {
       <AuthLayout>
         <div className="flex w-full max-w-md flex-col rounded-lg p-9 px-12">
           <div className="relative flex">
-            <Auth />
+            <SignInForm />
           </div>
 
           <div className="flex w-full items-center gap-4">
             <hr className="w-full border" />
-            <Typography>or</Typography>
+            <Typography variant="sm/normal">or</Typography>
             <hr className="w-full border" />
           </div>
 
@@ -33,7 +33,6 @@ export default function SignInPage() {
               className={cn(
                 buttonVariants({
                   variant: "secondary",
-                  size: "sm",
                 }),
                 "flex w-full justify-start gap-x-2"
               )}
@@ -50,7 +49,6 @@ export default function SignInPage() {
               className={cn(
                 buttonVariants({
                   variant: "secondary",
-                  size: "sm",
                 }),
                 "flex w-full justify-start gap-x-2"
               )}
@@ -68,23 +66,6 @@ export default function SignInPage() {
     </>
   );
 }
-
-// {/* Login */}
-// <Button
-// type="button"
-// variant="outline"
-// className={cn(
-//   "group flex h-[4.5rem] w-full items-center justify-start gap-x-3 rounded-lg px-3.5 text-left hover:border-black focus:outline-none"
-// )}
-// >
-// <span className="rounded-md border-2 p-2.5 group-hover:border-black group-hover:bg-black group-hover:text-gray-100">
-//   <LogIn className="h-5 w-5" />
-// </span>
-// <span className="flex flex-col">
-//   <span className="font-semibold">Sign in</span>
-//   <span className="text-gray-500">sign in with your credentials</span>
-// </span>
-// </Button>
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getServerAuthSession(context);

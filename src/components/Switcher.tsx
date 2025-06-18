@@ -46,6 +46,7 @@ import type { Project, Team } from "@prisma/client";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { IconButton } from "./ui/icon-button";
+import { getTeamLink } from "@/utils/links";
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<
   typeof PopoverTrigger
@@ -133,7 +134,7 @@ export default function MainSwitcher() {
               />
               <AvatarFallback>SC</AvatarFallback>
             </Avatar>
-            <Link href={`/teams/${currentTeam?.id as string}`}>
+            <Link href={getTeamLink(currentTeam?.id)}>
               <p
                 className={cn("font-medium", {
                   "max-w-[20px] truncate lg:max-w-fit": isProjectPath,
@@ -158,7 +159,7 @@ export default function MainSwitcher() {
         </div>
       )}
       {isProjectPath && (
-        <span className="mx-2 text-2xl font-light text-gray-300 dark:text-gray-700">
+        <span className="mx-2 text-2xl font-light text-muted-foreground">
           /
         </span>
       )}

@@ -8,8 +8,8 @@ export function formatFullDate(date: Date | string) {
     minute: "numeric",
   });
 }
-  
-export const formatShortDate = (date: string) => {
+
+export const formatShortDate = (date: Date | string) => {
   const newDate = new Date(date);
   return newDate.toLocaleDateString("en-us", {
     month: "short",
@@ -17,7 +17,7 @@ export const formatShortDate = (date: string) => {
   });
 };
 
-export const formatShortDateWithYear = (date: string) => {
+export const formatShortDateWithYear = (date: Date | string) => {
   const newDate = new Date(date);
   return newDate.toLocaleDateString("en-us", {
     month: "short",

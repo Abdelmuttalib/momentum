@@ -1,75 +1,34 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 import { useRouter } from "next/router";
-import { api } from "@/utils/api";
-import { AuthLayout } from "@/components/layout";
-import { FormLabel } from "@/components/ui/form-label";
-import { Typography } from "@/components/ui/typography";
-import Seo from "@/components/Seo";
-
-const signUpValidationSchema = z
-  .object({
-    firstName: z
-      .string()
-      .min(2, "first name must be at least 2 characters")
-      .nonempty("first name cannot be empty"),
-    lastName: z
-      .string()
-      .min(2, "last name must be at least 2 characters")
-      .nonempty("last name cannot be empty"),
-    email: z
-      .string()
-      .min(4, "email must be at least 4 characters")
-      .email("invalid email format")
-      .nonempty("email cannot be empty"),
-    password: z.string().min(8, "password must be at least 8 characters"),
-    confirmPassword: z
-      .string()
-      .min(8, "confirm password must be at least 8 characters"),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    path: ["confirmPassword"],
-    message: "passwords do not match",
-  });
-
-type CreateUserAccountForm = z.infer<typeof signUpValidationSchema>;
+import { AuthLayout } from "@/components/layout/auth-layout";
+import { Seo } from "@/components/seo";
+import { Label } from "@/components/ui/label";
+import { useRegisterUser } from "@/hooks/use-register-user";
+import {
+  AuthPageDescription,
+  AuthPageTitle,
+} from "@/components/views/auth/common";
+import { siteConfig } from "@/config/site-config";
 
 function CreateUserAccountForm() {
-  const { push } = useRouter();
+  const router = useRouter();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<CreateUserAccountForm>({
-    resolver: zodResolver(signUpValidationSchema),
+  const { form, handleSubmit, mutation } = useRegisterUser({
+    onSuccess: () => {
+      // toast.success("Account created successfully");
+      router.push(siteConfig.pages.main.links.signIn.href).catch((e) => {
+        // redirect to sign in page
+        console.log("ERROR_REGISTER_USER", e);
+      });
+    },
+    onError: () => {
+      toast.error("Something went wrong, kindly try again!");
+    },
   });
-
-  const registerInvitedUserMutation =
-    api.company.registerInvitedUser.useMutation({
-      onSuccess: async () => {
-        toast.success("Account created successfully");
-        await push("/sign-in");
-      },
-      onError: () => {
-        toast.error("Something went wrong, kindly try again!");
-      },
-    });
-
-  async function onSubmit(data: CreateUserAccountForm) {
-    await registerInvitedUserMutation.mutateAsync({
-      firstName: data.firstName,
-      lastName: data.lastName,
-      email: data.email,
-      password: data.password,
-    });
-  }
 
   return (
     <>
@@ -77,98 +36,82 @@ function CreateUserAccountForm() {
 
       <div className="w-full max-w-md space-y-6 px-6 py-4">
         <div>
-          <Typography as="h1" variant="xl/medium">
-            Get Started
-          </Typography>
-
-          <Typography className="text-foreground-light">
+          <AuthPageTitle>Get Started</AuthPageTitle>
+          <AuthPageDescription>
             get started by creating your account.
-          </Typography>
+          </AuthPageDescription>
         </div>
 
         <form
           className="flex flex-col gap-4"
           // eslint-disable-next-line @typescript-eslint/no-misused-promises
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={handleSubmit}
         >
           {/* Email Input */}
-          <div>
-            <FormLabel htmlFor="email">Email</FormLabel>
+          <div className="space-y-2">
+            <Label htmlFor="email">Email</Label>
             <Input
               id="email"
-              {...register("email")}
+              {...form.register("email")}
               type="email"
               inputMode="email"
               placeholder="email@mail.com"
-              error={errors?.email}
+              disabled={mutation.isLoading}
+              data-invalid={form.formState.errors?.email?.message}
             />
           </div>
 
           {/* First Name Input */}
-          <div className="flex w-full flex-col gap-4 sm:flex-row">
-            <div className="w-full">
-              <FormLabel htmlFor="firstName">First Name</FormLabel>
-              <Input
-                id="firstName"
-                type="firstName"
-                {...register("firstName", { required: true })}
-                placeholder="first name"
-                error={errors?.firstName}
-              />
-            </div>
-
-            <div className="w-full">
-              <FormLabel htmlFor="lastName">Last Name</FormLabel>
-              <Input
-                id="lastName"
-                type="lastName"
-                {...register("lastName", { required: true })}
-                placeholder="last name"
-                error={errors?.lastName}
-              />
-            </div>
+          <div className="space-y-2">
+            <Label htmlFor="name">Name</Label>
+            <Input
+              id="name"
+              type="name"
+              {...form.register("name", { required: true })}
+              placeholder="name"
+              disabled={mutation.isLoading}
+              data-invalid={form.formState.errors?.name?.message}
+            />
           </div>
 
           {/* Password Input */}
-          <div>
-            <FormLabel htmlFor="password">Password</FormLabel>
+          <div className="space-y-2">
+            <Label htmlFor="password">Password</Label>
             <Input
               id="password"
               type="password"
-              {...register("password", { required: true })}
+              {...form.register("password", { required: true })}
               placeholder="password"
-              error={errors?.password}
+              disabled={mutation.isLoading}
+              data-invalid={form.formState.errors?.password?.message}
             />
           </div>
 
           {/* Confirm Password Input */}
-          <div>
-            <FormLabel htmlFor="confirmPassword">Confirm Password</FormLabel>
+          <div className="space-y-2">
+            <Label htmlFor="confirmPassword">Confirm Password</Label>
             <Input
               id="confirmPassword"
               type="password"
-              {...register("confirmPassword", { required: true })}
+              {...form.register("confirmPassword", { required: true })}
               placeholder="confirm password"
-              error={errors?.confirmPassword}
+              disabled={mutation.isLoading}
+              data-invalid={form.formState.errors?.confirmPassword?.message}
             />
-            {/* {errors.confirmPassword && (
-            <p className="mt-0.5 text-sm text-red-500">
-              {errors?.confirmPassword?.message}
-            </p>
-          )} */}
           </div>
-          <Button
-            type="submit"
-            disabled={
-              Object.keys(errors).length > 0 ||
-              registerInvitedUserMutation.isLoading
-            }
-            isLoading={registerInvitedUserMutation.isLoading}
-            className="mt-2 w-full"
-          >
-            Create Account
-          </Button>
-
+          <div className="mt-2">
+            <Button
+              type="submit"
+              disabled={
+                Object.keys(form.formState.errors).length > 0 ||
+                mutation.isLoading
+              }
+              isLoading={mutation.isLoading}
+              className="w-full"
+            >
+              Create Account
+            </Button>
+          </div>
           {/* Another Auth Routes */}
 
           {/* <div className=" text-sm font-medium text-gray-700 sm:mb-4 sm:flex sm:items-center sm:gap-1">

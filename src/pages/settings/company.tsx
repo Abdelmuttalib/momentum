@@ -1,19 +1,22 @@
 // import DashboardLayout from "@/components/layout/dashboard-layout";
 import { Button } from "@/components/ui/button";
 import { SettingsContentLayout } from ".";
+import { CompanySettings } from "@/components/views/settings";
 
-export default function CompanySettings() {
+export default function CompanySettingsPage() {
   return (
     <SettingsContentLayout
       title="Company Settings"
       description="dd"
       actions={
         <>
-          <Button variant="primary">Save Changes</Button>
+          <Button>Save Changes</Button>
         </>
       }
     >
-      fkndsfsjkf
+      <div>
+        <CompanySettings />
+      </div>
     </SettingsContentLayout>
   );
 }

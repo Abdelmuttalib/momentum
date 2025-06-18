@@ -1,4 +1,4 @@
-import FAQ from "@/components/@pages/landing-page/faq";
+import FAQ from "@/components/views/landing-page/faq";
 import Head from "next/head";
 import React from "react";
 

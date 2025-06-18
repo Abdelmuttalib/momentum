@@ -12,7 +12,7 @@ const nextConfig = {
   reactStrictMode: false,
 
   images: {
-    domains: ["pvpgmjnmehreieyinspc.supabase.co"],
+    domains: ["pvpgmjnmehreieyinspc.supabase.co", "avatar.vercel.sh"],
   },
 
   /**

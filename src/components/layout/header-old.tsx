@@ -134,7 +134,7 @@ function Header({ pageTitle, actions }: HeaderProps) {
                       <Link
                         href={href}
                         className={cn(
-                          "mb-2 block rounded-md px-3 py-1.5 text-sm font-medium text-gray-600 hover:bg-gray-200 hover:text-gray-900 dark:text-gray-500 dark:hover:bg-gray-800 dark:hover:text-gray-200",
+                          "mb-2 block rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground hover:bg-gray-200 hover:text-gray-900 dark:text-gray-500 dark:hover:bg-gray-800 dark:hover:text-gray-200",
                           {
                             "text-gray-900 dark:text-gray-200 ": current,
                           }
@@ -143,7 +143,7 @@ function Header({ pageTitle, actions }: HeaderProps) {
                         {label}
                       </Link>
                       {current && (
-                        <span className="absolute -bottom-1 left-0 right-0 mx-auto h-[3px] w-12 bg-primary-500 dark:bg-primary-400"></span>
+                        <span className="absolute -bottom-1 left-0 right-0 mx-auto h-[3px] w-12 bg-primary/50 dark:bg-primary/40"></span>
                       )}
                     </li>
                   </ul>
@@ -168,7 +168,7 @@ function Header({ pageTitle, actions }: HeaderProps) {
                       <Link
                         href={href}
                         className={cn(
-                          "mb-2 block rounded-md px-3 py-1.5 text-sm font-medium text-gray-600 hover:bg-gray-200 hover:text-gray-900 dark:text-gray-500 dark:hover:bg-gray-800 dark:hover:text-gray-200",
+                          "mb-2 block rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground hover:bg-gray-200 hover:text-gray-900 dark:text-gray-500 dark:hover:bg-gray-800 dark:hover:text-gray-200",
                           {
                             "text-gray-900 dark:text-gray-200 ": current,
                           }
@@ -177,7 +177,7 @@ function Header({ pageTitle, actions }: HeaderProps) {
                         {label}
                       </Link>
                       {current && (
-                        <span className="absolute -bottom-1 left-0 right-0 mx-auto h-[3px] w-12 bg-primary-500 dark:bg-primary-400"></span>
+                        <span className="absolute -bottom-1 left-0 right-0 mx-auto h-[3px] w-12 bg-primary/50 dark:bg-primary/40"></span>
                       )}
                     </li>
                   </ul>
@@ -201,7 +201,7 @@ function Header({ pageTitle, actions }: HeaderProps) {
                       <Link
                         href={href}
                         className={cn(
-                          "mb-2 block rounded-md px-3 py-1.5 text-sm font-medium text-gray-600 hover:bg-gray-200 hover:text-gray-900 dark:text-gray-500 dark:hover:bg-gray-800 dark:hover:text-gray-200",
+                          "mb-2 block rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground hover:bg-gray-200 hover:text-gray-900 dark:text-gray-500 dark:hover:bg-gray-800 dark:hover:text-gray-200",
                           {
                             "text-gray-900 dark:text-gray-200 ": current,
                           }
@@ -210,7 +210,7 @@ function Header({ pageTitle, actions }: HeaderProps) {
                         {label}
                       </Link>
                       {current && (
-                        <span className="absolute -bottom-1 left-0 right-0 mx-auto h-[3px] w-12 bg-primary-500 dark:bg-primary-400"></span>
+                        <span className="absolute -bottom-1 left-0 right-0 mx-auto h-[3px] w-12 bg-primary/50 dark:bg-primary/40"></span>
                       )}
                     </li>
                   </ul>

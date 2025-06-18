@@ -1,7 +1,7 @@
 import { cn } from "@/utils/cn";
 import { FontSelect } from "./font-select";
 import { FontSizeSelect } from "./font-size-select";
-import ThemeSwitcher, { ThemeColorSelect } from "./theme-select";
+import ThemeSwitcher from "./theme-select";
 
 export default function TailwindIndicator() {
   if (process.env.NODE_ENV === "production") return null;
@@ -24,14 +24,13 @@ export function UICustomizer({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "fixed left-1 right-1 top-1 z-50 mx-auto flex w-fit items-center justify-center rounded-lg border px-2 py-1.5 text-sm",
+        "fixed right-1 top-1 z-50 mx-auto flex w-fit items-center justify-center gap-2 rounded-lg border px-2 py-1.5 text-sm",
         className
       )}
     >
       <FontSelect />
       <FontSizeSelect />
-      <ThemeColorSelect />
-      <ThemeSwitcher />
+      <ThemeSwitcher size="icon" />
     </div>
   );
 }

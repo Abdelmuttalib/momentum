@@ -8,23 +8,19 @@ import {
   publicProcedure,
   protectedProcedure,
 } from "@/server/api/trpc";
-import { ProjectStatus, type Project } from "@prisma/client";
+import { type Project } from "@prisma/client";
+import { createProjectFormSchema } from "@/schema";
 
 export const projectRouter = createTRPCRouter({
   createProject: protectedProcedure
-    .input(
-      z.object({
-        name: z.string(),
-        status: z.nativeEnum(ProjectStatus),
-        teamId: z.string(),
-      })
-    )
+    .input(createProjectFormSchema)
     .mutation(async ({ input, ctx }) => {
+      console.log("input", input);
       const companyId = ctx.session.user.company.id;
       const newProject = await ctx.prisma.project.create({
         data: {
           name: input.name,
-          status: input.status,
+          description: input.description,
           teamId: input.teamId,
           companyId: companyId,
         },
@@ -77,7 +73,7 @@ export const projectRouter = createTRPCRouter({
       z.object({
         id: z.string(),
         name: z.string().optional(),
-        status: z.nativeEnum(ProjectStatus).optional(),
+        description: z.string().optional(),
       })
     )
     .mutation(async ({ input, ctx }) => {
@@ -85,7 +81,7 @@ export const projectRouter = createTRPCRouter({
         where: { id: input.id },
         data: {
           name: input.name,
-          status: input.status,
+          description: input.description,
         },
       });
       return updatedProject;

@@ -1,15 +1,10 @@
-import type { BadgeColor } from "@/components/ui/badge";
-import {
-  InvitationStatus,
-  ProjectStatus,
-  Role,
-  TaskStatus,
-} from "@prisma/client";
-import { Priority } from "./enums";
+import { InvitationStatus, Role, TaskStatus } from "@prisma/client";
+import { Priority } from "@/utils/enums";
+import { type RichBadgeColor } from "types";
 
 export function getInviteStatusBadgeColor(
   status: InvitationStatus
-): BadgeColor {
+): RichBadgeColor {
   switch (status) {
     case InvitationStatus.INVITED:
       return "blue";
@@ -22,7 +17,7 @@ export function getInviteStatusBadgeColor(
   }
 }
 
-export function getUserRoleBadgeColor(status: Role): BadgeColor {
+export function getUserRoleBadgeColor(status: Role): RichBadgeColor {
   switch (status) {
     case Role.ADMIN:
       return "blue";
@@ -35,23 +30,7 @@ export function getUserRoleBadgeColor(status: Role): BadgeColor {
   }
 }
 
-export function getProjectStatusBadgeColor(status: ProjectStatus): BadgeColor {
-  switch (status) {
-    case ProjectStatus.PLANNED:
-      return "blue";
-
-    case ProjectStatus.IN_PROGRESS:
-      return "yellow";
-
-    case ProjectStatus.COMPLETED:
-      return "green";
-
-    default:
-      return "gray";
-  }
-}
-
-export function getTaskStatusBadgeColor(status: TaskStatus): BadgeColor {
+export function getTaskStatusBadgeColor(status: TaskStatus): RichBadgeColor {
   switch (status) {
     case TaskStatus.BACKLOG:
       return "gray";
@@ -76,7 +55,7 @@ export function getTaskStatusBadgeColor(status: TaskStatus): BadgeColor {
   }
 }
 
-export function getTaskPriorityBadgeColor(status: Priority): BadgeColor {
+export function getTaskPriorityBadgeColor(status: Priority): RichBadgeColor {
   switch (status) {
     case Priority.HIGH:
       return "red";

@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-// @ts-nocheck
 
 import { cn } from "@/utils/cn";
 import { Dialog, Transition } from "@headlessui/react";
 import type { ClassValue } from "clsx";
 import React, { Fragment } from "react";
-import { IconButton } from "./icon-button";
 import { Typography } from "./typography";
+import { Button } from "./button";
 
 const DialogOverlay = React.forwardRef<
   React.ElementRef<typeof Transition.Child>,
@@ -61,7 +60,7 @@ const DialogPortal = React.forwardRef<
         )}
         {...props}
       > */}
-      {children}
+      <>{children}</>
       {/* <DialogPrimitive.Close className="absolute right-2 top-2 rounded-sm ">
         <IconButton variant="outline" className="h-7 w-7">
           <Cross2Icon className="h-5 w-5" />
@@ -84,7 +83,7 @@ DialogOverlay.displayName = "DialogOverlay";
 //   <Dialog.Title
 //     as={as}
 //     ref={ref}
-//     className="text-lg font-medium leading-6 text-gray-900"
+//     className="text-lg font-medium leading-6 text-foreground"
 //     {...props}
 //   />
 // ));
@@ -104,7 +103,7 @@ const DialogTitle: React.FC<DialogTitleProps> = ({
 }) => (
   <Dialog.Title
     as={as}
-    className={cn("text-lg font-medium leading-6 text-gray-900", className)}
+    className={cn("text-lg font-medium leading-6 text-foreground", className)}
     {...props}
   />
 );
@@ -154,28 +153,6 @@ const DialogRoot = React.forwardRef<
       <DialogOverlay />
 
       {children}
-      {/* <Dialog.Title
-      as="h3"
-      className="text-lg font-medium leading-6 text-gray-900"
-    >
-      Payment successful
-    </Dialog.Title>
-    <div className="mt-2">
-      <p className="text-sm text-gray-500">
-        Your payment has been successfully submitted. We’ve sent you an email
-        with all of the details of your order.
-      </p>
-    </div>
-
-    <div className="mt-4">
-      <button
-        type="button"
-        className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-        onClick={closeModal}
-      >
-        Got it, thanks!
-      </button>
-    </div> */}
     </Dialog>
   </Transition>
 ));
@@ -207,11 +184,11 @@ export default function CustomDialog({
 
       <DialogRoot open={open} onClose={onClose}>
         <DialogPortal>
-          <DialogContent className={cn("", className)}>
-            <IconButton
-              size="xs"
+          <DialogContent className={cn("relative", className)}>
+            <Button
+              size="icon-sm"
               variant="outline"
-              className="absolute right-2 top-2 h-7 w-7"
+              className="absolute right-2 top-2 h-7 w-7 text-white"
               onClick={onClose}
             >
               <svg
@@ -228,7 +205,7 @@ export default function CustomDialog({
                   d="M6 18L18 6M6 6l12 12"
                 />
               </svg>
-            </IconButton>
+            </Button>
             <DialogTitle as="div">
               <Typography as="h1" variant="base/medium">
                 {title}
@@ -236,7 +213,7 @@ export default function CustomDialog({
               {description && (
                 <Typography
                   as="p"
-                  variant="sm/regular"
+                  variant="sm/normal"
                   className="text-foreground-light"
                 >
                   {description}

@@ -1,9 +1,4 @@
 // enums.ts
-export enum ProjectStatus {
-  PLANNED = "PLANNED",
-  IN_PROGRESS = "IN_PROGRESS",
-  COMPLETED = "COMPLETED",
-}
 
 export enum TaskStatus {
   BACKLOG = "BACKLOG",

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { teamMembersColumns } from "@/components/@pages/team/teamMembersColumns";
-import Container from "@/components/@pages/landing-page/container";
-import { DataTable } from "@/components/@pages/teams/TeamMembers/data-table";
+import { teamMembersColumns } from "@/components/views/team/teamMembersColumns";
+import Container from "@/components/views/landing-page/container";
+import { DataTable } from "@/components/views/teams/TeamMembers/data-table";
 import { Layout } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,9 +14,11 @@ import { type GetServerSideProps } from "next";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { AddUserDialog } from "@/components/@pages/company/organization-teams";
+import { AddUserDialog } from "@/components/views/company/organization-teams";
 import { UsersIcon } from "lucide-react";
 import type { TTeam } from "types";
+import { Seo } from "@/components/seo";
+import { AppLayout } from "@/components/layout/app-layout";
 
 interface TeamSettingsPageProps {
   team: Team;
@@ -88,82 +90,77 @@ export default function TeamSettingsPage({ team }: TeamSettingsPageProps) {
       teamId: team.id,
     });
 
+  const { data: teamMembers } = api.team.getTeamMembers.useQuery({
+    teamId: team.id,
+  });
+
+  console.log("teamMembers", teamMembers);
+
   return (
-    <Layout pageTitle="">
-      {/* <div className="h5 mb-6 border-b pb-8 pt-2">Team Settings</div> */}
-      <Container className="flex flex-col gap-7 py-7">
-        <div className="w-full">
-          <div className="flex flex-col gap-2 pb-8">
-            <div>
-              <h2 className="h6-light">Team Info</h2>
-            </div>
-            <div>
-              <form
-                // eslint-disable-next-line @typescript-eslint/no-misused-promises
-                onSubmit={handleSubmit(onSubmit)}
-                className="flex flex-col gap-5 divide-y-2"
-              >
-                <div className="flex w-fit items-end gap-3 space-y-4">
-                  <div>
-                    <Label
-                      htmlFor="teamName"
-                      className="text-sm font-medium text-gray-700"
-                    >
-                      Team Name
-                    </Label>
-                    <Input
-                      id="teamName"
-                      inputMode="text"
-                      type="text"
-                      placeholder="team name"
-                      {...register("name", {
-                        required: true,
-                      })}
-                      defaultValue={team.name}
+    <>
+      <Seo title={`${team.name} | Momentum`} />
+
+      <AppLayout>
+        {/* <div className="h5 mb-6 border-b pb-8 pt-2">Team Settings</div> */}
+        <Container className="flex flex-col gap-7 py-7">
+          <div className="w-full">
+            <div className="flex flex-col gap-2 pb-8">
+              <div>
+                <form
+                  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                  onSubmit={handleSubmit(onSubmit)}
+                  className="flex flex-col gap-5 divide-y-2"
+                >
+                  <div className="flex w-fit items-end gap-3 space-y-4">
+                    <div>
+                      <Label htmlFor="teamName" className="text-sm font-medium">
+                        Team Name
+                      </Label>
+                      <Input
+                        id="teamName"
+                        inputMode="text"
+                        type="text"
+                        placeholder="team name"
+                        {...register("name", {
+                          required: true,
+                        })}
+                        defaultValue={team.name}
+                        disabled={updateTeamNameMutation.isLoading}
+                        data-invalid={errors?.name}
+                      />
+                    </div>
+                    <Button
+                      type="submit"
+                      isLoading={updateTeamNameMutation.isLoading}
                       disabled={updateTeamNameMutation.isLoading}
-                      error={errors?.name}
-                    />
+                    >
+                      Save Changes
+                    </Button>
                   </div>
-                  <Button
-                    type="submit"
-                    isLoading={updateTeamNameMutation.isLoading}
-                    disabled={updateTeamNameMutation.isLoading}
-                  >
-                    Save Changes
-                  </Button>
-                </div>
-              </form>
+                </form>
+              </div>
             </div>
           </div>
-        </div>
-        {/* team members/invites */}
-        <div className="w-full">
-          <div className="flex flex-col gap-2 pb-8">
-            <div className="flex items-center justify-between">
-              <h2 className="h6-light">Team Members</h2>
-              <AddUserDialog
-                team={team as TTeam}
-                triggerButton={
-                  <Button
-                    type="button"
-                    size="sm"
-                    className="inline-flex items-center gap-1.5 whitespace-nowrap text-sm"
-                  >
-                    <UsersIcon className="w-[1.125rem]" />
-                    Add Members
-                  </Button>
-                }
-              />
-            </div>
-            <div>
-              {teamData && (
-                <DataTable columns={teamMembersColumns} data={teamData.users} />
-              )}
+          {/* team members/invites */}
+          <div className="w-full">
+            <div className="flex flex-col gap-2 pb-8">
+              <div className="flex items-center justify-between">
+                <h2 className="h6-light">Team Members</h2>
+                <AddUserDialog team={team as TTeam} />
+              </div>
+              <div>
+                {teamData && (
+                  <DataTable
+                    columns={teamMembersColumns}
+                    data={teamData.users}
+                  />
+                )}
+              </div>
             </div>
           </div>
-        </div>
-      </Container>
-    </Layout>
+        </Container>
+      </AppLayout>
+    </>
   );
 }
 

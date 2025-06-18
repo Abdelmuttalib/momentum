@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import { Layout } from "@/components/layout";
 import { prisma } from "@/server/db";
 import type {
   GetServerSideProps,
@@ -10,34 +9,41 @@ import type {
 } from "next";
 
 import { getServerAuthSession } from "@/server/auth";
-import CreateTask from "@/components/@pages/project/tasks/forms/create-task";
-import TaskBoard from "@/components/@pages/project/tasks/task-board";
-import Seo from "@/components/Seo";
+import { CreateTask } from "@/components/views/project/tasks/forms/create-task";
+import TaskBoard from "@/components/views/project/tasks/task-board";
+import { Seo } from "@/components/seo";
 import type { Project } from "@prisma/client";
+import { AppLayout } from "@/components/layout/app-layout";
 
 // type ProjectPageProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 type ProjectPageProps = {
   project: Project;
+  projectId: string;
+  teamId: string;
 };
 
-const ProjectPage = ({
+export default function ProjectPage({
   project,
+  projectId,
+  teamId,
 }: // teamId
-ProjectPageProps) => {
+ProjectPageProps) {
   return (
     <>
       <Seo
         title={`${project?.name} | Momentum`}
         description={`${project?.name} tasks board | Momentum`}
       />
-      <Layout pageTitle="Board" rightSideActions={<CreateTask />}>
+      <AppLayout>
+        {/* pageTitle="Board" rightSideActions={<CreateTask />} */}
+
+        <CreateTask teamId={teamId} projectId={projectId} />
+
         <div>{project?.id && <TaskBoard projectId={project.id} />}</div>
-      </Layout>
+      </AppLayout>
     </>
   );
-};
-
-export default ProjectPage;
+}
 
 export const getServerSideProps: GetServerSideProps = async ({
   req,
@@ -83,6 +89,7 @@ export const getServerSideProps: GetServerSideProps = async ({
       project: JSON.parse(JSON.stringify(project)),
       teamId,
       team,
+      projectId: project.id,
     },
   };
 };
