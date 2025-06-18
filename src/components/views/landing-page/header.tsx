@@ -68,10 +68,7 @@ export default function Header() {
             >
               <div className="mt-8 flex w-full flex-col justify-start sm:w-auto lg:mt-0 lg:flex-row lg:gap-2">
                 <Button variant="ghost" size="sm" asChild>
-                  <Link
-                    href="https://github.com/yourusername/issuetracker"
-                    target="_blank"
-                  >
+                  <Link href={siteConfig.githubUrl} target="_blank">
                     <Github className="h-4 w-4" />
                     GitHub
                   </Link>

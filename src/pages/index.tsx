@@ -90,12 +90,12 @@ export default function LandingPage() {
                   </Typography>
 
                   <div className="flex flex-col flex-wrap gap-x-4 gap-y-2 sm:flex-row sm:gap-y-4">
-                    <ButtonLink
-                      href="/sign-in"
-                      iconRight={<ArrowRight className="w-4" />}
-                    >
-                      Get Started
-                    </ButtonLink>
+                    <Button asChild>
+                      <Link href={siteConfig.pages.main.links.signIn.href}>
+                        Get Started
+                        <ArrowRight className="h-4 w-4" />
+                      </Link>
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -144,7 +144,7 @@ export default function LandingPage() {
         </LandingPageSection>
 
         {/* Screenshot Section */}
-        <LandingPageSection>
+        {/* <LandingPageSection>
           <Container>
             <div className="flex h-full w-full flex-col gap-14">
               <div className="text-center">
@@ -184,12 +184,12 @@ export default function LandingPage() {
               </div>
             </div>
           </Container>
-        </LandingPageSection>
+        </LandingPageSection> */}
 
         {/* Tech Stack */}
         <LandingPageSection className="bg-muted/30 py-16">
           <Container>
-            <div className="flex h-full w-full flex-col gap-14">
+            <div className="flex h-full w-full flex-col gap-8">
               <div className="space-y-4 text-center">
                 <h2 className="text-3xl font-bold">Built with Modern Tech</h2>
                 <p className="text-lg text-muted-foreground">
@@ -237,10 +237,7 @@ export default function LandingPage() {
 
             <div className="flex items-center space-x-4">
               <Button variant="ghost" size="sm" asChild>
-                <Link
-                  href="https://github.com/Abdelmuttalib/momentum"
-                  target="_blank"
-                >
+                <Link href={siteConfig.githubUrl} target="_blank">
                   <Github className="mr-2 h-4 w-4" />
                   Source Code
                 </Link>
