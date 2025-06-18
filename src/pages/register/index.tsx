@@ -1,9 +1,9 @@
 import {
   CreateAdminAccountForm,
   CreateCompanyForm,
-} from "@/components/auth/CreateCompanyForm";
-import { AuthLayout } from "@/components/layout";
-import Seo from "@/components/Seo";
+} from "@/components/views/auth/forms/create-company";
+import { AuthLayout } from "@/components/layout/auth-layout";
+import { Seo } from "@/components/seo";
 import { useState } from "react";
 
 export type RegisterStep = "company" | "user";

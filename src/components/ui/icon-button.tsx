@@ -9,36 +9,36 @@ const iconButtonVariants = cva(
     variants: {
       // variant: {
       //   primary:
-      //     "text-white bg-primary hover:bg-primary-600 focus:ring-primary-200 focus:bg-primary",
+      //     "text-white bg-primary hover:bg-primary focus:ring-primary/20 focus:bg-primary",
       //   "primary-outline":
-      //     "text-primary bg-background ring-primary-400 hover:bg-primary-100/40 focus:ring-primary",
+      //     "text-primary bg-background ring-primary/40 hover:bg-primary-100/40 focus:ring-primary",
       //   outline:
       //     "text-foreground bg-background ring-border hover:bg-primary-100/30 focus:ring-primary",
       //   secondary:
-      //     "text-primary-800 dark:text-gray-200 bg-primary-100/50 hover:bg-primary-100/70 focus:bg-primary-100/80 dark:bg-gray-800/50 dark:hover:bg-gray-800/60 dark:ring-gray-700  dark:focus:bg-gray-800/70",
-      //   dark: "bg-gray-900 text-white hover:bg-gray-900/90 active:bg-gray-700 disabled:bg-gray-700 focus:ring-primary-300",
+      //     "text-primary dark:text-gray-200 bg-primary-100/50 hover:bg-primary-100/70 focus:bg-primary-100/80 dark:bg-gray-800/50 dark:hover:bg-gray-800/60 dark:ring-gray-700  dark:focus:bg-gray-800/70",
+      //   dark: "bg-gray-900 text-white hover:bg-gray-900/90 active:bg-gray-700 disabled:bg-gray-700 focus:ring-primary/30",
       //   destructive:
-      //     "bg-error text-white hover:bg-red-600 dark:hover:bg-red-600",
+      //     "bg-destructive text-white hover:bg-red-600 dark:hover:bg-red-600",
       //   "destructive-outline":
-      //     "bg-background text-error ring-error hover:bg-error/10 dark:hover:bg-error hover:text-white",
+      //     "bg-background text-destructive ring-destructive hover:bg-destructive/10 dark:hover:bg-destructive hover:text-white",
       //   "primary-ghost": "hover:bg-accent hover:text-accent-foreground",
-      //   ghost: "hover:bg-gray-hover focus:bg-hover",
+      //   ghost: "hover:bg-accent focus:bg-hover",
       // },
       variant: {
         primary:
-          "text-white bg-primary shadow-sm hover:bg-primary-600 focus:ring-primary-200 dark:focus:ring-primary-600 active:bg-primary focus:bg-primary",
+          "text-white bg-primary shadow-sm hover:bg-primary focus:ring-primary/20 dark:focus:ring-primary active:bg-primary focus:bg-primary",
         "primary-outline":
-          "text-primary bg-background ring-primary-400 hover:bg-primary-100/40 dark:hover:bg-layer-3 focus:ring-primary",
+          "text-primary bg-background ring-primary/40 hover:bg-primary-100/40 dark:hover:bg-popover focus:ring-primary",
         outline:
-          "text-foreground bg-background ring-border hover:bg-layer-2 focus:ring-primary",
+          "text-foreground bg-background ring-border hover:bg-popover focus:ring-primary",
         secondary:
-          "text-primary-800 dark:text-gray-200 bg-primary-100/50 hover:bg-primary-100/70 focus:bg-primary-100/80 dark:bg-gray-800/50 dark:hover:bg-gray-800/60 dark:ring-gray-700  dark:focus:bg-gray-800/70",
+          "text-primary dark:text-gray-200 bg-primary-100/50 hover:bg-primary-100/70 focus:bg-primary-100/80 dark:bg-gray-800/50 dark:hover:bg-gray-800/60 dark:ring-gray-700  dark:focus:bg-gray-800/70",
         destructive:
-          "bg-error text-white hover:bg-red-600 dark:hover:bg-red-600",
+          "bg-destructive text-white hover:bg-red-600 dark:hover:bg-red-600",
         "destructive-outline":
-          "ring-red-500 text-red-500 hover:bg-red-500 hover:text-white focus:bg-red-500 focus:ring-red-200 focus:text-white dark:text-red-400 dark:ring-red-400 dark:hover:ring-red-500 dark:hover:bg-error dark:hover:text-white dark:focus:bg-red-500 dark:focus:ring-red-400 dark:focus:text-white",
-        dark: "bg-gray-900 text-white duration-150 ease-linear hover:bg-gray-900/90 active:bg-gray-700 disabled:bg-gray-700 focus:ring-primary-300",
-        ghost: "hover:bg-gray-hover dark:hover:bg-layer-2 text-foreground",
+          "ring-red-500 text-destructive hover:bg-red-500 hover:text-white focus:bg-red-500 focus:ring-red-200 focus:text-white dark:text-red-400 dark:ring-red-400 dark:hover:ring-red-500 dark:hover:bg-destructive dark:hover:text-white dark:focus:bg-red-500 dark:focus:ring-red-400 dark:focus:text-white",
+        dark: "bg-gray-900 text-white duration-150 ease-linear hover:bg-gray-900/90 active:bg-gray-700 disabled:bg-gray-700 focus:ring-primary/30",
+        ghost: "hover:bg-accent dark:hover:bg-popover text-foreground",
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {

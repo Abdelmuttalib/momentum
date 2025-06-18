@@ -10,17 +10,20 @@ import {
   protectedAdminProcedure,
 } from "@/server/api/trpc";
 import {
-  ProjectStatus,
   type Project,
   Role,
   InvitationStatus,
+  type Invitation,
 } from "@prisma/client";
-import { createOrgWithAdminAccountFormSchema } from "@/components/auth/schema";
 import { hashPassword } from "@/utils/bcrypt";
+import {
+  createCompanyWithAdminAccountFormSchema,
+  inviteUserFormSchema,
+} from "@/schema";
 
 export const companyRouter = createTRPCRouter({
   createCompanyWithAdminAccount: publicProcedure
-    .input(createOrgWithAdminAccountFormSchema)
+    .input(createCompanyWithAdminAccountFormSchema)
     .mutation(async ({ input, ctx }) => {
       const newCompany = await ctx.prisma.company.create({
         data: {
@@ -32,8 +35,7 @@ export const companyRouter = createTRPCRouter({
 
       const newAdminUser = await ctx.prisma.user.create({
         data: {
-          firstName: input.firstName,
-          lastName: input.lastName,
+          name: input.name,
           email: input.email,
           password: hashedPassword,
           company: {
@@ -43,6 +45,7 @@ export const companyRouter = createTRPCRouter({
           },
           role: Role.ADMIN,
           emailVerified: false,
+          image: `https://avatar.vercel.sh/${input.email}${newCompany.id}`,
         },
       });
       return { newCompany, newAdminUser };
@@ -77,15 +80,22 @@ export const companyRouter = createTRPCRouter({
   }),
 
   inviteUserToCompany: protectedProcedure
-    .input(
-      z.object({
-        email: z.string().email().nonempty(),
-        role: z.nativeEnum(Role),
-        companyId: z.string().nonempty(),
-        invitedById: z.string().nonempty(),
-      })
-    )
+    .input(inviteUserFormSchema)
     .mutation(async ({ input, ctx }) => {
+      const currentUser = ctx.session.user;
+
+      if (!currentUser) {
+        throw new Error("You must be logged in to invite users");
+      }
+
+      if (currentUser.role !== Role.ADMIN) {
+        throw new Error("You are not authorized to invite users");
+      }
+
+      if (currentUser.email === input.email) {
+        throw new Error("You cannot invite yourself");
+      }
+
       const existingUser = await ctx.prisma.user.findUnique({
         where: {
           email: input.email,
@@ -106,9 +116,16 @@ export const companyRouter = createTRPCRouter({
         throw new Error("User already invited");
       }
 
+      const userCompanyId = currentUser.company.id;
+
       const newInvite = await ctx.prisma.invitation.create({
         data: {
-          ...input,
+          ...(input as {
+            email: string;
+            role: Role;
+          }),
+          companyId: currentUser.company.id,
+          invitedById: currentUser.id,
         },
       });
 
@@ -118,8 +135,7 @@ export const companyRouter = createTRPCRouter({
   registerInvitedUser: publicProcedure
     .input(
       z.object({
-        firstName: z.string(),
-        lastName: z.string(),
+        name: z.string(),
         email: z.string(),
         password: z.string(),
       })
@@ -140,8 +156,7 @@ export const companyRouter = createTRPCRouter({
 
         const registeredUser = await ctx.prisma.user.create({
           data: {
-            firstName: input.firstName,
-            lastName: input.lastName,
+            name: input.name,
             email: input.email,
             password: hashedPassword,
             emailVerified: false,
@@ -179,28 +194,25 @@ export const companyRouter = createTRPCRouter({
       });
     }),
 
-  allProjects: publicProcedure
-    .input(
-      z.object({
-        teamId: z.string(),
-      })
-    )
-    .query(async ({ input, ctx }) => {
-      const projects: Project[] = await ctx.prisma.project.findMany({
-        where: { teamId: input.teamId },
-        include: {
-          tasks: true, // include tasks in the project
-        },
-      });
-      return projects;
-    }),
+  getAllCompanyProjects: publicProcedure.query(async ({ input, ctx }) => {
+    const cId = ctx.session.user.company.id;
+    const projects: Project[] = await ctx.prisma.project.findMany({
+      where: {
+        companyId: cId,
+      },
+      include: {
+        tasks: true, // include tasks in the project
+      },
+    });
+    return projects;
+  }),
 
   updateProject: protectedProcedure
     .input(
       z.object({
         id: z.string(),
         name: z.string().optional(),
-        status: z.nativeEnum(ProjectStatus).optional(),
+        description: z.string().optional(),
       })
     )
     .mutation(async ({ input, ctx }) => {
@@ -208,7 +220,7 @@ export const companyRouter = createTRPCRouter({
         where: { id: input.id },
         data: {
           name: input.name,
-          status: input.status,
+          description: input.description,
         },
       });
       return updatedProject;

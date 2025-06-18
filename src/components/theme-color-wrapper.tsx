@@ -1,6 +1,5 @@
 import { useFont } from "@/hooks/use-font";
 import { useFontSize } from "@/hooks/use-font-size";
-import { useThemeColor } from "@/hooks/use-theme-color";
 import { cn } from "@/utils/cn";
 import { useEffect } from "react";
 
@@ -21,8 +20,6 @@ export function ThemeColorWrapper({
 
   // const fontSizeClass = `theme-text-sizes-${fontSize.fontSize}`;
 
-
-  const [themeColor] = useThemeColor();
   const [font] = useFont();
 
   const fontClass = `font-${font.font || "general-sans"}`;
@@ -43,12 +40,12 @@ export function ThemeColorWrapper({
       document.documentElement.classList.add(fontClass);
 
       // Remove existing theme color classes and add the new one
-      document.documentElement.classList.forEach((className) => {
-        if (className.startsWith("theme-")) {
-          document.documentElement.classList.remove(className);
-        }
-      });
-      document.documentElement.classList.add(`theme-${themeColor.colorName}`);
+      // document.documentElement.classList.forEach((className) => {
+      //   if (className.startsWith("theme-")) {
+      //     document.documentElement.classList.remove(className);
+      //   }
+      // });
+      // document.documentElement.classList.add(`theme-${themeColor.colorName}`);
 
       // Only add/remove font size class if it's not 'default'
       if (fontSizeClass) {
@@ -60,7 +57,7 @@ export function ThemeColorWrapper({
         document.documentElement.classList.add(fontSizeClass);
       }
     }
-  }, [fontClass, fontSizeClass, themeColor]);
+  }, [fontClass, fontSizeClass]);
 
   return (
     <div

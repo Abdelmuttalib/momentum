@@ -9,21 +9,20 @@ import {
   protectedAdminProcedure,
   protectedProcedure,
 } from "@/server/api/trpc";
+import { TaskStatus } from "@/utils/enums";
+import { createTeamFormSchema } from "@/schema";
 
 export const teamRouter = createTRPCRouter({
   // admin
   createTeam: protectedProcedure
-    .input(
-      z.object({
-        name: z.string(),
-      })
-    )
+    .input(createTeamFormSchema)
     .mutation(async ({ input, ctx }) => {
       const companyId = ctx.session.user.company.id;
       const userId = ctx.session.user.id;
       const newTeam = await ctx.prisma.team.create({
         data: {
           name: input.name,
+          description: input.description,
           company: {
             connect: { id: companyId },
           },
@@ -82,6 +81,27 @@ export const teamRouter = createTRPCRouter({
     return companyTeams;
   }),
 
+  getTeamTasksCompletedThisWeek: protectedProcedure
+    .input(z.object({ teamId: z.string() }))
+    .query(async ({ input, ctx }) => {
+      const dateToday = new Date();
+      const tasksCompletedThisWeek = await ctx.prisma.team.findMany({
+        where: {
+          id: input.teamId,
+          tasks: {
+            some: {
+              status: TaskStatus.COMPLETED,
+              updatedAt: {
+                gte: dateToday.toISOString(),
+              },
+            },
+          },
+        },
+        include: {},
+      });
+      return tasksCompletedThisWeek;
+    }),
+
   getTeam: protectedProcedure
     .input(z.object({ teamId: z.string() }))
     .query(async ({ input, ctx }) => {
@@ -91,11 +111,11 @@ export const teamRouter = createTRPCRouter({
         },
         include: {
           users: true,
+          projects: true,
           // users: {
           //   select: {
           //     id: true,
-          //     firstName: true,
-          //     lastName: true,
+          //     name: true,
           //     email: true,
           //     emailVerified: true,
           //     image: true,
@@ -113,8 +133,7 @@ export const teamRouter = createTRPCRouter({
   //         select: {
   //           id: true,
   //           phoneNumber: true,
-  //           firstName: true,
-  //           lastName: true,
+  //           name: true,
   //           email: true,
   //           emailVerified: true,
   //           image: true,
@@ -145,7 +164,7 @@ export const teamRouter = createTRPCRouter({
   getTeamMembers: protectedProcedure
     .input(
       z.object({
-        teamId: z.string().nonempty(),
+        teamId: z.string(),
       })
     )
     .query(async ({ input, ctx }) => {
@@ -158,6 +177,8 @@ export const teamRouter = createTRPCRouter({
           users: true,
         },
       });
+
+      console.log("input", input, teamMembers);
 
       return teamMembers;
     }),

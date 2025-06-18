@@ -56,7 +56,7 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
                 alt={currentTeam.name}
               />
             )}
-            <AvatarFallback className="mr-2 h-5 w-5 rounded-full bg-gradient-to-br from-primary-700 to-primary-500"></AvatarFallback>
+            <AvatarFallback className="mr-2 h-5 w-5 rounded-full bg-gradient-to-br from-primary to-primary/50"></AvatarFallback>
           </Avatar>
           <p className="max-w-[140px] truncate text-left">
             {currentTeam?.name}
@@ -68,7 +68,7 @@ export default function TeamSwitcher({ className }: TeamSwitcherProps) {
         {teams?.map((team) => (
           <Link key={team.id} href={`/teams/${team.id}`}>
             <DropdownMenuItem
-              className="whitespace-nowrap px-2 py-2.5 text-sm font-medium focus:bg-primary-100/50"
+              className="focus:bg-primary-100/50 whitespace-nowrap px-2 py-2.5 text-sm font-medium"
               // onClick={() => void signOut()}
             >
               <Avatar className="mr-2 h-5 w-5">

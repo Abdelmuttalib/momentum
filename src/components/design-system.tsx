@@ -3,57 +3,57 @@
 
 import { Bookmark } from "lucide-react";
 
-import Badge from "@/components/ui/badge";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { IconButton } from "@/components/ui/icon-button";
 import { Typography, type TypographyProps } from "@/components/ui/typography";
 
 const typographyVariants: TypographyProps["variant"][] = [
-  "display-2xl/regular",
-  "display-2xl/medium",
-  "display-2xl/semibold",
-  "display-2xl/bold",
-  "display-xl/regular",
-  "display-xl/medium",
-  "display-xl/semibold",
-  "display-xl/bold",
-  "display-lg/regular",
-  "display-lg/medium",
-  "display-lg/semibold",
-  "display-lg/bold",
-  "display-md/regular",
-  "display-md/medium",
-  "display-md/semibold",
-  "display-md/bold",
-  "display-sm/regular",
-  "display-sm/medium",
-  "display-sm/semibold",
-  "display-sm/bold",
-  "display-xs/regular",
-  "display-xs/medium",
-  "display-xs/semibold",
-  "display-xs/bold",
-  "xl/regular",
+  "7xl/normal",
+  "7xl/medium",
+  "7xl/semibold",
+  "7xl/bold",
+  "6xl/normal",
+  "6xl/medium",
+  "6xl/semibold",
+  "6xl/bold",
+  "5xl/normal",
+  "5xl/medium",
+  "5xl/semibold",
+  "5xl/bold",
+  "4xl/normal",
+  "4xl/medium",
+  "4xl/semibold",
+  "4xl/bold",
+  "3xl/normal",
+  "3xl/medium",
+  "3xl/semibold",
+  "3xl/bold",
+  "2xl/normal",
+  "2xl/medium",
+  "2xl/semibold",
+  "2xl/bold",
+  "xl/normal",
   "xl/medium",
   "xl/semibold",
   "xl/bold",
-  "lg/regular",
+  "lg/normal",
   "lg/medium",
   "lg/semibold",
   "lg/bold",
-  "md/regular",
+  "md/normal",
   "md/medium",
   "md/semibold",
   "md/bold",
-  "base/regular",
+  "base/normal",
   "base/medium",
   "base/semibold",
   "base/bold",
-  "sm/regular",
+  "sm/normal",
   "sm/medium",
   "sm/semibold",
   "sm/bold",
-  "xs/regular",
+  "xs/normal",
   "xs/medium",
   "xs/semibold",
   "xs/bold",
@@ -85,7 +85,7 @@ export default function DesignSystemGuide() {
     <div className="container mx-auto my-10 space-y-10 p-8">
       <Typography
         as="h1"
-        variant="display-lg/semibold"
+        variant="5xl/semibold"
         className="mb-40 max-w-xl capitalize"
       >
         Design System Guide
@@ -106,10 +106,10 @@ export default function DesignSystemGuide() {
 
       <div className="mx-auto max-w-3xl space-y-16">
         <section className="space-y-6">
-          <Typography as="h2" variant="display-xs/medium">
+          <Typography as="h2" variant="2xl/medium">
             Introduction
           </Typography>
-          <Typography as="p" variant="base/regular" className="text-foreground">
+          <Typography as="p" variant="base/normal" className="text-foreground">
             Building beautiful and consistent web applications requires a
             well-structured design system. In this guide, I will delve into the
             design system implemented in a Next.js application using Tailwind
@@ -120,10 +120,10 @@ export default function DesignSystemGuide() {
         </section>
 
         <section className="space-y-6">
-          <Typography as="h2" variant="display-xs/medium">
+          <Typography as="h2" variant="2xl/medium">
             Color Palette
           </Typography>
-          <Typography as="p" variant="base/regular" className="text-foreground">
+          <Typography as="p" variant="base/normal" className="text-foreground">
             The color palette serves as the foundation for the visual identity
             of the application. Here, we define primary, secondary, and accent
             colors using HSL values. Tailwind CSS utilities are leveraged to
@@ -139,19 +139,19 @@ export default function DesignSystemGuide() {
   /* primary */
   --color-primary-50: 240 33.3% 97.6%; /* #F7F7FB */
   --color-primary-100: 240 95% 92.2%; /* #D8D8FE */
-  --color-primary-200: 240 94.9% 84.7%; /* #B3B3FD */
-  --color-primary-300: 240 89.2% 74.5%; /* #8484F8 */
-  --color-primary-400: 240 89.5% 70%; /* #6E6EF7 */
-  --color-primary-500: 240 87.3% 60%; /* #4040F2 #4f46e5 */
-  --color-primary-600: 240 63.2% 51%; /* #3333D1  #4f46e5 */
-  --color-primary-700: 240 68.9% 44.1%; /* #2323BE */
-  --color-primary-800: 240 72.1% 33.7%; /* #181894 */
+  --color-primary/20: 240 94.9% 84.7%; /* #B3B3FD */
+  --color-primary/30: 240 89.2% 74.5%; /* #8484F8 */
+  --color-primary/40: 240 89.5% 70%; /* #6E6EF7 */
+  --color-primary/50: 240 87.3% 60%; /* #4040F2 #4f46e5 */
+  --color-primary: 240 63.2% 51%; /* #3333D1  #4f46e5 */
+  --color-primary: 240 68.9% 44.1%; /* #2323BE */
+  --color-primary: 240 72.1% 33.7%; /* #181894 */
   --color-primary-900: 240 73.2% 19%; /* #0D0D54 */
 
-  --color-primary: var(--color-primary-500);
-  --color-primary-hover: var(--color-primary-400);
-  --color-primary-active: var(--color-primary-600);
-  --color-primary-disabled: var(--color-primary-300);
+  --color-primary: var(--color-primary/50);
+  --color-primary-hover: var(--color-primary/40);
+  --color-primary-active: var(--color-primary);
+  --color-primary-disabled: var(--color-primary/30);
 
   /* gray */
   --color-gray: 211.2 10% 49.2%;
@@ -209,17 +209,17 @@ export default function DesignSystemGuide() {
   --color-yellow-800: 44.5 95.2% 24.7%; /* #7B5C03 */
   --color-yellow-900: 42.6 92.7% 16.1%; /* #4F3903 */
 
-  --color-info: var(--color-primary-500);
-  --color-info-light: var(--color-primary-400);
-  --color-info-dark: var(--color-primary-600);
+  --color-info: var(--color-primary/50);
+  --color-info-light: var(--color-primary/40);
+  --color-info-dark: var(--color-primary);
 
   --color-success: var(--color-green-500);
   --color-success-light: var(--color-green-400);
   --color-success-dark: var(--color-green-600);
 
-  --color-error: var(--color-red-500);
-  --color-error-light: var(--color-red-400);
-  --color-error-dark: var(--color-red-600);
+  --color-destructive: var(--color-red-500);
+  --color-destructive-light: var(--color-red-400);
+  --color-destructive-dark: var(--color-red-600);
 
   --color-danger: var(--color-red-500);
   --color-danger-light: var(--color-red-400);
@@ -233,10 +233,10 @@ export default function DesignSystemGuide() {
         </section>
 
         <section className="space-y-6">
-          <Typography as="h2" variant="display-xs/medium">
+          <Typography as="h2" variant="2xl/medium">
             Fonts
           </Typography>
-          <Typography as="p" variant="base/regular" className="text-foreground">
+          <Typography as="p" variant="base/normal" className="text-foreground">
             {/* explain sections for defining locally served fonts with css */}
             We define font families and weights to ensure consistent typography
             across the application. The fonts are served locally to optimize
@@ -247,7 +247,7 @@ export default function DesignSystemGuide() {
           <pre>
             <code>{`:root {
   /* Fonts */
-  
+
   /* Inter - latin */
   @font-face {
     font-family: 'Inter';
@@ -259,7 +259,7 @@ export default function DesignSystemGuide() {
       U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
       U+FEFF, U+FFFD;
   }
-  
+
   /* Plus Jakarta */
   @font-face {
     font-family: 'Plus Jakarta';
@@ -274,7 +274,7 @@ export default function DesignSystemGuide() {
       U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
       U+FEFF, U+FFFD;
   }
-  
+
   /* Onest */
   @font-face {
     font-family: 'Onest';
@@ -288,16 +288,16 @@ export default function DesignSystemGuide() {
       U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
       U+FEFF, U+FFFD;
   }
-  
+
 }`}</code>
           </pre>
         </section>
 
         <section className="space-y-6">
-          <Typography as="h2" variant="display-xs/medium">
+          <Typography as="h2" variant="2xl/medium">
             Typography
           </Typography>
-          <Typography as="p" variant="base/regular" className="text-foreground">
+          <Typography as="p" variant="base/normal" className="text-foreground">
             Typography plays a crucial role in conveying information
             effectively. We define font families, sizes, weights, and line
             heights to establish a harmonious text hierarchy.
@@ -331,12 +331,12 @@ export default function DesignSystemGuide() {
   --font-xl: 1.25rem; /* 20px */
 
   /* display */
-  --font-display-xs: 1.5rem; /* 24px */
-  --font-display-sm: 1.875rem; /* 30px */
-  --font-display-md: 2.25rem; /* 36px */
-  --font-display-lg: 3rem; /* 48px */
-  --font-display-xl: 3.75rem; /* 60px */
-  --font-display-2xl: 4.5rem; /* 72px */
+  --font-2xl: 1.5rem; /* 24px */
+  --font-3xl: 1.875rem; /* 30px */
+  --font-4xl: 2.25rem; /* 36px */
+  --font-5xl: 3rem; /* 48px */
+  --font-6xl: 3.75rem; /* 60px */
+  --font-7xl: 4.5rem; /* 72px */
 
   /* Line Height */
   --line-height-xs: 1.125rem; /* 18px */
@@ -346,12 +346,12 @@ export default function DesignSystemGuide() {
   --line-height-lg: 1.75rem; /* 28px */
   --line-height-xl: 1.875rem; /* 30px */
 
-  --line-height-display-xs: 2rem; /* 32px */
-  --line-height-display-sm: 2.375rem; /* 38px */
-  --line-height-display-md: 2.75rem; /* 44px */
-  --line-height-display-lg: 3.75rem; /* 60px */
-  --line-height-display-xl: 4.5rem; /* 72px */
-  --line-height-display-2xl: 5.625rem; /* 90px */
+  --line-height-2xl: 2rem; /* 32px */
+  --line-height-3xl: 2.375rem; /* 38px */
+  --line-height-4xl: 2.75rem; /* 44px */
+  --line-height-5xl: 3.75rem; /* 60px */
+  --line-height-6xl: 4.5rem; /* 72px */
+  --line-height-7xl: 5.625rem; /* 90px */
 
   /* Font Weight */
   --font-weight-regular: 400;
@@ -363,7 +363,7 @@ export default function DesignSystemGuide() {
           <Typography as="h3" variant="xl/medium">
             Typography Component
           </Typography>
-          <Typography as="p" variant="base/regular" className="text-foreground">
+          <Typography as="p" variant="base/normal" className="text-foreground">
             In order to ensure consistent typography across our application,
             I&apos;ve implemented a robust Typography component. This component
             serves as a pivotal tool in our development process, promoting both
@@ -372,47 +372,27 @@ export default function DesignSystemGuide() {
             system:
           </Typography>
 
-          <Typography
-            as="h4"
-            variant="base/regular"
-            className="text-foreground"
-          >
+          <Typography as="h4" variant="base/normal" className="text-foreground">
             {" "}
             - Consistency for a Unified Look and Feel
           </Typography>
 
-          <Typography
-            as="h4"
-            variant="base/regular"
-            className="text-foreground"
-          >
+          <Typography as="h4" variant="base/normal" className="text-foreground">
             {" "}
             - Flexible Variant System
           </Typography>
 
-          <Typography
-            as="h4"
-            variant="base/regular"
-            className="text-foreground"
-          >
+          <Typography as="h4" variant="base/normal" className="text-foreground">
             {" "}
             - Direct Integration with Design System
           </Typography>
 
-          <Typography
-            as="h4"
-            variant="base/regular"
-            className="text-foreground"
-          >
+          <Typography as="h4" variant="base/normal" className="text-foreground">
             {" "}
             - Improved Readability and Maintenance
           </Typography>
 
-          <Typography
-            as="h4"
-            variant="base/regular"
-            className="text-foreground"
-          >
+          <Typography as="h4" variant="base/normal" className="text-foreground">
             {" "}
             - Adherence to Design System Standards
           </Typography>
@@ -424,7 +404,7 @@ export default function DesignSystemGuide() {
   import { type VariantProps, cva } from 'class-variance-authority';
 
   import cn from '@/lib/cn';
-  
+
   type FontSize =
     | 'xs'
     | 'sm'
@@ -432,15 +412,15 @@ export default function DesignSystemGuide() {
     | 'md'
     | 'lg'
     | 'xl'
-    | 'display-xs'
-    | 'display-sm'
-    | 'display-md'
-    | 'display-lg'
-    | 'display-xl'
-    | 'display-2xl';
-  
+    | '2xl'
+    | '3xl'
+    | '4xl'
+    | '5xl'
+    | '6xl'
+    | '7xl';
+
   type FontWeight = 'regular' | 'medium' | 'semibold' | 'bold';
-  
+
   // extend type of props to include html attributes for the element
   export interface TypographyProps
     extends React.HTMLAttributes<HTMLElement>,
@@ -448,47 +428,47 @@ export default function DesignSystemGuide() {
     as: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p' | 'span' | 'label' | ...
     variant: 'FontSize/FontWeight';
   }
-  
+
   const typographyVariants = cva('font-normal leading-normal', {
     variants: {
       variant: {
         // xs
-        'xs/regular': 'text-xs font-regular leading-xs',
+        'xs/normal': 'text-xs font-regular leading-xs',
         'xs/medium': 'text-xs font-medium leading-xs',
         'xs/semibold': 'text-xs font-semibold leading-xs',
         'xs/bold': 'text-xs font-bold leading-xs',
-  
+
         // sm
-        'sm/regular': 'text-sm font-regular leading-sm',
+        'sm/normal': 'text-sm font-regular leading-sm',
         'sm/medium': 'text-sm font-medium leading-sm',
         'sm/semibold': 'text-sm font-semibold leading-sm',
         'sm/bold': 'text-sm font-bold leading-sm',
-  
+
         // base
-        'base/regular': 'text-base font-regular leading-base',
+        'base/normal': 'text-base font-regular leading-base',
         'base/medium': 'text-base font-medium leading-base',
         'base/semibold': 'text-base font-semibold leading-base',
         'base/bold': 'text-base font-bold leading-base',
-  
+
         // md
-        'md/regular': 'text-md font-regular leading-md',
+        'md/normal': 'text-md font-regular leading-md',
         'md/medium': 'text-md font-medium leading-md',
         'md/semibold': 'text-md font-semibold leading-md',
         'md/bold': 'text-md font-bold leading-md',
-  
+
         // lg
-        'lg/regular': 'text-lg font-regular leading-lg',
+        'lg/normal': 'text-lg font-regular leading-lg',
         'lg/medium': 'text-lg font-medium leading-lg',
         'lg/semibold': 'text-lg font-semibold leading-lg',
         'lg/bold': 'text-lg font-bold leading-lg',
-  
+
       },
     },
     defaultVariants: {
-      variant: 'md/regular',
+      variant: 'md/normal',
     },
   });
-  
+
   export default function Typography({
     as,
     variant,
@@ -496,7 +476,7 @@ export default function DesignSystemGuide() {
     ...props
   }: TypographyProps) {
     const Comp = as;
-  
+
     return (
       <Comp
         className={cn('text-balance', typographyVariants({ variant }), className)}
@@ -504,19 +484,19 @@ export default function DesignSystemGuide() {
       />
     );
   }
-  
+
   export { Typography, typographyVariants };
 
-  
+
 }`}</code>
           </pre>
         </section>
 
         <section className="space-y-6">
-          <Typography as="h2" variant="display-xs/medium">
+          <Typography as="h2" variant="2xl/medium">
             Spacing and Layout
           </Typography>
-          <Typography as="p" variant="base/regular" className="text-foreground">
+          <Typography as="p" variant="base/normal" className="text-foreground">
             Consistent spacing and layout contribute to a visually appealing and
             user-friendly interface. We define spacing variables for margins,
             padding, and layout dimensions to maintain a balanced design system.
@@ -538,10 +518,10 @@ export default function DesignSystemGuide() {
         </section>
 
         <section className="space-y-6">
-          <Typography as="h2" variant="display-xs/medium">
+          <Typography as="h2" variant="2xl/medium">
             Borders
           </Typography>
-          <Typography as="p" variant="base/regular" className="text-foreground">
+          <Typography as="p" variant="base/normal" className="text-foreground">
             The border-related variables define border radii and colors,
             providing consistent styling for elements.
           </Typography>
@@ -581,10 +561,10 @@ export default function DesignSystemGuide() {
             <div className="flex h-20 w-20 items-center justify-center rounded border-2 border-border">
               base
             </div>
-            <div className="flex h-20 w-20 items-center justify-center rounded border-2 border-border-light">
+            <div className="border-border-light flex h-20 w-20 items-center justify-center rounded border-2">
               light
             </div>
-            <div className="flex h-20 w-20 items-center justify-center rounded border-2 border-border-lighter">
+            <div className="border-border-lighter flex h-20 w-20 items-center justify-center rounded border-2">
               lighter
             </div>
           </div>
@@ -603,21 +583,21 @@ export default function DesignSystemGuide() {
         </section>
 
         <section className="space-y-6">
-          <Typography as="h2" variant="display-xs/medium">
+          <Typography as="h2" variant="2xl/medium">
             Shadows
           </Typography>
-          <Typography as="p" variant="base/regular" className="text-foreground">
+          <Typography as="p" variant="base/normal" className="text-foreground">
             Shadow variables define different shadow effects to be applied to
             elements, providing depth and visual hierarchy.
           </Typography>
 
           <div className="flex justify-evenly">
-            <div className="flex h-20 w-20 items-center justify-center rounded bg-layer shadow-sm"></div>
-            <div className="flex h-20 w-20 items-center justify-center rounded bg-layer shadow-md"></div>
-            <div className="flex h-20 w-20 items-center justify-center rounded bg-layer shadow-lg"></div>
-            <div className="flex h-20 w-20 items-center justify-center rounded bg-layer shadow-xl"></div>
-            <div className="flex h-20 w-20 items-center justify-center rounded bg-layer shadow-2xl"></div>
-            <div className="flex h-20 w-20 items-center justify-center rounded bg-layer shadow-inner"></div>
+            <div className="flex h-20 w-20 items-center justify-center rounded bg-popover shadow-sm"></div>
+            <div className="flex h-20 w-20 items-center justify-center rounded bg-popover shadow-md"></div>
+            <div className="flex h-20 w-20 items-center justify-center rounded bg-popover shadow-lg"></div>
+            <div className="flex h-20 w-20 items-center justify-center rounded bg-popover shadow-xl"></div>
+            <div className="flex h-20 w-20 items-center justify-center rounded bg-popover shadow-2xl"></div>
+            <div className="flex h-20 w-20 items-center justify-center rounded bg-popover shadow-inner"></div>
           </div>
           <pre>
             <code>
@@ -633,49 +613,49 @@ export default function DesignSystemGuide() {
         </section>
 
         <section className="space-y-6">
-          <Typography as="h2" variant="display-xs/medium">
+          <Typography as="h2" variant="2xl/medium">
             Layers
           </Typography>
-          <Typography as="p" variant="base/regular" className="text-foreground">
+          <Typography as="p" variant="base/normal" className="text-foreground">
             Layer variables define different layers for UI elements, helping to
             establish visual hierarchy and elevation.
           </Typography>
           <div className="flex justify-evenly">
-            <div className="flex h-20 w-20 items-center justify-center rounded bg-layer">
+            <div className="flex h-20 w-20 items-center justify-center rounded bg-popover">
               1
             </div>
-            <div className="flex h-20 w-20 items-center justify-center rounded bg-layer-2">
+            <div className="flex h-20 w-20 items-center justify-center rounded bg-popover">
               2
             </div>
-            <div className="flex h-20 w-20 items-center justify-center rounded bg-layer-3">
+            <div className="flex h-20 w-20 items-center justify-center rounded bg-popover">
               3
             </div>
-            <div className="flex h-20 w-20 items-center justify-center rounded bg-layer-4">
+            <div className="flex h-20 w-20 items-center justify-center rounded bg-popover">
               4
             </div>
           </div>
           <pre>
             <code>
-              {`--layer-1: var(--color-white);
---layer-2: var(--color-gray-50);
---layer-3: var(--color-gray-100);
---layer-4: var(--color-gray-200);
+              {`--popover-1: var(--color-white);
+--popover: var(--color-gray-50);
+--popover: var(--color-gray-100);
+--popover: var(--color-gray-200);
 
 .dark {
-  --layer-1: var(--color-gray-750);
-  --layer-2: var(--color-gray-750);
-  --layer-3: var(--color-gray-700);
-  --layer-4: var(--color-gray-600);
+  --popover-1: var(--color-gray-750);
+  --popover: var(--color-gray-750);
+  --popover: var(--color-gray-700);
+  --popover: var(--color-gray-600);
 }`}
             </code>
           </pre>
         </section>
 
         <section className="space-y-6">
-          <Typography as="h2" variant="display-xs/medium">
+          <Typography as="h2" variant="2xl/medium">
             Dark Mode
           </Typography>
-          <Typography as="p" variant="base/regular" className="text-foreground">
+          <Typography as="p" variant="base/normal" className="text-foreground">
             Dark mode enhances user experience, and we provide a set of
             variables to adapt the design system for dark mode. Colors, text,
             and background properties are adjusted to ensure readability and
@@ -693,10 +673,10 @@ export default function DesignSystemGuide() {
         </section>
 
         <section className="space-y-6">
-          <Typography as="h2" variant="display-xs/medium">
+          <Typography as="h2" variant="2xl/medium">
             Dynamic Theme Primary Color
           </Typography>
-          <Typography as="p" variant="base/regular" className="text-foreground">
+          <Typography as="p" variant="base/normal" className="text-foreground">
             The dynamic theme primary color allows for customization of the
             primary color scheme. Below are examples of different theme options
             with their respective primary color variables.
@@ -708,239 +688,239 @@ export default function DesignSystemGuide() {
   .theme-default {
     --color-primary-50: 240 33.3% 97.6%; /* #F7F7FB */
     --color-primary-100: 240 95% 92.2%; /* #D8D8FE */
-    --color-primary-200: 240 94.9% 84.7%; /* #B3B3FD */
-    --color-primary-300: 240 89.2% 74.5%; /* #8484F8 */
-    --color-primary-400: 240 89.5% 70%; /* #6E6EF7 */
-    --color-primary-500: 240 87.3% 60%; /* #4040F2 #4f46e5 */
-    --color-primary-600: 240 63.2% 51%; /* #3333D1  #4f46e5 */
-    --color-primary-700: 240 68.9% 44.1%; /* #2323BE */
-    --color-primary-800: 240 72.1% 33.7%; /* #181894 */
+    --color-primary/20: 240 94.9% 84.7%; /* #B3B3FD */
+    --color-primary/30: 240 89.2% 74.5%; /* #8484F8 */
+    --color-primary/40: 240 89.5% 70%; /* #6E6EF7 */
+    --color-primary/50: 240 87.3% 60%; /* #4040F2 #4f46e5 */
+    --color-primary: 240 63.2% 51%; /* #3333D1  #4f46e5 */
+    --color-primary: 240 68.9% 44.1%; /* #2323BE */
+    --color-primary: 240 72.1% 33.7%; /* #181894 */
     --color-primary-900: 240 73.2% 19%; /* #0D0D54 */
-  
-    --color-primary: var(--color-primary-500);
-    --color-primary-hover: var(--color-primary-400);
-    --color-primary-active: var(--color-primary-600);
-    --color-primary-disabled: var(--color-primary-300);
+
+    --color-primary: var(--color-primary/50);
+    --color-primary-hover: var(--color-primary/40);
+    --color-primary-active: var(--color-primary);
+    --color-primary-disabled: var(--color-primary/30);
   }
-  
+
   .dark .theme-default {
     --color-primary-50: 240 33.3% 97.6%; /* #F7F7FB */
     --color-primary-100: 240 95% 92.2%; /* #D8D8FE */
-    --color-primary-200: 240 94.9% 84.7%; /* #B3B3FD */
-    --color-primary-300: 240 89.2% 74.5%; /* #8484F8 */
-    --color-primary-400: 240 89.5% 70%; /* #6E6EF7 */
-    --color-primary-500: 240 87.3% 60%; /* #4040F2 #4f46e5 */
-    --color-primary-600: 240 63.2% 51%; /* #3333D1  #4f46e5 */
-    --color-primary-700: 240 68.9% 44.1%; /* #2323BE */
-    --color-primary-800: 240 72.1% 33.7%; /* #181894 */
+    --color-primary/20: 240 94.9% 84.7%; /* #B3B3FD */
+    --color-primary/30: 240 89.2% 74.5%; /* #8484F8 */
+    --color-primary/40: 240 89.5% 70%; /* #6E6EF7 */
+    --color-primary/50: 240 87.3% 60%; /* #4040F2 #4f46e5 */
+    --color-primary: 240 63.2% 51%; /* #3333D1  #4f46e5 */
+    --color-primary: 240 68.9% 44.1%; /* #2323BE */
+    --color-primary: 240 72.1% 33.7%; /* #181894 */
     --color-primary-900: 240 73.2% 19%; /* #0D0D54 */
-  
-    --color-primary: var(--color-primary-400);
-    --color-primary-hover: var(--color-primary-300);
-    --color-primary-active: var(--color-primary-500);
-    --color-primary-disabled: var(--color-primary-300);
+
+    --color-primary: var(--color-primary/40);
+    --color-primary-hover: var(--color-primary/30);
+    --color-primary-active: var(--color-primary/50);
+    --color-primary-disabled: var(--color-primary/30);
   }
-  
+
   .theme-emerald {
     --color-primary-50: 151.8 81% 95.9%; /* #ecfdf5 */
     --color-primary-100: 149.3 80.4% 90%; /* #d1fae5 */
-    --color-primary-200: 152.4 76% 80.4%; /* #a7f3d0 */
-    --color-primary-300: 156.2 71.6% 66.9%; /* #6ee7b7 */
-    --color-primary-400: 158.1 64.4% 51.6%; /* #34d399 */
-    --color-primary-500: 160.1 84.1% 39.4%; /* #10b981 */
-    --color-primary-600: 161.4 93.5% 30.4%; /* #059669 */
-    --color-primary-700: 162.9 93.5% 24.3%; /* #047857 */
-    --color-primary-800: 163.1 88.1% 19.8%; /* #065f46 */
+    --color-primary/20: 152.4 76% 80.4%; /* #a7f3d0 */
+    --color-primary/30: 156.2 71.6% 66.9%; /* #6ee7b7 */
+    --color-primary/40: 158.1 64.4% 51.6%; /* #34d399 */
+    --color-primary/50: 160.1 84.1% 39.4%; /* #10b981 */
+    --color-primary: 161.4 93.5% 30.4%; /* #059669 */
+    --color-primary: 162.9 93.5% 24.3%; /* #047857 */
+    --color-primary: 163.1 88.1% 19.8%; /* #065f46 */
     --color-primary-900: 164.2 85.7% 16.5%; /* #064e3b */
     --color-primary-950: 165.7 91.3% 9%; /* #022c22 */
-  
-    --color-primary: var(--color-primary-500);
-    --color-primary-hover: var(--color-primary-400);
-    --color-primary-active: var(--color-primary-600);
-    --color-primary-disabled: var(--color-primary-300);
+
+    --color-primary: var(--color-primary/50);
+    --color-primary-hover: var(--color-primary/40);
+    --color-primary-active: var(--color-primary);
+    --color-primary-disabled: var(--color-primary/30);
   }
-  
+
   .dark .theme-emerald {
     --color-primary-50: 151.8 81% 95.9%; /* #ecfdf5 */
     --color-primary-100: 149.3 80.4% 90%; /* #d1fae5 */
-    --color-primary-200: 152.4 76% 80.4%; /* #a7f3d0 */
-    --color-primary-300: 156.2 71.6% 66.9%; /* #6ee7b7 */
-    --color-primary-400: 158.1 64.4% 51.6%; /* #34d399 */
-    --color-primary-500: 160.1 84.1% 39.4%; /* #10b981 */
-    --color-primary-600: 161.4 93.5% 30.4%; /* #059669 */
-    --color-primary-700: 162.9 93.5% 24.3%; /* #047857 */
-    --color-primary-800: 163.1 88.1% 19.8%; /* #065f46 */
+    --color-primary/20: 152.4 76% 80.4%; /* #a7f3d0 */
+    --color-primary/30: 156.2 71.6% 66.9%; /* #6ee7b7 */
+    --color-primary/40: 158.1 64.4% 51.6%; /* #34d399 */
+    --color-primary/50: 160.1 84.1% 39.4%; /* #10b981 */
+    --color-primary: 161.4 93.5% 30.4%; /* #059669 */
+    --color-primary: 162.9 93.5% 24.3%; /* #047857 */
+    --color-primary: 163.1 88.1% 19.8%; /* #065f46 */
     --color-primary-900: 164.2 85.7% 16.5%; /* #064e3b */
     --color-primary-950: 165.7 91.3% 9%; /* #022c22 */
-  
-    --color-primary: var(--color-primary-500);
-    --color-primary-hover: var(--color-primary-400);
-    --color-primary-active: var(--color-primary-600);
-    --color-primary-disabled: var(--color-primary-300);
+
+    --color-primary: var(--color-primary/50);
+    --color-primary-hover: var(--color-primary/40);
+    --color-primary-active: var(--color-primary);
+    --color-primary-disabled: var(--color-primary/30);
   }
-  
+
   .theme-indigo {
     --color-primary-50: 225.9 100% 96.7%; /* #eef2ff */
     --color-primary-100: 226.5 100% 93.9%; /* #e0e7ff */
-    --color-primary-200: 228 96.5% 88.8%; /* #c7d2fe */
-    --color-primary-300: 229.7 93.5% 81.8%; /* #a5b4fc */
-    --color-primary-400: 234.5 89.5% 73.9%; /* #818cf8 */
-    --color-primary-500: 238.7 83.5% 66.7%; /* #6366f1 */
-    --color-primary-600: 243.4 75.4% 58.6%; /* #4f46e5 */
-    --color-primary-700: 244.5 57.9% 50.6%; /* #4338ca */
-    --color-primary-800: 243.7 54.5% 41.4%; /* #3730a3 */
+    --color-primary/20: 228 96.5% 88.8%; /* #c7d2fe */
+    --color-primary/30: 229.7 93.5% 81.8%; /* #a5b4fc */
+    --color-primary/40: 234.5 89.5% 73.9%; /* #818cf8 */
+    --color-primary/50: 238.7 83.5% 66.7%; /* #6366f1 */
+    --color-primary: 243.4 75.4% 58.6%; /* #4f46e5 */
+    --color-primary: 244.5 57.9% 50.6%; /* #4338ca */
+    --color-primary: 243.7 54.5% 41.4%; /* #3730a3 */
     --color-primary-900: 242.2 47.4% 34.3%; /* #312e81 */
     --color-primary-950: 243.8 47.1% 20%; /* #1e1b4b */
-  
-    --color-primary: var(--color-primary-500);
-    --color-primary-hover: var(--color-primary-400);
-    --color-primary-active: var(--color-primary-600);
-    --color-primary-disabled: var(--color-primary-300);
+
+    --color-primary: var(--color-primary/50);
+    --color-primary-hover: var(--color-primary/40);
+    --color-primary-active: var(--color-primary);
+    --color-primary-disabled: var(--color-primary/30);
   }
-  
+
   .dark .theme-indigo {
     --color-primary-50: 225.9 100% 96.7%; /* #eef2ff */
     --color-primary-100: 226.5 100% 93.9%; /* #e0e7ff */
-    --color-primary-200: 228 96.5% 88.8%; /* #c7d2fe */
-    --color-primary-300: 229.7 93.5% 81.8%; /* #a5b4fc */
-    --color-primary-400: 234.5 89.5% 73.9%; /* #818cf8 */
-    --color-primary-500: 238.7 83.5% 66.7%; /* #6366f1 */
-    --color-primary-600: 243.4 75.4% 58.6%; /* #4f46e5 */
-    --color-primary-700: 244.5 57.9% 50.6%; /* #4338ca */
-    --color-primary-800: 243.7 54.5% 41.4%; /* #3730a3 */
+    --color-primary/20: 228 96.5% 88.8%; /* #c7d2fe */
+    --color-primary/30: 229.7 93.5% 81.8%; /* #a5b4fc */
+    --color-primary/40: 234.5 89.5% 73.9%; /* #818cf8 */
+    --color-primary/50: 238.7 83.5% 66.7%; /* #6366f1 */
+    --color-primary: 243.4 75.4% 58.6%; /* #4f46e5 */
+    --color-primary: 244.5 57.9% 50.6%; /* #4338ca */
+    --color-primary: 243.7 54.5% 41.4%; /* #3730a3 */
     --color-primary-900: 242.2 47.4% 34.3%; /* #312e81 */
     --color-primary-950: 243.8 47.1% 20%; /* #1e1b4b */
-  
-    --color-primary: var(--color-primary-500);
-    --color-primary-hover: var(--color-primary-400);
-    --color-primary-active: var(--color-primary-600);
-    --color-primary-disabled: var(--color-primary-300);
+
+    --color-primary: var(--color-primary/50);
+    --color-primary-hover: var(--color-primary/40);
+    --color-primary-active: var(--color-primary);
+    --color-primary-disabled: var(--color-primary/30);
   }
-  
+
   .theme-rose {
     --color-primary-50: 355.7 100% 97.3%; /* #fff1f2 */
     --color-primary-100: 355.6 100% 94.7%; /* #ffe4e6 */
-    --color-primary-200: 352.7 96.1% 90%; /* #fecdd3 */
-    --color-primary-300: 352.6 95.7% 81.8%; /* #fda4af */
-    --color-primary-400: 351.3 94.5% 71.4%; /* #fb7185 */
-    --color-primary-500: 349.7 89.2% 60.2%; /* #f43f5e */
-    --color-primary-600: 346.8 77.2% 49.8%; /* #e11d48 */
-    --color-primary-700: 345.3 82.7% 40.8%; /* #be123c */
-    --color-primary-800: 343.4 79.7% 34.7%; /* #9f1239 */
+    --color-primary/20: 352.7 96.1% 90%; /* #fecdd3 */
+    --color-primary/30: 352.6 95.7% 81.8%; /* #fda4af */
+    --color-primary/40: 351.3 94.5% 71.4%; /* #fb7185 */
+    --color-primary/50: 349.7 89.2% 60.2%; /* #f43f5e */
+    --color-primary: 346.8 77.2% 49.8%; /* #e11d48 */
+    --color-primary: 345.3 82.7% 40.8%; /* #be123c */
+    --color-primary: 343.4 79.7% 34.7%; /* #9f1239 */
     --color-primary-900: 341.5 75.5% 30.4%; /* #881337 */
     --color-primary-950: 343.1 87.7% 15.9%; /* #4c0519 */
-  
-    --color-primary: var(--color-primary-500);
-    --color-primary-hover: var(--color-primary-400);
-    --color-primary-active: var(--color-primary-600);
-    --color-primary-disabled: var(--color-primary-300);
+
+    --color-primary: var(--color-primary/50);
+    --color-primary-hover: var(--color-primary/40);
+    --color-primary-active: var(--color-primary);
+    --color-primary-disabled: var(--color-primary/30);
   }
-  
+
   .dark .theme-rose {
     --color-primary-50: 355.7 100% 97.3%; /* #fff1f2 */
     --color-primary-100: 355.6 100% 94.7%; /* #ffe4e6 */
-    --color-primary-200: 352.7 96.1% 90%; /* #fecdd3 */
-    --color-primary-300: 352.6 95.7% 81.8%; /* #fda4af */
-    --color-primary-400: 351.3 94.5% 71.4%; /* #fb7185 */
-    --color-primary-500: 349.7 89.2% 60.2%; /* #f43f5e */
-    --color-primary-600: 346.8 77.2% 49.8%; /* #e11d48 */
-    --color-primary-700: 345.3 82.7% 40.8%; /* #be123c */
-    --color-primary-800: 343.4 79.7% 34.7%; /* #9f1239 */
+    --color-primary/20: 352.7 96.1% 90%; /* #fecdd3 */
+    --color-primary/30: 352.6 95.7% 81.8%; /* #fda4af */
+    --color-primary/40: 351.3 94.5% 71.4%; /* #fb7185 */
+    --color-primary/50: 349.7 89.2% 60.2%; /* #f43f5e */
+    --color-primary: 346.8 77.2% 49.8%; /* #e11d48 */
+    --color-primary: 345.3 82.7% 40.8%; /* #be123c */
+    --color-primary: 343.4 79.7% 34.7%; /* #9f1239 */
     --color-primary-900: 341.5 75.5% 30.4%; /* #881337 */
     --color-primary-950: 343.1 87.7% 15.9%; /* #4c0519 */
-  
-    --color-primary: var(--color-primary-500);
-    --color-primary-hover: var(--color-primary-400);
-    --color-primary-active: var(--color-primary-600);
-    --color-primary-disabled: var(--color-primary-300);
+
+    --color-primary: var(--color-primary/50);
+    --color-primary-hover: var(--color-primary/40);
+    --color-primary-active: var(--color-primary);
+    --color-primary-disabled: var(--color-primary/30);
   }
-  
+
   .theme-blue {
     --color-primary-50: 225.7 100% 95.9%; /* #eaefff */
     --color-primary-100: 226.8 100% 92%; /* #d6dfff */
-    --color-primary-200: 226.7 100% 84.1%; /* #aec0ff */
-    --color-primary-300: 226.7 100% 76.1%; /* #85a0ff */
-    --color-primary-400: 226.7 100% 68.2%; /* #5d81ff */
-    --color-primary-500: 226.7 100% 60.2%; /* #3461ff */
-    --color-primary-600: 226.7 65.9% 48.2%; /* #2a4ecc */
-    --color-primary-700: 226.7 66.3% 36.1%; /* #1f3a99 */
-    --color-primary-800: 226.7 65.9% 24.1%; /* #152766 */
+    --color-primary/20: 226.7 100% 84.1%; /* #aec0ff */
+    --color-primary/30: 226.7 100% 76.1%; /* #85a0ff */
+    --color-primary/40: 226.7 100% 68.2%; /* #5d81ff */
+    --color-primary/50: 226.7 100% 60.2%; /* #3461ff */
+    --color-primary: 226.7 65.9% 48.2%; /* #2a4ecc */
+    --color-primary: 226.7 66.3% 36.1%; /* #1f3a99 */
+    --color-primary: 226.7 65.9% 24.1%; /* #152766 */
     --color-primary-900: 226.8 67.2% 12%; /* #0a1333 */
     --color-primary-950: 228 66.7% 5.9%; /* #050919 */
-  
-    --color-primary: var(--color-primary-500);
-    --color-primary-hover: var(--color-primary-400);
-    --color-primary-active: var(--color-primary-600);
-    --color-primary-disabled: var(--color-primary-300);
+
+    --color-primary: var(--color-primary/50);
+    --color-primary-hover: var(--color-primary/40);
+    --color-primary-active: var(--color-primary);
+    --color-primary-disabled: var(--color-primary/30);
   }
-  
+
   .dark .theme-blue {
     --color-primary-50: 225.7 100% 95.9%; /* #eaefff */
     --color-primary-100: 226.8 100% 92%; /* #d6dfff */
-    --color-primary-200: 226.7 100% 84.1%; /* #aec0ff */
-    --color-primary-300: 226.7 100% 76.1%; /* #85a0ff */
-    --color-primary-400: 226.7 100% 68.2%; /* #5d81ff */
-    --color-primary-500: 226.7 100% 60.2%; /* #3461ff */
-    --color-primary-600: 226.7 65.9% 48.2%; /* #2a4ecc */
-    --color-primary-700: 226.7 66.3% 36.1%; /* #1f3a99 */
-    --color-primary-800: 226.7 65.9% 24.1%; /* #152766 */
+    --color-primary/20: 226.7 100% 84.1%; /* #aec0ff */
+    --color-primary/30: 226.7 100% 76.1%; /* #85a0ff */
+    --color-primary/40: 226.7 100% 68.2%; /* #5d81ff */
+    --color-primary/50: 226.7 100% 60.2%; /* #3461ff */
+    --color-primary: 226.7 65.9% 48.2%; /* #2a4ecc */
+    --color-primary: 226.7 66.3% 36.1%; /* #1f3a99 */
+    --color-primary: 226.7 65.9% 24.1%; /* #152766 */
     --color-primary-900: 226.8 67.2% 12%; /* #0a1333 */
     --color-primary-950: 228 66.7% 5.9%; /* #050919 */
-  
-    --color-primary: var(--color-primary-500);
-    --color-primary-hover: var(--color-primary-400);
-    --color-primary-active: var(--color-primary-600);
-    --color-primary-disabled: var(--color-primary-300);
+
+    --color-primary: var(--color-primary/50);
+    --color-primary-hover: var(--color-primary/40);
+    --color-primary-active: var(--color-primary);
+    --color-primary-disabled: var(--color-primary/30);
   }
-  
+
   .theme-orange {
     --color-primary-50: 33.3 100% 96.5%; /* #fff7ed */
     --color-primary-100: 34.3 100% 91.8%; /* #ffedd5 */
-    --color-primary-200: 32.1 97.7% 83.1%; /* #fed7aa */
-    --color-primary-300: 30.7 97.2% 72.4%; /* #fdba74 */
-    --color-primary-400: 27 96% 61%; /* #fb923c */
-    --color-primary-500: 24.6 95% 53.1%; /* #f97316 */
-    --color-primary-600: 20.5 90.2% 48.2%; /* #ea580c */
-    --color-primary-700: 17.5 88.3% 40.4%; /* #c2410c */
-    --color-primary-800: 15 79.1% 33.7%; /* #9a3412 */
+    --color-primary/20: 32.1 97.7% 83.1%; /* #fed7aa */
+    --color-primary/30: 30.7 97.2% 72.4%; /* #fdba74 */
+    --color-primary/40: 27 96% 61%; /* #fb923c */
+    --color-primary/50: 24.6 95% 53.1%; /* #f97316 */
+    --color-primary: 20.5 90.2% 48.2%; /* #ea580c */
+    --color-primary: 17.5 88.3% 40.4%; /* #c2410c */
+    --color-primary: 15 79.1% 33.7%; /* #9a3412 */
     --color-primary-900: 15.3 74.6% 27.8%; /* #7c2d12 */
     --color-primary-950: 13 81.1% 14.5%; /* #431407 */
-  
-    --color-primary: var(--color-primary-500);
-    --color-primary-hover: var(--color-primary-400);
-    --color-primary-active: var(--color-primary-600);
-    --color-primary-disabled: var(--color-primary-300);
+
+    --color-primary: var(--color-primary/50);
+    --color-primary-hover: var(--color-primary/40);
+    --color-primary-active: var(--color-primary);
+    --color-primary-disabled: var(--color-primary/30);
   }
-  
+
   .dark .theme-orange {
     --color-primary-50: 33.3 100% 96.5%; /* #fff7ed */
     --color-primary-100: 34.3 100% 91.8%; /* #ffedd5 */
-    --color-primary-200: 32.1 97.7% 83.1%; /* #fed7aa */
-    --color-primary-300: 30.7 97.2% 72.4%; /* #fdba74 */
-    --color-primary-400: 27 96% 61%; /* #fb923c */
-    --color-primary-500: 24.6 95% 53.1%; /* #f97316 */
-    --color-primary-600: 20.5 90.2% 48.2%; /* #ea580c */
-    --color-primary-700: 17.5 88.3% 40.4%; /* #c2410c */
-    --color-primary-800: 15 79.1% 33.7%; /* #9a3412 */
+    --color-primary/20: 32.1 97.7% 83.1%; /* #fed7aa */
+    --color-primary/30: 30.7 97.2% 72.4%; /* #fdba74 */
+    --color-primary/40: 27 96% 61%; /* #fb923c */
+    --color-primary/50: 24.6 95% 53.1%; /* #f97316 */
+    --color-primary: 20.5 90.2% 48.2%; /* #ea580c */
+    --color-primary: 17.5 88.3% 40.4%; /* #c2410c */
+    --color-primary: 15 79.1% 33.7%; /* #9a3412 */
     --color-primary-900: 15.3 74.6% 27.8%; /* #7c2d12 */
     --color-primary-950: 13 81.1% 14.5%; /* #431407 */
-  
-    --color-primary: var(--color-primary-500);
-    --color-primary-hover: var(--color-primary-400);
-    --color-primary-active: var(--color-primary-600);
-    --color-primary-disabled: var(--color-primary-300);
+
+    --color-primary: var(--color-primary/50);
+    --color-primary-hover: var(--color-primary/40);
+    --color-primary-active: var(--color-primary);
+    --color-primary-disabled: var(--color-primary/30);
   }
-  
+
 ...
 }`}</code>
           </pre>
         </section>
 
         <section className="space-y-6">
-          <Typography as="h2" variant="display-xs/medium">
+          <Typography as="h2" variant="2xl/medium">
             Text Colors
           </Typography>
-          <Typography as="p" variant="base/regular" className="text-foreground">
+          <Typography as="p" variant="base/normal" className="text-foreground">
             The text colors of the interface define the color scheme for text
             elements. Here are the key text color variables used in the design
             system.
@@ -963,14 +943,14 @@ export default function DesignSystemGuide() {
             <Typography
               as="p"
               variant="lg/medium"
-              className="text-foreground-lighter"
+              className="text-muted-foreground"
             >
               The quick brown fox jumps over the lazy dog
             </Typography>
             <Typography
               as="p"
               variant="lg/medium"
-              className="text-foreground-muted-light"
+              className="text-muted-foreground"
             >
               The quick brown fox jumps over the lazy dog
             </Typography>
@@ -995,7 +975,6 @@ export default function DesignSystemGuide() {
   /* Background/Foregound */
   --background: var(--color-white);
   --foreground: var(--color-gray-800);
-  --background-muted: var(--color-gray-100);
 
   /* Text */
   --color-text-light: var(--color-gray-600);
@@ -1011,10 +990,10 @@ export default function DesignSystemGuide() {
         </section>
 
         <section className="space-y-6">
-          <Typography as="h2" variant="display-xs/medium">
+          <Typography as="h2" variant="2xl/medium">
             Transitions
           </Typography>
-          <Typography as="p" variant="base/regular" className="text-foreground">
+          <Typography as="p" variant="base/normal" className="text-foreground">
             Consistent animation transitions can enhance the overall user
             experience. The design system provides the following transition
             variables for defining the duration of animations.
@@ -1028,16 +1007,16 @@ export default function DesignSystemGuide() {
         </section>
 
         <section className="space-y-6">
-          <Typography as="h2" variant="display-xs/medium">
+          <Typography as="h2" variant="2xl/medium">
             Color Theory and Gray Colors
           </Typography>
-          <Typography as="p" variant="base/regular" className="text-foreground">
+          <Typography as="p" variant="base/normal" className="text-foreground">
             Color theory plays a crucial role in UI/UX design, influencing the
             overall look and feel of an application. In this design system, the
             gray color palette has been thoughtfully selected to ensure a
             harmonious and visually pleasing user interface.
           </Typography>
-          <Typography as="p" variant="base/regular" className="text-foreground">
+          <Typography as="p" variant="base/normal" className="text-foreground">
             The shades of gray are chosen based on HSL (Hue, Saturation,
             Lightness) values, providing a balanced and subtle appearance. These
             shades are carefully crafted to enhance readability and user
@@ -1073,7 +1052,7 @@ export default function DesignSystemGuide() {
             })}
           </div>
 
-          <Typography as="p" variant="base/regular" className="text-foreground">
+          <Typography as="p" variant="base/normal" className="text-foreground">
             In dark mode, the primary color has been adjusted to reduce contrast
             and enhance visual comfort. This thoughtful modification aims to
             provide a seamless experience for users in low-light environments.
@@ -1083,24 +1062,24 @@ export default function DesignSystemGuide() {
 
           <pre>
             <code>{`:root {
-  --color-primary: var(--color-primary-500);
-  --color-primary-hover: var(--color-primary-400);
-  --color-primary-active: var(--color-primary-600);
-  --color-primary-disabled: var(--color-primary-300);
+  --color-primary: var(--color-primary/50);
+  --color-primary-hover: var(--color-primary/40);
+  --color-primary-active: var(--color-primary);
+  --color-primary-disabled: var(--color-primary/30);
 }
 
 .dark {
-  --color-primary: var(--color-primary-400);
-  --color-primary-hover: var(--color-primary-300);
-  --color-primary-active: var(--color-primary-500);
-  --color-primary-disabled: var(--color-primary-300);
+  --color-primary: var(--color-primary/40);
+  --color-primary-hover: var(--color-primary/30);
+  --color-primary-active: var(--color-primary/50);
+  --color-primary-disabled: var(--color-primary/30);
 }
             `}</code>
           </pre>
         </section>
 
         <section className="space-y-6">
-          <Typography as="h2" variant="display-xs/medium">
+          <Typography as="h2" variant="2xl/medium">
             Buttons
           </Typography>
 
@@ -1133,13 +1112,13 @@ export default function DesignSystemGuide() {
             <p className='text-xl font-bold text-foreground-light'>
               Foreground Light
             </p>
-            <p className='text-xl font-bold text-foreground-lighter'>
+            <p className='text-xl font-bold text-muted-foreground'>
               Foreground Lighter
             </p>
             <p className='text-xl font-bold text-foreground-muted'>
               Foreground Muted
             </p>
-            <p className='text-xl font-bold text-foreground-muted-light'>
+            <p className='text-xl font-bold text-muted-foreground'>
               Foreground Muted Light
             </p>
             <p className='text-xl font-bold text-foreground-muted-dark'>
@@ -1151,7 +1130,41 @@ export default function DesignSystemGuide() {
           </div> */}
         </section>
         <section className="space-y-6">
-          <Typography as="h2" variant="display-xs/medium">
+          <Typography as="h2" variant="2xl/medium">
+            Icon Buttons
+          </Typography>
+
+          {/* Icon Button */}
+          <div className="flex flex-col gap-y-4">
+            {[
+              "primary",
+              "primary-outline",
+              "outline",
+              "secondary",
+              "ghost",
+              "dark",
+              "destructive",
+              "destructive-outline",
+            ].map((variant) => {
+              return (
+                <div className="space-x-7" key={variant}>
+                  {["xs", "sm", "default", "lg"].reverse().map((size) => (
+                    <Button
+                      key={size}
+                      variant={variant}
+                      size={`${size ? `icon-${size}` : "icon"}`}
+                    >
+                      {/* {`icon-${size}`} */}
+                      <Bookmark className="w-[22px]" />
+                    </Button>
+                  ))}
+                </div>
+              );
+            })}
+          </div>
+        </section>
+        <section className="space-y-6">
+          <Typography as="h2" variant="2xl/medium">
             Icon Buttons
           </Typography>
 
@@ -1178,25 +1191,6 @@ export default function DesignSystemGuide() {
               );
             })}
           </div>
-        </section>
-
-        <section className="mt-20 space-y-6">
-          {/* <Typography as='h2' variant='display-xs/medium'>
-            Conclusion
-          </Typography> */}
-          <Typography as="p" variant="base/medium" className="text-foreground">
-            {/* By establishing a robust design system with Tailwind CSS in a
-            Next.js application, developers can ensure consistency, scalability,
-            and maintainability in their projects. This design system serves as
-            a solid foundation for building beautiful and user-friendly web
-            applications. Feel free to explore and adapt these variables to suit
-            the specific needs and branding of your project. */}
-            Note: The design system is a work in progress and will be updated in
-            terms of the UI as development continue and refine and expand the
-            system, this does not represent the final version and all the
-            components but it establishes a solid foundation for building
-            beautiful and user-friendly web applications.
-          </Typography>
         </section>
       </div>
     </div>

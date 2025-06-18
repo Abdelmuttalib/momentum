@@ -43,8 +43,7 @@ model Session {
 
 model User {
   id              String       @id @default(uuid())
-  firstName       String?
-  lastName        String?
+  name            String
   email           String       @unique
   emailVerified   Boolean      @default(false)
   image           String?
@@ -100,9 +99,9 @@ model Team {
 model Project {
   id        String        @id @default(uuid())
   name      String
+  description String      @default("")
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
-  status    ProjectStatus // To keep track of the progress of the project
   tasks     Task[]
   teamId    String
   team      Team          @relation(fields: [teamId], references: [id])

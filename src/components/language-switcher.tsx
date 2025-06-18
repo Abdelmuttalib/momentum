@@ -10,7 +10,7 @@ export default function LanguageSwitcher() {
       locale={locale === "en" ? "zh" : "en"}
       variant="outline"
       size="sm"
-      className="inline-flex h-10 w-24 items-center justify-center gap-2 border-gray-100 p-0 text-primary-700 hover:border-gray-200"
+      className="inline-flex h-10 w-24 items-center justify-center gap-2 border-gray-100 p-0 text-primary hover:border-gray-200"
     >
       <LanguageIcon className="h-6 w-6 text-gray-800" />
       <div className="h-7 w-0.5 bg-slate-200"></div>

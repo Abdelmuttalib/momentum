@@ -13,7 +13,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   // Destructure the phoneNumber and password from the request body
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const { company, first_name, last_name, email, password } = req.body;
+  const { company, name, email, password } = req.body;
 
   // Check if the email and password are provided
   if (!email || !password) {
@@ -45,8 +45,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const prismaUser = await prisma.user.create({
       data: {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        firstName: first_name,
-        lastName: last_name,
+        name: name,
         company,
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         email: email,

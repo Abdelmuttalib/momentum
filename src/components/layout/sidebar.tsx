@@ -26,7 +26,7 @@ export const dashboardLinks: DashboardLink[] = [
     icon: <HomeIcon className="w-5 text-current" />,
     href: "/overview",
   },
-  
+
   {
     label: "Teams",
     icon: <UsersIcon className="w-5 text-current" />,
@@ -58,10 +58,10 @@ export function SideBarLink({ href, icon, label, isCurrentPath }: SideBarLink) {
     <Link
       href={href}
       className={cn(
-        "group flex w-full items-center rounded px-4 py-2.5 hover:bg-accent-hover focus:border-gray-900 focus:outline-transparent xl:gap-3",
+        "group flex w-full items-center rounded px-4 py-2.5 hover:bg-accent focus:border-gray-900 focus:outline-transparent xl:gap-3",
         {
-          "bg-accent-hover text-foreground": isCurrentPath,
-          "text-foreground-lighter": !isCurrentPath,
+          "bg-accent text-foreground": isCurrentPath,
+          "text-muted-foreground": !isCurrentPath,
         }
       )}
     >
@@ -82,7 +82,7 @@ export function SideBarSubLink({ href, label, isCurrentPath }: SideBarLink) {
         {
           "border-r-brand-400 rounded-r-none bg-gray-800/50 text-gray-100":
             isCurrentPath,
-          "text-gray-600": !isCurrentPath,
+          "text-muted-foreground": !isCurrentPath,
         }
       )}
     >
@@ -108,7 +108,7 @@ export default function SideBar({
 
   return (
     <div
-      className={cn("relative bg-foreground dark:bg-background px-4", {
+      className={cn("relative bg-foreground px-4 dark:bg-background", {
         "hidden h-full min-h-screen w-full flex-col xl:block xl:w-60":
           mode === "normal",
         "fixed inset-0 z-50 flex h-[100svh] w-full flex-col transition-colors duration-300":
@@ -127,7 +127,7 @@ export default function SideBar({
           </IconButton>
         )}
         <div className="hidden w-fit xl:flex">
-          <h5 className="font-medium text-white text-xl">Momentum</h5>
+          <h5 className="text-xl font-medium text-white">Momentum</h5>
         </div>
 
         {/* links */}

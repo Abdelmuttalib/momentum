@@ -4,12 +4,12 @@ import { Role } from "@prisma/client";
 import type { GetServerSideProps } from "next";
 import { z } from "zod";
 import { api } from "@/utils/api";
-import { DataTable } from "@/components/@pages/teams/TeamMembers/data-table";
-import NewInvite from "@/components/@pages/company/NewInvite";
-import { companyInvitationsColumns } from "@/components/@pages/company/invites/company-invitations-columns";
-import CreateTeam from "@/components/@pages/teams/forms/create-team";
-import { companyTeamsColumns } from "@/components/@pages/company/organization-teams";
-import Seo from "@/components/Seo";
+import { DataTable } from "@/components/views/teams/TeamMembers/data-table";
+import { CreateInvite } from "@/components/views/company/invitations/create-invite";
+import { companyInvitationsColumns } from "@/components/views/company/invites/company-invitations-columns";
+import { CreateTeam } from "@/components/views/teams/forms/create-team";
+import { companyTeamsColumns } from "@/components/views/company/organization-teams";
+import { Seo } from "@/components/seo";
 import { Typography } from "@/components/ui/typography";
 
 export default function CompanyPage() {
@@ -26,7 +26,7 @@ export default function CompanyPage() {
           <div>
             <div className="flex flex-col gap-4">
               <div className="flex w-full items-center justify-between">
-                <Typography as="h2" variant="lg/regular">
+                <Typography as="h2" variant="lg/normal">
                   Company Teams
                 </Typography>
                 {/* <CreateNewTeamDialog companyId={companyId} /> */}
@@ -46,10 +46,10 @@ export default function CompanyPage() {
           <div>
             <div className="flex flex-col gap-4">
               <div className="flex w-full items-center justify-between">
-                <Typography as="h2" variant="base/regular">
+                <Typography as="h2" variant="base/normal">
                   Invited Members(company)
                 </Typography>
-                <NewInvite />
+                <CreateInvite />
               </div>
               <div>
                 {invitations.data && (

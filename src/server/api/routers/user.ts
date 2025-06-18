@@ -20,8 +20,7 @@ export const userRouter = createTRPCRouter({
     .input(
       z.object({
         userId: z.string(),
-        firstName: z.string(),
-        lastName: z.string(),
+        name: z.string(),
         image: z.string().optional(),
       })
     )
@@ -29,8 +28,7 @@ export const userRouter = createTRPCRouter({
       const user = await ctx.prisma.user.update({
         where: { id: input.userId },
         data: {
-          firstName: input.firstName,
-          lastName: input.lastName,
+          name: input.name,
         },
       });
       return user;
