@@ -2,7 +2,7 @@ import { type GetStaticProps } from "next";
 import Header from "@/components/views/landing-page/header";
 import { Seo } from "@/components/seo";
 
-import { Button, ButtonLink } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
