@@ -26,7 +26,8 @@ export function useFormErrorToast<TFieldValues extends FieldValues>({
         // &&
         // lastShown.current[fieldName] !== errorMessage
       ) {
-        toast.error(errorMessage);
+        toast.error(`${fieldName}: ${errorMessage}`);
+        // toast.error(errorMessage);
         // lastShown.current[fieldName] = errorMessage;
       }
     });

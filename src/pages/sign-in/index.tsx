@@ -27,7 +27,7 @@ export default function SignInPage() {
             <hr className="w-full border" />
           </div>
 
-          <div className="mt-3 flex flex-col gap-y-3">
+          {/* <div className="mt-3 flex flex-col gap-y-3">
             <Link
               href="/register"
               className={cn(
@@ -60,7 +60,7 @@ export default function SignInPage() {
                 Join your company
               </Typography>
             </Link>
-          </div>
+          </div> */}
         </div>
       </AuthLayout>
     </>
