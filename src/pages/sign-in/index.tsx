@@ -1,10 +1,5 @@
 import { type GetServerSideProps } from "next";
 import { getServerAuthSession } from "@/server/auth";
-import { ArrowRightIcon } from "@heroicons/react/20/solid";
-import Link from "next/link";
-import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/utils/cn";
-import { BuildingOfficeIcon } from "@heroicons/react/20/solid";
 import { Typography } from "@/components/ui/typography";
 import { AuthLayout } from "@/components/layout/auth-layout";
 import { Seo } from "@/components/seo";
