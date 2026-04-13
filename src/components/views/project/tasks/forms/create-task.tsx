@@ -76,7 +76,7 @@ function CreateTaskForm({
       onSubmit={handleSubmit}
       className="flex flex-col gap-5"
     >
-      {JSON.stringify(teamMembers)}
+      {/* {JSON.stringify(teamMembers)} */}
       <div>
         <Label htmlFor="title" className="sr-only">
           Task title:
@@ -291,11 +291,13 @@ export function CreateTask({
   status,
   teamId,
   projectId,
+  triggerButton,
 }: {
   type?: "project" | "column";
   status?: TaskStatus;
   teamId: string;
   projectId: string;
+  triggerButton?: React.ReactNode;
 }) {
   return (
     <>
@@ -303,13 +305,15 @@ export function CreateTask({
         title="Create a new Task"
         description="Tasks are a great way to organize your projects and invite other users"
         triggerButton={
-          <Button
-            type="button"
-            className="ml-2 inline-flex gap-1 whitespace-nowrap"
-          >
-            <PlusIcon className="w-5" />
-            Create Task
-          </Button>
+          triggerButton || (
+            <Button
+              type="button"
+              className="ml-2 inline-flex gap-1 whitespace-nowrap"
+            >
+              <PlusIcon className="w-5" />
+              Create Task
+            </Button>
+          )
         }
         dialogContentClassName="sm:max-w-md"
       >

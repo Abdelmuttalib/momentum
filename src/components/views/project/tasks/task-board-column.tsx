@@ -5,6 +5,8 @@ import { Draggable, Droppable } from "react-beautiful-dnd";
 import TaskView from "./task-view";
 import { Typography } from "@/components/ui/typography";
 import { useRouter } from "next/router";
+import { Button } from "@/components/ui/button";
+import { PlusIcon } from "lucide-react";
 
 interface TaskColumnProps {
   status: TaskStatus;
@@ -12,6 +14,7 @@ interface TaskColumnProps {
 }
 
 export default function TaskBoardColumn({ status, tasks }: TaskColumnProps) {
+  console.log("TASKS->COLUMN", status, tasks);
   const router = useRouter();
 
   const [teamId, projectId] = [router.query.teamId, router.query.projectId] as [
@@ -36,6 +39,16 @@ export default function TaskBoardColumn({ status, tasks }: TaskColumnProps) {
             status={status}
             teamId={teamId}
             projectId={projectId}
+            triggerButton={
+              <Button
+                type="button"
+                className="ml-2 inline-flex gap-1 whitespace-nowrap"
+                variant="outline"
+                size="icon-sm"
+              >
+                <PlusIcon className="w-5" />
+              </Button>
+            }
           />
         </div>
       </div>

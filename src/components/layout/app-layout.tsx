@@ -17,6 +17,10 @@ import { useRouter } from "next/router";
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const { pathname, asPath } = useRouter();
 
+  const segments = asPath.split("?")[0].split("/").filter(Boolean);
+
+  let path = "";
+
   return (
     <>
       <SidebarProvider>
@@ -27,22 +31,33 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             <Separator orientation="vertical" className="mr-2 h-4" />
             <Breadcrumb>
               <BreadcrumbList>
-                <BreadcrumbItem className="hidden capitalize md:block">
-                  <BreadcrumbLink href={`/overview`}>Overview</BreadcrumbLink>
+                <BreadcrumbItem className="hidden md:block">
+                  <BreadcrumbLink href="/overview">Overview</BreadcrumbLink>
                 </BreadcrumbItem>
-                {asPath.split("/").map((p, i) => (
-                  <>
-                    <BreadcrumbItem
-                      key={`/${p}`}
-                      className="hidden capitalize md:block"
-                    >
-                      <BreadcrumbLink href={`/${p}`}>{p}</BreadcrumbLink>
-                    </BreadcrumbItem>
-                    {i < asPath.split("/").length - 1 && (
-                      <BreadcrumbSeparator className="hidden md:block" />
-                    )}
-                  </>
-                ))}
+
+                <BreadcrumbSeparator className="hidden md:block" />
+
+                {segments.map((segment, i) => {
+                  path += `/${segment}`;
+
+                  const isLast = i === segments.length - 1;
+
+                  return (
+                    <React.Fragment key={path}>
+                      <BreadcrumbItem className="hidden capitalize md:block">
+                        {isLast ? (
+                          <BreadcrumbPage>{segment}</BreadcrumbPage>
+                        ) : (
+                          <BreadcrumbLink href={path}>{segment}</BreadcrumbLink>
+                        )}
+                      </BreadcrumbItem>
+
+                      {!isLast && (
+                        <BreadcrumbSeparator className="hidden md:block" />
+                      )}
+                    </React.Fragment>
+                  );
+                })}
               </BreadcrumbList>
             </Breadcrumb>
           </header>

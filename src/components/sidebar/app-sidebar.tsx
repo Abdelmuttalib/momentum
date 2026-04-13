@@ -30,7 +30,7 @@ import { UserMenu } from "../common/user-menu";
 const navigation = [
   {
     title: "Overview",
-    url: "/",
+    url: "/overview",
     icon: Home,
   },
   // {
