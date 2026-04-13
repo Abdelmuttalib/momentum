@@ -4,6 +4,11 @@ import { Typography } from "@/components/ui/typography";
 import { AuthLayout } from "@/components/layout/auth-layout";
 import { Seo } from "@/components/seo";
 import { SignInForm } from "@/components/views/auth/forms/sign-in";
+import Link from "next/link";
+import { cn } from "@/utils/cn";
+import { buttonVariants } from "@/components/ui/button";
+import { ArrowRightIcon } from "lucide-react";
+import { BuildingOfficeIcon } from "@heroicons/react/24/outline";
 
 export default function SignInPage() {
   return (
@@ -22,7 +27,7 @@ export default function SignInPage() {
             <hr className="w-full border" />
           </div>
 
-          {/* <div className="mt-3 flex flex-col gap-y-3">
+          <div className="mt-3 flex flex-col gap-y-3">
             <Link
               href="/register"
               className={cn(
@@ -55,7 +60,7 @@ export default function SignInPage() {
                 Join your company
               </Typography>
             </Link>
-          </div> */}
+          </div>
         </div>
       </AuthLayout>
     </>
