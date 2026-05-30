@@ -129,7 +129,7 @@ export const taskRouter = createTRPCRouter({
     .input(z.object({ taskId: z.string(), companyId: z.string() }))
     .query(async ({ input, ctx }) => {
       const task = await ctx.prisma.task.findUnique({
-        where: { id: input.taskId, companyId: input.companyId },
+        where: { id: input.taskId },
       });
       return task;
     }),

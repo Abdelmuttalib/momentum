@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useFormErrorToast } from "./use-form-error-toast";
-import React from "react";
 
 interface CreateProjectOptions {
   onSuccess?: () => void;
@@ -25,9 +24,9 @@ export function useCreateProject({
     resolver: zodResolver(projectFormSchema),
   });
 
-  React.useEffect(() => {
-    form.setValue("teamId", teamId);
-  }, [teamId, form]);
+  // React.useEffect(() => {
+  //   form.setValue("teamId", teamId);
+  // }, [teamId, form]);
 
   console.log("formState.errors", form.formState.errors);
 
@@ -51,7 +50,6 @@ export function useCreateProject({
     console.log("Form submitted", data);
     await mutation.mutateAsync({
       ...data,
-      teamId: teamId,
     });
   });
 

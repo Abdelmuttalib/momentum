@@ -23,6 +23,7 @@ import { ButtonLoaderIcon } from "@/components/common/button-loader-icon";
 import { BackButton } from "@/components/common/back-button";
 import { TaskStatusBadge } from "@/features/tasks/components/task-status-badge";
 import { TaskPriorityBadge } from "@/features/tasks/components/task-priority-badge";
+import { useProjects } from "@/features/projects/hooks/use-projects";
 
 type TaskFormProps = {
   onSubmit: (data: TaskFormSchemaType) => void;
@@ -46,6 +47,7 @@ export function TaskForm({
   isPending,
 }: TaskFormProps) {
   const { data: session } = useSession();
+  const companyId = session?.user?.company.id;
 
   const form = useForm<TaskFormSchemaType>({
     resolver: zodResolver(taskFormSchema),
@@ -58,7 +60,9 @@ export function TaskForm({
 
   const { data: taskLabels } = api.task.getLabels.useQuery();
 
-  console.log("form", form.formState);
+  const { data: projects } = useProjects(companyId);
+
+  console.log("TaskForm form", form.formState);
 
   return (
     <form
@@ -210,6 +214,40 @@ export function TaskForm({
           />
         </div>
       </div>
+      {/* Project */}
+      <div>
+        <Label htmlFor="projectId">Project</Label>
+        <Controller
+          name="projectId"
+          control={form.control}
+          render={({ field }) => (
+            <Select
+              {...field}
+              onValueChange={(value) => field.onChange(value)}
+              disabled={isPending}
+            >
+              <SelectTrigger className="h-fit w-full">
+                <SelectValue placeholder="Select a project" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {projects?.map((project) => (
+                    <SelectItem
+                      key={project.id}
+                      value={project.id}
+                      className="flex capitalize"
+                    >
+                      <div className="flex items-center gap-2">
+                        <p className="font-medium">{project.name}</p>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          )}
+        />
+      </div>
       {/* Assign */}
       <div>
         <Label htmlFor="assigneeId">Assignee</Label>
@@ -255,7 +293,6 @@ export function TaskForm({
       </div>
       <div className="mt-2 flex flex-col-reverse md:flex-row md:gap-2 lg:justify-end">
         <BackButton
-          fallback={`/projects/${projectId}/tasks`}
           disabled={isPending}
           text="Cancel"
           // onClick={onCancel}

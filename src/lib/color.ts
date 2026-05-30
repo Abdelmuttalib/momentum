@@ -31,7 +31,6 @@ export const taskStatusBadgeColor: Record<TaskStatus, { color: CBadgeColor }> =
     [TaskStatus.BACKLOG]: { color: "gray" },
     [TaskStatus.TO_DO]: { color: "blue" },
     [TaskStatus.IN_PROGRESS]: { color: "yellow" },
-    [TaskStatus.IN_REVIEW]: { color: "orange" },
     [TaskStatus.COMPLETED]: { color: "green" },
     [TaskStatus.CANCELED]: { color: "stone" },
   };

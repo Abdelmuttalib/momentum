@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 
 export type BackButtonProps = {
   fallback?: string;
+  href?: string;
   text?: "Back" | "Cancel" | string;
   disabled?: boolean;
   onClick?: () => void;
@@ -12,6 +13,7 @@ export type BackButtonProps = {
 
 export function BackButton({
   fallback,
+  href,
   text = "Back",
   disabled,
   onClick,
@@ -19,16 +21,16 @@ export function BackButton({
 }: BackButtonProps) {
   const router = useRouter();
 
-  function onBack() {
+  async function onBack() {
     if (onClick) {
       onClick();
       return;
     }
 
-    // if (fallback) {
-    //   await router.push(fallback);
-    //   return;
-    // }
+    if (href) {
+      await router.push(href);
+      return;
+    }
 
     router.back();
   }
@@ -38,7 +40,9 @@ export function BackButton({
       type="button"
       title={text}
       variant="outline"
-      onClick={onBack} // Go back
+      onClick={() => {
+        void onBack();
+      }} // Go back
       disabled={disabled}
     >
       {withArrow && <ArrowLeftIcon className="h-4 w-4" />}

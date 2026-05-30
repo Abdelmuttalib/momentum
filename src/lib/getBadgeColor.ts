@@ -41,9 +41,6 @@ export function getTaskStatusBadgeColor(status: TaskStatus): RichBadgeColor {
     case TaskStatus.IN_PROGRESS:
       return "yellow";
 
-    case TaskStatus.IN_REVIEW:
-      return "blue";
-
     case TaskStatus.COMPLETED:
       return "green";
 

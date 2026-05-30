@@ -30,7 +30,7 @@ export default function ProjectTaskPage() {
   return (
     <>
       <AppLayout>
-        <DataLoader data={task} isLoading={isLoading} error={error}>
+        <DataLoader data={task} isLoading={isLoading} error={null}>
           {(data) => (
             <Stack spacing="group">
               {/* Header */}
