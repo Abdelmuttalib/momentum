@@ -1,5 +1,5 @@
-import { cn } from "@/utils/cn";
-import { Typography } from "./ui/typography";
+import { cn } from "@/lib/cn";
+import { Typography, type TypographyProps } from "./ui/typography";
 
 // export function PageHeader({ ...props }: React.ComponentProps<'header'>) {
 //   return <header className="mb-6 lg:mb-12" {...props} />
@@ -7,10 +7,11 @@ import { Typography } from "./ui/typography";
 
 type DivPropsType = React.HTMLAttributes<HTMLDivElement>;
 
-type PageHeaderProps = {
+export type PageHeaderProps = {
   title: string;
   description?: string;
   actions?: React.ReactNode;
+  actionsClassName?: string;
   className?: string;
 };
 
@@ -18,6 +19,7 @@ export function PageHeader({
   title,
   description,
   actions,
+  actionsClassName,
   className,
 }: PageHeaderProps) {
   return (
@@ -27,13 +29,17 @@ export function PageHeader({
         className
       )}
     >
-      <Inline className="flex flex-col items-start">
+      <Inline className="flex flex-col items-start gap-0">
         <PageTitle>{title}</PageTitle>
 
         {description && <PageDescription>{description}</PageDescription>}
       </Inline>
 
-      {actions && <PageHeaderActions>{actions}</PageHeaderActions>}
+      {actions && (
+        <PageHeaderActions className={actionsClassName}>
+          {actions}
+        </PageHeaderActions>
+      )}
     </div>
   );
 }
@@ -53,14 +59,35 @@ export function PageHeaderActions({
   );
 }
 
-export function PageTitle({
+{
+  /* <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1> */
+}
+
+export function PageTitle({ ...props }: TypographyProps) {
+  return (
+    <Typography
+      as="h1"
+      variant="2xl/semibold"
+      className="tracking-tight"
+      {...props}
+    />
+  );
+}
+
+export function PageSubTitle({
+  ...props
+}: React.ComponentProps<typeof Typography>) {
+  return <Typography as="h2" variant="xl/medium" {...props} />;
+}
+
+export function PageSubDescription({
   ...props
 }: React.ComponentProps<typeof Typography>) {
   return (
     <Typography
-      as="h1"
-      variant="4xl/semibold"
-      className="mb-2 tracking-tight"
+      as="p"
+      variant="sm/normal"
+      className="text-muted-foreground"
       {...props}
     />
   );
@@ -69,7 +96,14 @@ export function PageTitle({
 export function PageDescription({
   ...props
 }: React.ComponentProps<typeof Typography>) {
-  return <Typography as="p" variant="lg/normal" {...props} />;
+  return (
+    <Typography
+      as="p"
+      variant="base/normal"
+      className="text-muted-foreground"
+      {...props}
+    />
+  );
 }
 
 export function PageHeaderTitleAndDescription({
@@ -113,7 +147,7 @@ export function FormActions({
 }) {
   return (
     <div
-      className={cn("mt-6 flex items-stretch justify-end gap-4", className)}
+      className={cn("mt-6 flex items-stretch justify-end gap-2", className)}
       {...props}
     />
   );
@@ -132,18 +166,21 @@ export function FormSectionHeader({
   icon,
   title,
 }: {
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
   title: string;
 }) {
+  const Icon = icon;
   return (
     <Inline
       gap="inline"
       // className="flex items-center gap-3"
     >
-      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/20 text-primary">
-        {icon}
-      </div>
-      <Typography as="h3" variant="lg/bold">
+      {icon && (
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/20 text-primary">
+          {icon}
+        </div>
+      )}
+      <Typography as="h3" variant="lg/semibold">
         {title}
       </Typography>
     </Inline>

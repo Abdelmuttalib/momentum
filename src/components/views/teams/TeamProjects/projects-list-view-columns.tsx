@@ -1,4 +1,4 @@
-import { formatShortDateWithYear } from "@/utils/date";
+import { formatShortDateWithYear } from "@/lib/date";
 import type { Project } from "@prisma/client";
 import type { ColumnDef } from "@tanstack/react-table";
 

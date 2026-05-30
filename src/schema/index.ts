@@ -1,5 +1,5 @@
-import { Priority } from "@/utils/enums";
-import { Role, TaskStatus } from "@prisma/client";
+import { Priority } from "@/lib/enums";
+import { Role, TaskPriority, TaskStatus } from "@prisma/client";
 import { z } from "zod";
 
 export const createTeamFormSchema = z.object({
@@ -16,13 +16,13 @@ export const inviteUserFormSchema = z.object({
 
 export type InviteUserSchemaType = z.infer<typeof inviteUserFormSchema>;
 
-export const createProjectFormSchema = z.object({
+export const projectFormSchema = z.object({
   name: z.string().min(2, "Please enter a team name"),
   description: z.string().optional(),
-  teamId: z.string(),
 });
 
-export type CreateProjectSchemaType = z.infer<typeof createProjectFormSchema>;
+export type CreateProjectSchemaType = z.infer<typeof projectFormSchema>;
+export type ProjectFormSchemaType = z.infer<typeof projectFormSchema>;
 
 export const createCompanyFormSchema = z.object({
   name: z.string().min(3, { message: "company name is too short" }),
@@ -60,17 +60,27 @@ export const createCompanyWithAdminAccountFormSchema = z.object({
   password: z.string().min(8),
 });
 
-export const createTaskFormSchema = z.object({
+export const taskFormSchema = z.object({
   title: z.string().min(1, "Please enter a team name"),
   description: z.string().optional(),
   status: z.nativeEnum(TaskStatus),
-  priority: z.nativeEnum(Priority),
-  dueDate: z.date().optional(),
+  priority: z.nativeEnum(TaskPriority),
+  dueDate: z.date().nullable().optional(),
   assigneeId: z.string().optional(),
-  labels: z.string(),
+  labels: z.string().optional(),
+  projectId: z.string().optional(),
 });
 
-export type CreateTaskSchemaType = z.infer<typeof createTaskFormSchema>;
+export const updateTaskSchema = taskFormSchema.extend({
+  id: z.string(),
+  projectId: z.string(),
+});
+
+export type CreateTaskSchemaType = z.infer<typeof taskFormSchema>;
+
+export type TaskFormSchemaType = z.infer<typeof taskFormSchema>;
+
+export type UpdateTaskSchemaType = z.infer<typeof updateTaskSchema>;
 
 export const registerUserFormSchema = z
   .object({

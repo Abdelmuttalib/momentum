@@ -36,10 +36,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { AppLayout } from "@/components/layout/app-layout";
-import { api } from "@/utils/api";
-import { TaskStatus } from "@/utils/enums";
+import { api } from "@/lib/api";
+import { TaskStatus } from "@/lib/enums";
 import { CreateTeam } from "@/components/views/teams/forms/create-team";
-import { getTeamLink } from "@/utils/links";
+import { getTeamLink } from "@/lib/links";
 import Link from "next/link";
 import { TeamDetailLoader } from "@/components/views/teams/team-detail-loader";
 

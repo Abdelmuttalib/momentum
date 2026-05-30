@@ -3,7 +3,7 @@ import {
   createAdminAccountFormSchema,
   type CreateAdminAccountSchemaType,
 } from "@/schema";
-import { api } from "@/utils/api";
+import { api } from "@/lib/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";

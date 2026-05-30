@@ -4,7 +4,7 @@ import { MoonIcon, SunIcon } from "lucide-react";
 
 import { useMounted } from "@/hooks/use-mounted";
 
-import { cn } from "@/utils/cn";
+import { cn } from "@/lib/cn";
 import { Button, type ButtonProps } from "@/components/ui/button";
 
 interface ThemeSwitcherProps extends ButtonProps {
@@ -26,7 +26,7 @@ export default function ThemeSwitcher({
       type="button"
       variant="ghost"
       onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-      className={cn("text-foreground-light hidden sm:inline-flex", className)}
+      className={cn("hidden text-muted-foreground sm:inline-flex", className)}
       {...props}
     >
       {theme === "light" ? (

@@ -5,7 +5,7 @@ import { OTPInput, OTPInputContext } from "input-otp";
 import { Dot } from "lucide-react";
 import * as React from "react";
 
-import { cn } from "@/utils/cn";
+import { cn } from "@/lib/cn";
 import { type ClassValue } from "clsx";
 
 const InputOTP = React.forwardRef<

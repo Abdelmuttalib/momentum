@@ -4,14 +4,14 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { Button, buttonVariants } from "@/components/ui/button";
 import type { Team, User } from "@prisma/client";
-import { api } from "@/utils/api";
+import { api } from "@/lib/api";
 import { toast } from "sonner";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { UserAvatar } from "@/components/user/user-menu";
 import { UserPlusIcon } from "@heroicons/react/20/solid";
-import { cn } from "@/utils/cn";
+import { cn } from "@/lib/cn";
 import type { TTeam } from "types";
 import { PlusIcon, UsersIcon } from "lucide-react";
 import { Typography } from "@/components/ui/typography";
@@ -21,7 +21,7 @@ export function AddUserDialog({ team }: { team: TTeam }) {
   const apiContext = api.useContext();
   const { data: users } = api.team.getAllUsers.useQuery();
 
-  const { data: companyMembers } = api.company.getCompanyMembers.useQuery();
+  const { data: companyMembers } = api.company.getCompanyUsers.useQuery();
 
   const [teamUserIds, setTeamUserIds] = useState(
     team.users.map((user: User) => user.id)
@@ -37,7 +37,7 @@ export function AddUserDialog({ team }: { team: TTeam }) {
       // await apiContext.team.admin.getAllUsers.invalidate();
       await apiContext.team.getAllTeamsByCompanyId.invalidate();
       await apiContext.team.getAllUsers.invalidate();
-      await apiContext.company.getCompanyMembersNotInTeam.invalidate();
+      await apiContext.company.getCompanyUsersNotInTeam.invalidate();
       await apiContext.team.getTeam.invalidate();
       toast.success("User added to team successfully");
     },

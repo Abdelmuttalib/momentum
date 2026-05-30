@@ -1,7 +1,7 @@
 import { GridViewIcon, ListViewIcon } from "@/components/icons";
 import { IconButton } from "@/components/ui/icon-button";
 import { Input } from "@/components/ui/input";
-import { api } from "@/utils/api";
+import { api } from "@/lib/api";
 import { Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import { type TTeam, ViewTypeEnum } from "types";
@@ -66,12 +66,6 @@ export function TeamsView() {
               <GridViewIcon />
             </IconButton>
 
-            {/* <ButtonLink
-              href="/dashboard/menu/new"
-              iconLeft={<Plus className="w-5" />}
-            >
-              New Product
-            </ButtonLink> */}
             <CreateTeam />
           </div>
         </div>

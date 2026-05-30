@@ -1,3 +1,4 @@
+import { type CBadge } from "@/components/common/cbadge";
 import { type RichBadgeProps } from "@/components/ui/rich-badge";
 import type { Project, Team, User } from "@prisma/client";
 import { type Session } from "next-auth";
@@ -17,3 +18,4 @@ export enum ViewTypeEnum {
 }
 
 export type RichBadgeColor = RichBadgeProps["color"];
+export type CBadgeColor = React.ComponentProps<typeof CBadge>["color"];

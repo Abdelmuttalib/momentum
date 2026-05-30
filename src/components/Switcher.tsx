@@ -39,14 +39,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { cn } from "@/utils/cn";
-import { api } from "@/utils/api";
+import { cn } from "@/lib/cn";
+import { api } from "@/lib/api";
 import { useRouter } from "next/router";
 import type { Project, Team } from "@prisma/client";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { IconButton } from "./ui/icon-button";
-import { getTeamLink } from "@/utils/links";
+import { getTeamLink } from "@/lib/links";
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<
   typeof PopoverTrigger

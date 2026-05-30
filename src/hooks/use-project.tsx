@@ -1,8 +1,5 @@
-import {
-  createProjectFormSchema,
-  type CreateProjectSchemaType,
-} from "@/schema";
-import { api } from "@/utils/api";
+import { projectFormSchema, type CreateProjectSchemaType } from "@/schema";
+import { api } from "@/lib/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -22,10 +19,10 @@ export function useCreateProject({
 }: CreateProjectOptions) {
   const apiContext = api.useContext();
 
-  console.log("createProjectFormSchema", onSuccess, onError, teamId);
+  console.log("projectFormSchema", onSuccess, onError, teamId);
 
   const form = useForm<CreateProjectSchemaType>({
-    resolver: zodResolver(createProjectFormSchema),
+    resolver: zodResolver(projectFormSchema),
   });
 
   React.useEffect(() => {

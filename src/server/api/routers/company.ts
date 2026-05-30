@@ -15,7 +15,7 @@ import {
   InvitationStatus,
   type Invitation,
 } from "@prisma/client";
-import { hashPassword } from "@/utils/bcrypt";
+import { hashPassword } from "@/lib/bcrypt";
 import {
   createCompanyWithAdminAccountFormSchema,
   inviteUserFormSchema,
@@ -68,16 +68,18 @@ export const companyRouter = createTRPCRouter({
       return updatedCompany;
     }),
 
-  getAllInvitations: protectedProcedure.query(async ({ ctx }) => {
-    const companyId = ctx.session.user.company.id;
-    const invitations = await ctx.prisma.invitation.findMany({
-      where: {
-        companyId,
-      },
-    });
+  getAllInvitations: protectedProcedure
+    .input(z.object({ companyId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const companyId = ctx.session.user.company.id || input.companyId;
+      const invitations = await ctx.prisma.invitation.findMany({
+        where: {
+          companyId,
+        },
+      });
 
-    return invitations;
-  }),
+      return invitations;
+    }),
 
   inviteUserToCompany: protectedProcedure
     .input(inviteUserFormSchema)
@@ -226,7 +228,7 @@ export const companyRouter = createTRPCRouter({
       return updatedProject;
     }),
 
-  getCompanyMembersNotInTeam: protectedProcedure
+  getCompanyUsersNotInTeam: protectedProcedure
     .input(
       z.object({
         teamId: z.string(),
@@ -257,15 +259,15 @@ export const companyRouter = createTRPCRouter({
     return company;
   }),
 
-  getCompanyMembers: protectedProcedure.query(async ({ ctx }) => {
+  getCompanyUsers: protectedProcedure.query(async ({ ctx }) => {
     const currentUserId = ctx.session.user.id;
     const companyId = ctx.session.user.company.id;
     const companyMembers = await ctx.prisma.user.findMany({
       where: {
         companyId,
-        id: {
-          not: currentUserId,
-        },
+        // id: {
+        //   not: currentUserId,
+        // },
       },
       include: { teams: true },
     });

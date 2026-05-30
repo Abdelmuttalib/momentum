@@ -1,5 +1,5 @@
 import { InvitationStatus, Role, TaskStatus } from "@prisma/client";
-import { Priority } from "@/utils/enums";
+import { Priority } from "@/lib/enums";
 import { type RichBadgeColor } from "types";
 
 export function getInviteStatusBadgeColor(

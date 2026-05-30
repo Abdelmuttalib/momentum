@@ -1,4 +1,4 @@
-import { cn } from "@/utils/cn";
+import { cn } from "@/lib/cn";
 
 type LayoutContainerProps = {
   children: React.ReactNode;
@@ -55,7 +55,10 @@ export function DashboardPageContainer({
   return (
     <div
       className={cn(
-        "relative w-full flex-1 px-4 py-4 sm:px-6",
+        "relative w-full max-w-7xl flex-1 px-4 py-4 sm:px-6",
+        {
+          "max-w-full": size === "full",
+        },
         // {
         //   "max-w-screen-2xl": size === "xl",
         //   "max-w-full": size === "full",

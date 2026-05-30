@@ -15,6 +15,7 @@ import {
   AuthPageDescription,
   AuthPageTitle,
 } from "@/components/views/auth/common";
+import { ButtonLoaderIcon } from "@/components/common/button-loader-icon";
 
 interface CreateCompanyFormProps {
   setRegisterStep: (step: RegisterStep) => void;
@@ -57,7 +58,7 @@ export function CreateCompanyForm({
           />
         </div>
         <div className="flex justify-between">
-          <Button variant="outline" onClick={() => router.back()}>
+          <Button type="button" variant="outline" onClick={() => router.back()}>
             <ArrowLeftIcon className="-ml-1 h-4 w-4" />
             Back
           </Button>
@@ -157,11 +158,8 @@ export function CreateAdminAccountForm({
             <ArrowLeftIcon className="-ml-2 mr-1 h-4 w-4" />
             Back
           </Button>
-          <Button
-            type="submit"
-            disabled={mutation.isLoading}
-            isLoading={mutation.isLoading}
-          >
+          <Button type="submit" disabled={mutation.isLoading}>
+            <ButtonLoaderIcon isPending={mutation.isLoading} />
             Create Admin Account
           </Button>
         </div>

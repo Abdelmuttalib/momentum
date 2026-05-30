@@ -1,11 +1,11 @@
 import * as React from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 
-import { cn } from "@/utils/cn";
+import { cn } from "@/lib/cn";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 
-import { api } from "@/utils/api";
+import { api } from "@/lib/api";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import {

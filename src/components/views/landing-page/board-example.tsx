@@ -256,7 +256,6 @@ function Board() {
       <div className="flex h-full w-full justify-center">
         <DragDropContext onDragEnd={handleOnDragEnd}>
           <div className="relative flex h-full w-full flex-col gap-1 md:flex-row md:gap-2">
-            <GradientBackground />
             {/* Column/Status */}
             {statuses.map((status) => {
               const tasksByStatus = tasks.filter(
@@ -270,16 +269,16 @@ function Board() {
                   >
                     <div className="inline-flex items-center gap-x-2 ">
                       {status === "backlog" && (
-                        <CircleDashed className="text-foreground-light h-[18px] w-[18px]" />
+                        <CircleDashed className="h-[18px] w-[18px] text-muted-foreground" />
                       )}
                       {status === "todo" && (
-                        <Circle className="text-foreground-light h-[18px] w-[18px]" />
+                        <Circle className="h-[18px] w-[18px] text-muted-foreground" />
                       )}
                       {status === "in progress" && (
-                        <Radius className="text-foreground-light h-[18px] w-[18px]" />
+                        <Radius className="h-[18px] w-[18px] text-muted-foreground" />
                       )}
                       {status === "done" && (
-                        <CheckCircle2 className="text-foreground-light h-[18px] w-[18px]" />
+                        <CheckCircle2 className="h-[18px] w-[18px] text-muted-foreground" />
                       )}
                       <Typography
                         as="h3"

@@ -8,7 +8,7 @@ import CustomTableLayout, {
 } from "@/components/CustomTableLayout";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getUserRoleBadgeColor } from "@/utils/getBadgeColor";
+import { getUserRoleBadgeColor } from "@/lib/getBadgeColor";
 import type { Invitation } from "@prisma/client";
 
 function InviteLoader() {

@@ -1,4 +1,4 @@
-import { cn } from "@/utils/cn";
+import { cn } from "@/lib/cn";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { signOut } from "next-auth/react";

@@ -1,6 +1,6 @@
 import React from "react";
 import Container from "./container";
-import { Button, ButtonLink } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Github, LogIn } from "lucide-react";
 import ThemeSwitcher from "@/components/theme-select";
 import Link from "next/link";
@@ -90,24 +90,18 @@ function HeaderCTA() {
 
   if (user) {
     return (
-      <ButtonLink
-        href={siteConfig.pages.main.links.overview.href}
-        className="w-full flex-none lg:w-auto"
-        size={"sm"}
-      >
-        Dashboard
-      </ButtonLink>
+      <Button className="w-full flex-none lg:w-auto" size={"sm"} asChild>
+        <Link href={siteConfig.pages.main.links.overview.href}>Dashboard</Link>
+      </Button>
     );
   }
 
   return (
-    <ButtonLink
-      href={siteConfig.pages.main.links.signIn.href}
-      className="w-full flex-none lg:w-auto"
-      size={"sm"}
-    >
-      <LogIn className="w-4" />
-      Sign In
-    </ButtonLink>
+    <Button className="w-full flex-none lg:w-auto" size={"sm"} asChild>
+      <Link href={siteConfig.pages.main.links.signIn.href}>
+        <LogIn className="w-4" />
+        Sign In
+      </Link>
+    </Button>
   );
 }

@@ -10,12 +10,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { api } from "@/utils/api";
-import { Priority, TaskStatus } from "@/utils/enums";
+import { api } from "@/lib/api";
+import { Priority, TaskStatus } from "@/lib/enums";
 import {
   getTaskPriorityBadgeColor,
   getTaskStatusBadgeColor,
-} from "@/utils/getBadgeColor";
+} from "@/lib/getBadgeColor";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { Task } from "@prisma/client";
 import { Controller, useForm } from "react-hook-form";

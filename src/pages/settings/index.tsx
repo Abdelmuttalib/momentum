@@ -6,23 +6,10 @@ import { type GetServerSideProps } from "next";
 import { ProfileSettings } from "./profile";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { cn } from "@/utils/cn";
+import { cn } from "@/lib/cn";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
-export function SettingsLayoutContainer({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <div className={cn("mx-auto w-full px-2 sm:px-4 md:px-6", className)}>
-      {children}
-    </div>
-  );
-}
+import { AppLayout } from "@/components/layout/app-layout";
 
 export function SettingsContentLayout({
   children,
@@ -38,56 +25,35 @@ export function SettingsContentLayout({
   const { pathname } = useRouter();
 
   return (
-    <Layout pageTitle="Settings">
+    <AppLayout>
       <div className="space-y-8">
         <div className="flex flex-col">
-          <SettingsLayoutContainer className="w-full">
-            <ul className="relative flex w-full border-b text-sm">
-              {settingsPaths.map((path) => {
-                const isActive = path.href === pathname;
-                return (
-                  <li
-                    key={path.label}
-                    className={`${isActive ? "border-b-2 border-primary" : ""}`}
-                  >
-                    <Link
-                      href={path.href}
-                      className={`${
-                        isActive
-                          ? "bg-accent/70 text-foreground"
-                          : "text-muted-foreground"
-                      } mb-2 block rounded-md px-3.5 py-2.5 hover:bg-accent/70`}
-                    >
-                      {path.label}
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </SettingsLayoutContainer>
-          {/* <SettingsLayoutContainer>
-            <div className="flex w-full items-end justify-between py-8">
-              <div className="space-y-0.5">
-                <Typography as="h3" variant="xl/medium">
-                  {title}
-                </Typography>
-                <Typography
-                  as="p"
-                  variant="sm/normal"
-                  className="text-muted-foreground"
+          <ul className="relative flex w-full border-b text-sm">
+            {settingsPaths.map((path) => {
+              const isActive = path.href === pathname;
+              return (
+                <li
+                  key={path.label}
+                  className={`${isActive ? "border-b-2 border-primary" : ""}`}
                 >
-                  {title}
-                </Typography>
-              </div>
-              <div>
-                {actions ?? <Button variant="default">Save Changes</Button>}
-              </div>
-            </div>
-          </SettingsLayoutContainer> */}
+                  <Link
+                    href={path.href}
+                    className={`${
+                      isActive
+                        ? "bg-accent/70 text-foreground"
+                        : "text-muted-foreground"
+                    } mb-2 block rounded-md px-3.5 py-2.5 hover:bg-accent/70`}
+                  >
+                    {path.label}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
         </div>
-        <SettingsLayoutContainer>{children}</SettingsLayoutContainer>
+        {children}
       </div>
-    </Layout>
+    </AppLayout>
   );
 }
 
@@ -143,8 +109,8 @@ export default function SettingsIndexPage() {
         </>
       }
     >
-      {/* record */}
-      <div className="border-b py-6 text-sm lg:flex lg:items-start">
+      <></>
+      {/* <div className="border-b py-6 text-sm lg:flex lg:items-start">
         <div className="space-y-1 lg:mb-0 lg:mr-5 lg:w-2/5 lg:flex-shrink-0">
           <h3 className="text-foreground">
             Store name <span className="text-destructive">*</span>
@@ -163,7 +129,6 @@ export default function SettingsIndexPage() {
         </div>
       </div>
 
-      {/* record */}
       <div className="border-b py-6 text-sm lg:flex lg:items-start">
         <div className="mb-1 space-y-1 lg:mb-0 lg:mr-5 lg:w-2/5 lg:flex-shrink-0">
           <h3 className="text-foreground">
@@ -182,14 +147,12 @@ export default function SettingsIndexPage() {
           />
         </div>
       </div>
-      {/* record */}
       <div className="border-b py-6 text-sm lg:flex lg:items-start">
         <div className="mb-1 space-y-1 lg:mb-0 lg:mr-5 lg:w-2/5 lg:flex-shrink-0">
           <h3 className="text-foreground">
             Contact number <span className="text-destructive">*</span>
           </h3>
           <p className="max-w-[420px] text-muted-foreground">
-            {/* description for contact number field */}
             Contact number for your store
           </p>
         </div>
@@ -202,14 +165,12 @@ export default function SettingsIndexPage() {
           />
         </div>
       </div>
-      {/* record */}
       <div className="border-b py-6 text-sm lg:flex lg:items-start">
         <div className="mb-1 space-y-1 lg:mb-0 lg:mr-5 lg:w-2/5 lg:flex-shrink-0">
           <h3 className="text-foreground">
             Address <span className="text-destructive">*</span>
           </h3>
           <p className="max-w-[420px] text-muted-foreground">
-            {/* description for contact number field */}
             Address for your store
           </p>
         </div>
@@ -223,7 +184,7 @@ export default function SettingsIndexPage() {
 
           <Input id="input_city" type="text" className="" placeholder="city" />
         </div>
-      </div>
+      </div> */}
     </SettingsContentLayout>
   );
 }

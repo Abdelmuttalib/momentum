@@ -5,7 +5,7 @@ import { AuthLayout } from "@/components/layout/auth-layout";
 import { Seo } from "@/components/seo";
 import { SignInForm } from "@/components/views/auth/forms/sign-in";
 import Link from "next/link";
-import { cn } from "@/utils/cn";
+import { cn } from "@/lib/cn";
 import { buttonVariants } from "@/components/ui/button";
 import { ArrowRightIcon } from "lucide-react";
 import { BuildingOfficeIcon } from "@heroicons/react/24/outline";

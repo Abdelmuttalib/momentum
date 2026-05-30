@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/select";
 import { useTheme } from "next-themes";
 import { useMounted } from "@/hooks/use-mounted";
-import { cn } from "@/utils/cn";
+import { cn } from "@/lib/cn";
 
 export function ThemeModeSelect({ className }: { className?: string }) {
   const { theme, setTheme, themes } = useTheme();

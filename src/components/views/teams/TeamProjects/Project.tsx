@@ -4,9 +4,9 @@ import {
   ArrowTopRightOnSquareIcon,
   ChevronRightIcon,
 } from "@heroicons/react/20/solid";
-import { formatFullDate } from "@/utils/date";
+import { formatFullDate } from "@/lib/date";
 import { Skeleton } from "@/components/ui/skeleton";
-import { cn } from "@/utils/cn";
+import { cn } from "@/lib/cn";
 import { Typography } from "@/components/ui/typography";
 
 export function FollowLinkArrowIcon({ className }: { className?: string }) {

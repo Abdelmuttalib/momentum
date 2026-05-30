@@ -3,7 +3,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import type { Project, Team, User } from "@prisma/client";
-import { api } from "@/utils/api";
+import { api } from "@/lib/api";
 import { toast } from "sonner";
 
 import {
@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { type FC, useState, useEffect } from "react";
 import { PlusIcon } from "lucide-react";
-import { formatFullDate } from "@/utils/date";
+import { formatFullDate } from "@/lib/date";
 
 type TTeam = Team & {
   users: User[];

@@ -50,7 +50,7 @@ export function DataTable<TData, TValue>({
                   return (
                     <TableHead
                       key={header.id}
-                      className="text-foreground-light whitespace-nowrap px-5 py-4"
+                      className="whitespace-nowrap px-5 py-4 text-muted-foreground"
                     >
                       {header.isPlaceholder
                         ? null

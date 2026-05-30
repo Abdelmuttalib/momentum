@@ -1,6 +1,6 @@
 import { siteConfig } from "@/config/site-config";
 import { registerUserFormSchema, type RegisterUserSchemaType } from "@/schema";
-import { api } from "@/utils/api";
+import { api } from "@/lib/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";

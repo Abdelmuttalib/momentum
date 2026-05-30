@@ -1,29 +1,35 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { api } from "@/utils/api";
-import { cn } from "@/utils/cn";
+import { api } from "@/lib/api";
+import { cn } from "@/lib/cn";
 import type { Project, Task as TaskType, TaskStatus } from "@prisma/client";
 import { useEffect, useState } from "react";
 import { DragDropContext, type DropResult } from "react-beautiful-dnd";
 import { toast } from "sonner";
 // import TaskView from "./task-view";
-import { TaskStatus as TaskStatusNativeEnum } from "@/utils/enums";
+import { TaskStatus as TaskStatusNativeEnum } from "@/lib/enums";
 import { Skeleton } from "@/components/ui/skeleton";
 import TaskBoardColumn from "./task-board-column";
 import { TaskLoader } from "./task";
 
-export default function TaskBoard({ projectId }: { projectId: Project["id"] }) {
+export default function TaskBoard({
+  tasks,
+  projectId,
+}: {
+  tasks: TaskType[];
+  projectId: Project["id"];
+}) {
   const taskStatuses = Object.keys(TaskStatusNativeEnum) as TaskStatus[];
-  const { data: tasks, isLoading: isLoadingTasks } =
-    api.task.getAllProjectTasks.useQuery(
-      {
-        projectId: projectId,
-      },
-      {
-        enabled: !!projectId,
-      }
-    );
+  // const { data: tasks, isLoading: isLoadingTasks } =
+  //   api.task.getAllProjectTasks.useQuery(
+  //     {
+  //       projectId: projectId,
+  //     },
+  //     {
+  //       enabled: !!projectId,
+  //     }
+  //   );
 
   const [currentTasks, setCurrentTasks] = useState<TaskType[] | undefined>(
     tasks
@@ -207,20 +213,13 @@ export default function TaskBoard({ projectId }: { projectId: Project["id"] }) {
 
   // const [selectedTask, setSelectedTask] = useState<TaskType | null>(null);
 
-  if (isLoadingTasks) {
-    return (
-      <div className="relative z-10 flex h-full min-h-[75svh] w-full min-w-fit flex-col justify-between gap-3 overflow-x-auto pb-6 lg:flex-row 2xl:flex-nowrap">
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 -z-10 m-auto grid h-max w-full grid-cols-2 -space-x-52 opacity-10 dark:opacity-20"
-        >
-          <div className="h-56 bg-gradient-to-br from-primary to-purple-400 blur-[106px] dark:from-blue-700"></div>
-          <div className="from-brand-400 to-brand-300 dark:to-brand-600 h-56 bg-gradient-to-r blur-[106px]"></div>
-        </div>
-        <TaskBoardLoader />
-      </div>
-    );
-  }
+  // if (isLoadingTasks) {
+  //   return (
+  //     <div className="relative z-10 flex h-full min-h-[75svh] w-full min-w-fit flex-col justify-between gap-3 overflow-x-auto pb-6 lg:flex-row 2xl:flex-nowrap">
+  //       <TaskBoardLoader />
+  //     </div>
+  //   );
+  // }
 
   return (
     <DragDropContext onDragEnd={(e) => void handleOnDragEnd(e)}>
@@ -249,9 +248,9 @@ export function TaskBoardLoader() {
   return Object.keys(TaskStatusNativeEnum).map((status) => (
     <div
       key={status}
-      className="h-full w-full overflow-hidden rounded-lg border shadow-lg dark:border-gray-800/30 dark:bg-gray-800/10"
+      className="h-full w-full overflow-hidden rounded-lg border shadow-lg"
     >
-      <div className="flex items-center justify-between gap-3 bg-gray-50 px-4 py-3 dark:bg-transparent dark:text-gray-300">
+      <div className="flex items-center justify-between gap-3 px-4 py-3">
         <div className="flex items-center gap-1">
           <h2 className="font-medium capitalize">
             {status.replace("_", " ").toLocaleLowerCase()}

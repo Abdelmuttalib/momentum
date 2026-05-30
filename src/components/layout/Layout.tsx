@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from "react";
 
-import { cn } from "@/utils/cn";
+import { cn } from "@/lib/cn";
 import { useRouter } from "next/router";
 import SideBar from "./sidebar";
 import { IconButton } from "../ui/icon-button";

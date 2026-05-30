@@ -39,25 +39,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { type User as UserType } from "@prisma/client";
+import { type Role, type User as UserType } from "@prisma/client";
 import Link from "next/link";
-import { cn } from "@/utils/cn";
+import { cn } from "@/lib/cn";
 import Image from "next/image";
-import { getUserName } from "@/utils/user";
+import { getUserName } from "@/lib/user";
 import { type Session } from "next-auth";
-
-{
-  /* <TooltipProvider>
-  <Tooltip>
-    <TooltipTrigger asChild>
-      <Button variant="outline">Hover</Button>
-    </TooltipTrigger>
-    <TooltipContent>
-      <p>Add to library</p>
-    </TooltipContent>
-  </Tooltip>
-</TooltipProvider>; */
-}
 
 export function UserAvatar({
   user,
@@ -65,7 +52,16 @@ export function UserAvatar({
   triggerClassName,
   contentClassName,
 }: {
-  user: UserType | Session["user"];
+  user:
+    | UserType
+    | Session["user"]
+    | {
+        id: string;
+        name: string;
+        email: string;
+        image: string;
+        role: Role;
+      };
   size?: "default" | "sm" | "lg";
   triggerClassName?: string;
   contentClassName?: string;
@@ -80,12 +76,12 @@ export function UserAvatar({
         <TooltipTrigger asChild>
           <div
             className={cn(
-              "relative inline-flex items-center justify-center rounded-full uppercase text-gray-100",
+              "relative inline-flex shrink-0 items-center justify-center rounded-full text-sm uppercase",
               {
                 "h-8 w-8 text-lg": size === "default",
                 "h-10 w-10 text-lg": size === "lg",
                 "h-6 w-6": size === "sm",
-                "bg-gray-900": !user?.image,
+                "bg-accent": !user?.image,
               },
               triggerClassName
             )}
@@ -115,8 +111,8 @@ export function UserAvatar({
           )}
           {!user?.image && ( */}
           <div className="text-sm">
-            <p className="font-medium text-gray-100">{user.name}</p>
-            <p className="text-gray-400">{user.email}</p>
+            <p className="font-medium text-foreground">{user.name}</p>
+            <p className="text-muted-foreground">{user.email}</p>
           </div>
         </TooltipContent>
       </Tooltip>

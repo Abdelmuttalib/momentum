@@ -1,5 +1,4 @@
-import { RichBadge } from "@/components/ui/rich-badge";
-import { getUserRoleBadgeColor } from "@/utils/getBadgeColor";
+import { UserRoleBadge } from "@/features/users/components/user-role-badge";
 import type { User } from "@prisma/client";
 import { type ColumnDef } from "@tanstack/react-table";
 
@@ -19,9 +18,7 @@ export const teamMembersColumns: ColumnDef<User>[] = [
       const { role } = row.original;
       return (
         <>
-          <RichBadge color={getUserRoleBadgeColor(role)} className="capitalize">
-            {role}
-          </RichBadge>
+          <UserRoleBadge role={role} />
         </>
       );
     },

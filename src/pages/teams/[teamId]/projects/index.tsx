@@ -4,7 +4,7 @@ import Container from "@/components/views/landing-page/container";
 import { DataTable } from "@/components/views/teams/TeamMembers/data-table";
 import { getServerAuthSession } from "@/server/auth";
 import { prisma } from "@/server/db";
-import { api } from "@/utils/api";
+import { api } from "@/lib/api";
 import type { Team } from "@prisma/client";
 import { type GetServerSideProps } from "next";
 import { Seo } from "@/components/seo";

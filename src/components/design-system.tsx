@@ -311,9 +311,6 @@ export default function DesignSystemGuide() {
     Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
     sans-serif;
 
-  --font-general-sans: 'General Sans', -apple-system, BlinkMacSystemFont,
-    Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans,
-    Helvetica Neue, sans-serif;
 
   --font-plus-jakarta: 'Plus Jakarta', -apple-system, BlinkMacSystemFont,
     Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans,
@@ -929,7 +926,7 @@ export default function DesignSystemGuide() {
             <Typography
               as="p"
               variant="lg/medium"
-              className="text-foreground-light"
+              className="text-muted-foreground"
             >
               The quick brown fox jumps over the lazy dog
             </Typography>
@@ -1109,7 +1106,7 @@ export default function DesignSystemGuide() {
 
           {/* <div>
             <p className='text-xl font-bold text-foreground'>Foreground</p>
-            <p className='text-xl font-bold text-foreground-light'>
+            <p className='text-xl font-bold text-muted-foreground'>
               Foreground Light
             </p>
             <p className='text-xl font-bold text-muted-foreground'>

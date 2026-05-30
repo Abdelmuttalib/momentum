@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Typography } from "@/components/ui/typography";
-import { cn } from "@/utils/cn";
+import { cn } from "@/lib/cn";
 import Container from "@/components/views/landing-page/container";
 import { GradientBackground } from "@/components/gradient";
 import BoardExample from "@/components/views/landing-page/board-example";
@@ -82,7 +82,7 @@ export default function LandingPage() {
                   <Typography
                     as="p"
                     variant="lg/normal"
-                    className="text-foreground-light mx-auto w-full max-w-4xl"
+                    className="mx-auto w-full max-w-4xl text-muted-foreground"
                   >
                     A clean, fast issue tracker inspired by Linear. Manage
                     teams, projects, and tasks with an intuitive interface built

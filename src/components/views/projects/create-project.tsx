@@ -5,6 +5,7 @@ import { PlusIcon } from "@heroicons/react/20/solid";
 import { useCreateProject } from "@/hooks/use-project";
 import { DialogForm } from "@/components/common/dialog-form";
 import { toast } from "sonner";
+import { ButtonLoaderIcon } from "@/components/common/button-loader-icon";
 
 interface CreateProjectFormProps {
   onSuccess: () => void;
@@ -83,8 +84,8 @@ export function CreateProjectForm({
             type="submit"
             className="flex-1"
             disabled={mutation.isLoading}
-            isLoading={mutation.isLoading}
           >
+            <ButtonLoaderIcon isPending={mutation.isLoading} />
             Create Project
           </Button>
         </div>

@@ -1,5 +1,5 @@
 import { Typography, type TypographyProps } from "@/components/ui/typography";
-import { cn } from "@/utils/cn";
+import { cn } from "@/lib/cn";
 
 type AuthPageTitleProps = TypographyProps;
 

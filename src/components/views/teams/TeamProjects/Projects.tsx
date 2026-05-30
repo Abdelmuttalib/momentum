@@ -2,7 +2,7 @@
 import type { Project as ProjectType } from "@prisma/client";
 import Project, { ProjectLoader } from "./Project";
 import { useMemo, useState } from "react";
-import { api } from "@/utils/api";
+import { api } from "@/lib/api";
 import { IconButton } from "@/components/ui/icon-button";
 import { GridViewIcon, ListViewIcon } from "@/components/icons";
 import { Search } from "lucide-react";
@@ -90,12 +90,6 @@ export function ProjectsView() {
             </IconButton>
 
             {/* <CreateTeam /> */}
-            {/* <ButtonLink
-              href="/dashboard/menu/new"
-              iconLeft={<Plus className="w-5" />}
-            >
-              New Product
-            </ButtonLink> */}
           </div>
         </div>
         <div className="flex flex-col sm:gap-4 sm:py-4">

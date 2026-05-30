@@ -1,6 +1,6 @@
 import { useFont } from "@/hooks/use-font";
 import { useFontSize } from "@/hooks/use-font-size";
-import { cn } from "@/utils/cn";
+import { cn } from "@/lib/cn";
 import { useEffect } from "react";
 
 interface ThemeColorWrapperProps extends React.ComponentProps<"div"> {
@@ -11,18 +11,9 @@ export function ThemeColorWrapper({
   children,
   className,
 }: ThemeColorWrapperProps) {
-  // const [fontSize] = useFontSize();
-
-  // const fonts = 'font-inter font-general-sans font-plus-jakarta font-onest';
-
-  // const fontSizeClasses =
-  //   'font-sizes-small font-sizes-default font-sizes-large';
-
-  // const fontSizeClass = `theme-text-sizes-${fontSize.fontSize}`;
-
   const [font] = useFont();
 
-  const fontClass = `font-${font.font || "general-sans"}`;
+  const fontClass = `font-${font.font || "inter"}`;
 
   const [fontSize] = useFontSize();
 

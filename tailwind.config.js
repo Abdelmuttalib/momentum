@@ -21,7 +21,6 @@ module.exports = {
         // sans: 'var(--font-sans)',
         // serif: 'var(--font-serif)',
         inter: "var(--font-inter)",
-        "general-sans": "var(--font-general-sans)",
         "plus-jakarta": "var(--font-plus-jakarta)",
         onest: "var(--font-onest)",
       },

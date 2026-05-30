@@ -1,7 +1,7 @@
 import { type FontSizeValue, useFontSize } from "@/hooks/use-font-size";
 
-import { FONT_SIZES } from "@/utils/fonts";
-import { cn } from "@/utils/cn";
+import { FONT_SIZES } from "@/lib/fonts";
+import { cn } from "@/lib/cn";
 import {
   Select,
   SelectContent,

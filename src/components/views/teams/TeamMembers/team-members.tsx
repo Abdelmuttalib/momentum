@@ -1,7 +1,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import type { Team, User } from "@prisma/client";
-import { api } from "@/utils/api";
+import { api } from "@/lib/api";
 import { toast } from "sonner";
 
 import {
@@ -15,7 +15,7 @@ import {
 import { type FC, useState, useEffect } from "react";
 import { PlusIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { getUserRoleBadgeColor } from "@/utils/getBadgeColor";
+import { getUserRoleBadgeColor } from "@/lib/getBadgeColor";
 
 type TTeam = Team & {
   users: User[];

@@ -1,7 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
 import Container from "./container";
-import { ButtonLink } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function CallToAction() {
   return (
@@ -66,9 +67,9 @@ export default function CallToAction() {
               Project Management.
             </p>
             <div className="flex flex-wrap justify-center gap-6">
-              <ButtonLink href="/sign-in" size="lg">
-                Get Started
-              </ButtonLink>
+              <Button size="lg" asChild>
+                <Link href="/sign-in">Get Started</Link>
+              </Button>
             </div>
             {/* <div className="flex flex-wrap justify-center gap-6">
               <a

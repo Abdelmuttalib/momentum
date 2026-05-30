@@ -7,35 +7,21 @@ import {
   protectedProcedure,
 } from "@/server/api/trpc";
 import { TaskStatus, type Task, type Label } from "@prisma/client";
-import { Priority } from "@/utils/enums";
+import { taskFormSchema, updateTaskSchema } from "@/schema";
 
 export const taskRouter = createTRPCRouter({
   create: protectedProcedure
-    .input(
-      z.object({
-        title: z.string(),
-        description: z.string().optional(),
-        status: z.nativeEnum(TaskStatus),
-        priority: z.nativeEnum(Priority),
-        dueDate: z.date().optional(),
-        projectId: z.string(),
-        teamId: z.string(),
-        assigneeId: z.string().optional(),
-        // labels: z.array(z.string()).optional(),
-        labels: z.string(),
-        // orderIndex: z.number(),
-      })
-    )
+    .input(taskFormSchema)
     .mutation(async ({ input, ctx }) => {
       const companyId = ctx.session.user.company.id;
       const tasksByStatus = await ctx.prisma.task.findMany({
         where: {
           companyId: companyId,
           projectId: input.projectId,
-          teamId: input.teamId,
           status: input.status,
         },
       });
+
       const orderIndex = tasksByStatus.length;
 
       const newTask = await ctx.prisma.task.create({
@@ -46,7 +32,6 @@ export const taskRouter = createTRPCRouter({
           priority: input.priority,
           dueDate: input.dueDate || null,
           projectId: input.projectId,
-          teamId: input.teamId,
           companyId: companyId,
           assigneeId: input.assigneeId,
           orderIndex: orderIndex,
@@ -65,16 +50,7 @@ export const taskRouter = createTRPCRouter({
     }),
 
   update: protectedProcedure
-    .input(
-      z.object({
-        id: z.string(),
-        title: z.string().optional(),
-        description: z.string().optional(),
-        status: z.nativeEnum(TaskStatus).optional(),
-        priority: z.nativeEnum(Priority).optional(),
-        dueDate: z.date().optional(),
-      })
-    )
+    .input(updateTaskSchema)
     .mutation(async ({ input, ctx }) => {
       const updatedTask = await ctx.prisma.task.update({
         where: { id: input.id },
@@ -84,6 +60,7 @@ export const taskRouter = createTRPCRouter({
           status: input.status,
           priority: input.priority,
           dueDate: input.dueDate,
+          assigneeId: input.assigneeId,
         },
       });
       return updatedTask;
@@ -148,6 +125,59 @@ export const taskRouter = createTRPCRouter({
     return tasks;
   }),
 
+  getTask: protectedProcedure
+    .input(z.object({ taskId: z.string(), companyId: z.string() }))
+    .query(async ({ input, ctx }) => {
+      const task = await ctx.prisma.task.findUnique({
+        where: { id: input.taskId, companyId: input.companyId },
+      });
+      return task;
+    }),
+
+  getTasks: protectedProcedure
+    .input(z.object({ companyId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const tasks = await ctx.prisma.task.findMany({
+        where: {
+          companyId: input.companyId,
+        },
+        include: {
+          labels: true,
+          assignee: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              role: true,
+              image: true,
+            },
+          },
+          comments: {
+            select: {
+              id: true,
+              comment: true,
+              createdAt: true,
+              updatedAt: true,
+              author: {
+                select: {
+                  id: true,
+                  name: true,
+                  email: true,
+                  role: true,
+                  image: true,
+                },
+              },
+            },
+          },
+        },
+
+        orderBy: {
+          updatedAt: "desc",
+        },
+      });
+      return tasks;
+    }),
+
   getAllProjectTasks: protectedProcedure
     .input(z.object({ projectId: z.string() }))
     .query(async ({ input, ctx }) => {
@@ -172,6 +202,38 @@ export const taskRouter = createTRPCRouter({
         where: { id: input.id },
       });
       return task;
+    }),
+
+  getRecentTasks: protectedProcedure
+    .input(z.object({ companyId: z.string() }))
+    .query(async ({ input, ctx }) => {
+      const tasks = await ctx.prisma.task.findMany({
+        where: { companyId: input.companyId },
+        orderBy: {
+          createdAt: "desc",
+        },
+        take: 5,
+        include: {
+          labels: true,
+          assignee: true,
+          comments: true,
+        },
+      });
+      return tasks;
+    }),
+
+  getActiveTasks: protectedProcedure
+    .input(z.object({ companyId: z.string() }))
+    .query(async ({ input, ctx }) => {
+      const tasks = await ctx.prisma.task.findMany({
+        where: {
+          companyId: input.companyId,
+          status: {
+            in: [TaskStatus.TO_DO, TaskStatus.IN_PROGRESS],
+          },
+        },
+      });
+      return tasks;
     }),
 
   assignUser: protectedProcedure

@@ -9,7 +9,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import type { Dispatch, ReactNode, SetStateAction } from "react";
 
-import { cn } from "@/utils/cn";
+import { cn } from "@/lib/cn";
 
 import { IconButton } from "@/components/ui/icon-button";
 import { UsersIcon } from "lucide-react";

@@ -12,6 +12,7 @@ datasource db {
   // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
   // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
   url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 // Necessary for Next auth
@@ -103,8 +104,8 @@ model Project {
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
   tasks     Task[]
-  teamId    String
-  team      Team          @relation(fields: [teamId], references: [id])
+  teamId    String?
+  team      Team?          @relation(fields: [teamId], references: [id])
 
   companyId String // Add companyId field to relate project to company
   company   Company @relation(fields: [companyId], references: [id])
@@ -129,8 +130,8 @@ model Task {
   assignee    User?        @relation(fields: [assigneeId], references: [id])
   projectId   String
   project     Project      @relation(fields: [projectId], references: [id])
-  teamId      String
-  team        Team         @relation(fields: [teamId], references: [id])
+  teamId      String?
+  team        Team?         @relation(fields: [teamId], references: [id])
   companyId   String
   company     Company      @relation(fields: [companyId], references: [id])
   comments    Comment[]
@@ -150,7 +151,6 @@ enum TaskStatus {
   BACKLOG
   TO_DO
   IN_PROGRESS
-  IN_REVIEW
   COMPLETED
   CANCELED
 }

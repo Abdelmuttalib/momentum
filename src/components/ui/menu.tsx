@@ -2,7 +2,7 @@
 // import { CheckIcon, LanguageIcon } from "@heroicons/react/20/solid";
 // import { Fragment } from "react";
 
-import { cn } from "@/utils/cn";
+import { cn } from "@/lib/cn";
 import { Menu, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 
@@ -27,7 +27,7 @@ import { Fragment } from "react";
 //             "hidden sm:flex"
 //           )}
 //         >
-//           <LanguageIcon className="w-5 text-foreground-light" />
+//           <LanguageIcon className="w-5 text-muted-foreground" />
 //         </Menu.Button>
 //       </div>
 //       <Transition
@@ -109,7 +109,7 @@ export function CustomMenu({
             "hidden sm:flex"
           )}
         >
-          <LanguageIcon className="w-5 text-foreground-light" />
+          <LanguageIcon className="w-5 text-muted-foreground" />
         </MenuButton> */}
 
         {menuButton}
