@@ -4,7 +4,7 @@
 import { Badge } from "@/components/ui/badge";
 import LabelBadge from "@/components/ui/label-badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getTaskStatusBadgeColor } from "@/utils/getBadgeColor";
+import { getTaskStatusBadgeColor } from "@/lib/getBadgeColor";
 // import TaskDialog from "./task-dialog";
 import type { Task } from "@prisma/client";
 import {
@@ -32,16 +32,14 @@ export default function Task({
       {...draggableProps}
       {...dragHandleProps}
       ref={innerRef}
-      className="mb-4 rounded-lg border bg-white p-4 shadow-lg hover:bg-gray-50 dark:border-gray-800 dark:bg-gray-900/50"
+      className="mb-4 rounded-lg border p-4 shadow-lg"
       // onClick={() => setSelectedTask(task)}
     >
       <div className="flex justify-between">
-        <h3 className="mb-2 font-semibold dark:text-gray-200">{task.title}</h3>
+        <h3 className="mb-2 font-semibold ">{task.title}</h3>
         <TaskDialog task={task} />
       </div>
-      <p className="text-muted-foreground dark:text-gray-500">
-        {task.description}
-      </p>
+      <p className="text-muted-foreground">{task.description}</p>
       <div className="mt-4 flex items-center justify-between gap-2">
         {/* TODO: fix typing for labels on task */}
         {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
@@ -80,10 +78,10 @@ export default function Task({
       className="mb-4 rounded-lg border bg-white p-4 shadow-lg hover:bg-gray-50 dark:border-gray-800 dark:bg-gray-900/50"
     >
       <div className="flex justify-between">
-        <h3 className="mb-2 font-semibold dark:text-gray-200">{task.title}</h3>
+        <h3 className="mb-2 font-semibold ">{task.title}</h3>
         <TaskDialog task={task} />
       </div>
-      <p className="text-muted-foreground dark:text-gray-500">{task.description}</p>
+      <p className="text-muted-foreground">{task.description}</p>
       <div className="mt-4 flex items-center justify-between gap-2">
         {task?.labels?.map((label: LabelType) => (
           <LabelBadge
@@ -109,14 +107,14 @@ export default function Task({
 
 export function TaskLoader() {
   return (
-    <div className="relative mb-4 rounded-lg border bg-white p-4 shadow-lg hover:bg-gray-50 dark:border-gray-800 dark:bg-gray-900/50">
+    <div className="relative mb-4 rounded-lg border p-4 shadow-lg">
       <div className="flex justify-between">
-        <h3 className="mb-2 font-semibold dark:text-gray-200">
+        <h3 className="mb-2 font-semibold ">
           <Skeleton className="h-6 w-36" />
         </h3>
         {/* <TaskDialog task={task} /> */}
       </div>
-      <div className="text-muted-foreground dark:text-gray-500">
+      <div className="text-muted-foreground">
         <Skeleton className="h-6 w-24" />
       </div>
       <div className="mt-4 flex items-center justify-between gap-2">

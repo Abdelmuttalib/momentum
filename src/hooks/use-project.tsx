@@ -1,13 +1,9 @@
-import {
-  createProjectFormSchema,
-  type CreateProjectSchemaType,
-} from "@/schema";
-import { api } from "@/utils/api";
+import { projectFormSchema, type CreateProjectSchemaType } from "@/schema";
+import { api } from "@/lib/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useFormErrorToast } from "./use-form-error-toast";
-import React from "react";
 
 interface CreateProjectOptions {
   onSuccess?: () => void;
@@ -22,17 +18,13 @@ export function useCreateProject({
 }: CreateProjectOptions) {
   const apiContext = api.useContext();
 
-  console.log("createProjectFormSchema", onSuccess, onError, teamId);
-
   const form = useForm<CreateProjectSchemaType>({
-    resolver: zodResolver(createProjectFormSchema),
+    resolver: zodResolver(projectFormSchema),
   });
 
-  React.useEffect(() => {
-    form.setValue("teamId", teamId);
-  }, [teamId, form]);
-
-  console.log("formState.errors", form.formState.errors);
+  // React.useEffect(() => {
+  //   form.setValue("teamId", teamId);
+  // }, [teamId, form]);
 
   const mutation = api.project.createProject.useMutation({
     onSuccess: async () => {
@@ -51,10 +43,8 @@ export function useCreateProject({
   });
 
   const handleSubmit = form.handleSubmit(async (data) => {
-    console.log("Form submitted", data);
     await mutation.mutateAsync({
       ...data,
-      teamId: teamId,
     });
   });
 

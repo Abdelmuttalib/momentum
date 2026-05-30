@@ -10,7 +10,7 @@ export function AuthLayout({ children }: { children: ReactNode }) {
             <Typography
               as="h2"
               variant="5xl/semibold"
-              className="bg-gradient-to-br from-primary-foreground to-foreground bg-clip-text tracking-tight text-transparent dark:bg-gradient-to-tl"
+              className="tracking-tight text-white dark:text-foreground"
             >
               Momentum
             </Typography>

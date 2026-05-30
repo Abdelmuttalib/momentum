@@ -1,5 +1,5 @@
 import { InvitationStatus, Role, TaskStatus } from "@prisma/client";
-import { Priority } from "@/utils/enums";
+import { Priority } from "@/lib/enums";
 import { type RichBadgeColor } from "types";
 
 export function getInviteStatusBadgeColor(
@@ -40,9 +40,6 @@ export function getTaskStatusBadgeColor(status: TaskStatus): RichBadgeColor {
 
     case TaskStatus.IN_PROGRESS:
       return "yellow";
-
-    case TaskStatus.IN_REVIEW:
-      return "blue";
 
     case TaskStatus.COMPLETED:
       return "green";

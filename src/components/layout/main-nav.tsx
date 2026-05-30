@@ -2,7 +2,7 @@ import * as React from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Image from "next/image";
-import { cn } from "@/utils/cn";
+import { cn } from "@/lib/cn";
 import { dashboardLinks } from "./sidebar";
 
 export function MainNav() {

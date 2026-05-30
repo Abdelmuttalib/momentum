@@ -10,32 +10,33 @@ import {
   DialogContent,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  ChatBubbleLeftRightIcon,
-  // EllipsisVerticalIcon,
-} from "@heroicons/react/24/outline";
-import { Trash2 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { MessageSquareIcon, Trash2 } from "lucide-react";
 import LabelBadge from "@/components/ui/label-badge";
-import { getTaskStatusBadgeColor } from "@/utils/getBadgeColor";
-import type { Label, Task } from "@prisma/client";
+import type { Label } from "@prisma/client";
 import {
   type DraggableProvidedDragHandleProps,
   type DraggableProvidedDraggableProps,
 } from "react-beautiful-dnd";
 import { UserAvatar } from "@/components/user/user-menu";
 import { Input } from "@/components/ui/input";
-import { api } from "@/utils/api";
+import { api } from "@/lib/api";
 import { toast } from "sonner";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { useSession } from "next-auth/react";
-import { formatFullDate } from "@/utils/date";
-import { cn } from "@/utils/cn";
+import { formatDate, formatDistanceToNow } from "@/lib/date";
+import { cn } from "@/lib/cn";
 import { Typography } from "@/components/ui/typography";
+import { TaskStatusBadge } from "@/features/tasks/components/task-status-badge";
+import { ButtonLoaderIcon } from "@/components/common/button-loader-icon";
+import { type GetProjectTasks } from "@/features/projects/types";
+import { useTaskComments } from "@/features/tasks/hooks/use-task-comment";
+import { DataLoader } from "@/components/data-loader";
+import { CBadge } from "@/components/common/cbadge";
+import { Textarea } from "@/components/ui/textarea";
 
 interface TaskProps {
-  task: Task;
+  task: GetProjectTasks[number];
   innerRef: (element: HTMLElement | null) => void;
   draggableProps: DraggableProvidedDraggableProps;
   dragHandleProps: DraggableProvidedDragHandleProps | null | undefined;
@@ -53,10 +54,10 @@ export default function TaskView({
 
   const apiContext = api.useContext();
 
-  const { data: taskComments, isLoading: isLoadingTaskComments } =
-    api.task.getTaskComments.useQuery({
-      taskId: task.id,
-    });
+  // const { data: taskComments, isLoading: isLoadingTaskComments } =
+  //   api.task.getTaskComments.useQuery({
+  //     taskId: task.id,
+  //   });
 
   const addCommentMutation = api.task.addComment.useMutation({
     onSuccess: async () => {
@@ -103,6 +104,9 @@ export default function TaskView({
     },
   });
 
+  const { data: taskComments, isLoading: isLoadingTaskComments } =
+    useTaskComments(task.id);
+
   async function onDeleteComment(commentId: string, authorId: string) {
     await deleteCommentMuation.mutateAsync({
       id: commentId,
@@ -119,7 +123,7 @@ export default function TaskView({
           {...draggableProps}
           {...dragHandleProps}
           ref={innerRef}
-          className="mb-4 rounded-lg border bg-popover p-4 hover:bg-popover"
+          className="rounded-lg border bg-card p-4 hover:bg-popover"
           // onClick={() => setSelectedTask(task)}
         >
           <div className="flex justify-between">
@@ -131,7 +135,7 @@ export default function TaskView({
           <Typography
             as="p"
             variant="sm/normal"
-            className="text-foreground-light"
+            className="text-muted-foreground"
           >
             {task.description}
           </Typography>
@@ -144,32 +148,29 @@ export default function TaskView({
                 key={label.id}
                 name={label.name}
                 color={label.color}
-              ></LabelBadge>
+              />
             ))}
-            <Badge
-              color={getTaskStatusBadgeColor(task.status)}
-              className="capitalize"
-            >
-              {task.status.replace("_", " ").toLocaleLowerCase()}
-            </Badge>
+
+            <TaskStatusBadge status={task.status} size="sm" />
           </div>
           <div className="mt-2 flex justify-between px-0.5">
-            <div className="inline-flex items-center gap-x-1 text-muted-foreground">
-              <ChatBubbleLeftRightIcon className="w-[18px]" />
-              {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-              {/* @ts-ignore */}
-              <span className="text-xs">{task?.comments?.length}</span>
-            </div>
-
-            {/* TODO: fix typing for assignee on task */}
-            {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-            {/* @ts-ignore */}
             {task.assigneeId && <UserAvatar user={task?.assignee} size="sm" />}
+
+            <div className="inline-flex items-center gap-x-1 text-muted-foreground">
+              <MessageSquareIcon className="w-4" />
+              <Typography
+                as="span"
+                variant="xs/normal"
+                className="text-muted-foreground"
+              >
+                {taskComments?.length}
+              </Typography>
+            </div>
           </div>
         </div>
       </DialogTrigger>
       {/* {isOpen && ( */}
-      <DialogContent className="w-full max-w-2xl">
+      <DialogContent className="w-full max-w-2xl overflow-x-hidden">
         <DialogHeader className="space-y-0">
           <DialogTitle className="flex items-center gap-x-6">
             {task.title}
@@ -183,17 +184,13 @@ export default function TaskView({
         </DialogHeader>
 
         {/* content */}
-        <div>
+        <div className="truncate">
           <div className="flex flex-col gap-4 divide-y">
             <div className="flex flex-col gap-y-4 py-3 text-sm">
               <div className="flex gap-x-6">
                 <p className="font-medium text-muted-foreground">Status</p>
-                <Badge
-                  color={getTaskStatusBadgeColor(task.status)}
-                  className="capitalize"
-                >
-                  {task.status.replace("_", " ").toLocaleLowerCase()}
-                </Badge>
+
+                <TaskStatusBadge status={task.status} size="sm" />
               </div>
               <div className="flex gap-x-6">
                 <p className="font-medium text-muted-foreground">Label</p>
@@ -204,7 +201,7 @@ export default function TaskView({
                     key={label.id}
                     name={label.name}
                     color={label.color}
-                  ></LabelBadge>
+                  />
                 ))}
               </div>
               <div className="flex gap-x-6">
@@ -230,57 +227,83 @@ export default function TaskView({
             <div className="flex flex-col gap-y-2 pt-4">
               <div className="inline-flex items-center gap-x-2">
                 <h3 className="font-semibold">Comments</h3>
-                <span className="block rounded-full bg-accent px-1.5 py-0.5 text-sm font-medium">
-                  {taskComments?.length}{" "}
-                </span>
+
+                {/* <CBadge size="sm">{taskComments?.length} </CBadge> */}
               </div>
-              <div className="flex flex-col gap-y-2 divide-y">
-                {taskComments?.map(
-                  ({ id, comment, author, createdAt, authorId }, index) => (
-                    <div
-                      key={id}
-                      className={cn("relative flex gap-3", {
-                        "pt-3": index !== 0,
-                      })}
-                    >
-                      <UserAvatar
-                        user={author}
-                        size="lg"
-                        triggerClassName="w-12 h-12"
-                      />
-                      <div className="flex flex-col">
-                        <p className="inline text-sm font-medium">
-                          {author.name}
-                        </p>
-                        <span className="text-xs text-muted-foreground">
-                          {formatFullDate(createdAt)}
-                        </span>
-                        <p className="inline pt-2 font-semibold">{comment}</p>
-                      </div>
-                      {authorId === user?.id && (
-                        <button
-                          className="absolute right-2 top-2 outline-none focus:outline-none disabled:pointer-events-none"
-                          onClick={() => onDeleteComment(id, authorId)}
-                          disabled={deleteCommentMuation.isLoading}
-                        >
-                          <Trash2 className="text-destructive-500 dark:text-destructive-400 w-5" />
-                        </button>
+              <DataLoader
+                data={taskComments}
+                isLoading={isLoadingTaskComments}
+                error={null}
+              >
+                {(data) => (
+                  <>
+                    <div className="flex flex-col gap-y-2">
+                      {data?.map(
+                        (
+                          { id, comment, author, createdAt, authorId },
+                          index
+                        ) => (
+                          <div
+                            key={id}
+                            className={cn("relative flex w-full gap-3")}
+                          >
+                            <UserAvatar user={author} size="lg" />
+                            <div className="flex flex-col truncate">
+                              <Typography
+                                variant="sm/normal"
+                                className="inline"
+                              >
+                                {author.name}
+                                <Typography
+                                  as="span"
+                                  variant="xs/normal"
+                                  className="ml-1 text-muted-foreground"
+                                >
+                                  {formatDistanceToNow(createdAt)}
+                                </Typography>
+                              </Typography>
+                              <Typography
+                                as="span"
+                                variant="xs/normal"
+                                className="text-muted-foreground"
+                              >
+                                {formatDate(createdAt)}
+                              </Typography>
+                              <Typography
+                                variant="base/medium"
+                                className="mt-2 inline max-w-[90%] truncate"
+                              >
+                                {comment}
+                              </Typography>
+                            </div>
+                            {authorId === user?.id && (
+                              <Button
+                                variant="link"
+                                size="icon-sm"
+                                className="absolute right-2 top-2 text-destructive/70 outline-none hover:bg-destructive/20 hover:text-destructive focus:outline-none disabled:pointer-events-none"
+                                onClick={() => onDeleteComment(id, authorId)}
+                                disabled={deleteCommentMuation.isLoading}
+                              >
+                                <Trash2 className="w-5" />
+                              </Button>
+                            )}
+                          </div>
+                        )
                       )}
                     </div>
-                  )
+                  </>
                 )}
-              </div>
-              {/* <p className="text-muted-foreground">{task.description}</p> */}
+              </DataLoader>
+
               <form onSubmit={handleSubmit(onAddComment)} className="mt-6">
                 <div className="flex flex-col gap-y-2">
                   <div>
                     <label htmlFor="comment" className="sr-only">
                       Add Comment
                     </label>
-                    <Input
+                    <Textarea
                       id="comment"
-                      type="text"
-                      className="h-14"
+                      className="max-h-64"
                       placeholder="Write a comment..."
                       {...register("comment", {
                         required: true,
@@ -295,14 +318,18 @@ export default function TaskView({
                   </div>
                   <Button
                     type="submit"
+                    variant="secondary"
+                    size="sm"
                     className="w-full sm:w-auto sm:self-end"
                     disabled={
                       isLoadingTaskComments ||
                       addCommentMutation.isLoading ||
                       deleteCommentMuation.isLoading
                     }
-                    isLoading={addCommentMutation.isLoading}
                   >
+                    <ButtonLoaderIcon
+                      isPending={addCommentMutation.isPending}
+                    />
                     Save Comment
                   </Button>
                 </div>

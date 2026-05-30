@@ -5,8 +5,8 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs";
-import { cn } from "@/utils/cn";
-import { api } from "@/utils/api";
+import { cn } from "@/lib/cn";
+import { api } from "@/lib/api";
 import { type NextRouter, useRouter } from "next/router";
 import Link from "next/link";
 import type { Project } from "@prisma/client";

@@ -3,7 +3,7 @@ import Link, { type LinkProps } from "next/link";
 import { useRouter } from "next/navigation";
 import { ViewVerticalIcon } from "@radix-ui/react-icons";
 
-import { cn } from "@/utils/cn";
+import { cn } from "@/lib/cn";
 import { Button } from "../ui/button";
 import { ScrollArea } from "../ui/scroll-area";
 import { dashboardLinks } from "./sidebar";

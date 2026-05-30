@@ -1,6 +1,6 @@
-import { Badge } from "@/components/ui/badge";
-import { formatFullDate, formatShortDateWithYear } from "@/utils/date";
-import { getUserRoleBadgeColor } from "@/utils/getBadgeColor";
+import { InviteStatusBadge } from "@/features/company/components/invite-status-badge";
+import { UserRoleBadge } from "@/features/users/components/user-role-badge";
+import { formatShortDateWithYear } from "@/lib/date";
 import type { Invitation } from "@prisma/client";
 import type { ColumnDef } from "@tanstack/react-table";
 
@@ -14,11 +14,7 @@ export const companyInvitationsColumns: ColumnDef<Invitation>[] = [
     header: "Invite Status",
     cell: ({ row: { original } }) => {
       const invitation = original;
-      return (
-        <Badge color="green" className="uppercase">
-          {invitation?.status}
-        </Badge>
-      );
+      return <InviteStatusBadge status={invitation?.status} />;
     },
   },
   {
@@ -27,12 +23,9 @@ export const companyInvitationsColumns: ColumnDef<Invitation>[] = [
     cell: ({ row: { original } }) => {
       const invitation = original;
       return (
-        <Badge
-          color={getUserRoleBadgeColor(invitation?.role)}
-          className="rounded"
-        >
-          {invitation?.role}
-        </Badge>
+        <>
+          <UserRoleBadge role={invitation?.role} />
+        </>
       );
     },
   },

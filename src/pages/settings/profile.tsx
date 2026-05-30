@@ -4,9 +4,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getServerAuthSession } from "@/server/auth";
-import { api } from "@/utils/api";
-import { cn } from "@/utils/cn";
-import supabase from "@/utils/supabase";
+import { api } from "@/lib/api";
+import { cn } from "@/lib/cn";
+import supabase from "@/lib/supabase";
 import { XMarkIcon } from "@heroicons/react/20/solid";
 import { decode } from "base64-arraybuffer";
 import imageCompression from "browser-image-compression";
@@ -22,6 +22,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { SettingsPageTabs } from ".";
 import { AppLayout } from "@/components/layout/app-layout";
+import { ButtonLoaderIcon } from "@/components/common/button-loader-icon";
 
 const profileFormSchema = z.object({
   name: z.string(),
@@ -406,11 +407,13 @@ export function ProfileSettings() {
                     !imageFile ||
                     updateUserProfileImageMutation.isLoading
                   }
-                  isLoading={
-                    uploading || updateUserProfileImageMutation.isLoading
-                  }
                   className="inline-flex items-center gap-x-1"
                 >
+                  <ButtonLoaderIcon
+                    isPending={
+                      uploading || updateUserProfileImageMutation.isLoading
+                    }
+                  />
                   <Upload className="h-4 w-4" />
                   Upload
                 </Button>
@@ -466,13 +469,15 @@ export function ProfileSettings() {
                   <Button
                     type="submit"
                     className="sm:w-fit sm:self-end"
-                    isLoading={updateUserInfoMutation.isLoading || uploading}
                     disabled={
                       isLoadingUserData ||
                       updateUserInfoMutation.isLoading ||
                       uploading
                     }
                   >
+                    <ButtonLoaderIcon
+                      isPending={updateUserInfoMutation.isLoading || uploading}
+                    />
                     Save Changes
                   </Button>
                 </div>

@@ -1,16 +1,10 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { ButtonLink } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { UserAvatar } from "@/components/user/user-menu";
-import {
-  formatFullDate,
-  formatShortDate,
-  formatShortDateWithYear,
-} from "@/utils/date";
-import { getUserRoleBadgeColor } from "@/utils/getBadgeColor";
-import { getProjectLink, getTeamLink } from "@/utils/links";
-import { getUserName } from "@/utils/user";
-import type { Invitation, Project } from "@prisma/client";
+import { getProjectLink, getTeamLink } from "@/lib/links";
+import { getUserName } from "@/lib/user";
+import type { Project } from "@prisma/client";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Image } from "lucide-react";
 import Link from "next/link";
@@ -95,12 +89,12 @@ export const teamsListViewColumns: ColumnDef<TTeam>[] = [
       const team = original;
       return (
         <div className="flex space-x-2">
-          <ButtonLink href={getTeamLink(team.id)} variant="secondary" size="sm">
-            View
-          </ButtonLink>
-          <ButtonLink href={getTeamLink(team.id)} variant="secondary" size="sm">
-            Manage
-          </ButtonLink>
+          <Button variant="secondary" size="sm" asChild>
+            <Link href={getTeamLink(team.id)}>View</Link>
+          </Button>
+          <Button variant="secondary" size="sm" asChild>
+            <Link href={getTeamLink(team.id)}>View</Link>
+          </Button>
         </div>
       );
     },

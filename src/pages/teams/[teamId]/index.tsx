@@ -57,11 +57,11 @@ import { Typography } from "@/components/ui/typography";
 import {
   DashboardPageDescription,
   DashboardPageSubTitle,
-} from "@/components/common/dashboard-header";
-import { getTeamProjectLink, getTeamsLink } from "@/utils/links";
+} from "@/components/common/dashboard";
+import { getTeamProjectLink, getTeamsLink } from "@/lib/links";
 
 import { getServerAuthSession } from "@/server/auth";
-import { api } from "@/utils/api";
+import { api } from "@/lib/api";
 import { Seo } from "@/components/seo";
 import { AppLayout } from "@/components/layout/app-layout";
 import { TeamDetailLoader } from "@/components/views/teams/team-detail-loader";
@@ -69,7 +69,7 @@ import { RichBadge } from "@/components/ui/rich-badge";
 import {
   getInviteStatusBadgeColor,
   getUserRoleBadgeColor,
-} from "@/utils/getBadgeColor";
+} from "@/lib/getBadgeColor";
 import { CreateInvite } from "@/components/views/company/invitations/create-invite";
 import { Role } from "@prisma/client";
 import { CreateProject } from "@/components/views/projects/create-project";
@@ -77,9 +77,9 @@ import {
   formatFullDate,
   formatShortDate,
   formatShortDateWithYear,
-} from "@/utils/date";
+} from "@/lib/date";
 import { CreateLabel } from "@/components/views/project/tasks/forms/create-label";
-import { getUserInitials } from "@/utils/user";
+import { getUserInitials } from "@/lib/user";
 
 interface TeamPageProps {
   companyId: string;
@@ -96,9 +96,6 @@ export default function TeamPage({ teamId }: TeamPageProps) {
   });
 
   const { data: invitations } = api.company.getAllInvitations.useQuery();
-
-  console.log("team", team);
-  console.log("invitations", invitations);
 
   if (!isLoadingTeamData && !team) {
     return (

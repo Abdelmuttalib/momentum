@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { api } from "@/utils/api";
+import { api } from "@/lib/api";
 import { createTeamFormSchema, type CreateTeamSchemaType } from "@/schema";
 import { useFormErrorToast } from "./use-form-error-toast";
 
@@ -32,7 +32,6 @@ export function useCreateTeam({ onSuccess, onError }: CreateTeamOptions = {}) {
   });
 
   const handleSubmit = form.handleSubmit(async (data) => {
-    console.log("data", data);
     await mutation.mutateAsync(data);
   });
 

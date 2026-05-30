@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
-import { cn } from "@/utils/cn";
+import { cn } from "@/lib/cn";
 import { Dialog, Transition } from "@headlessui/react";
 import type { ClassValue } from "clsx";
 import React, { Fragment } from "react";
@@ -214,7 +214,7 @@ export default function CustomDialog({
                 <Typography
                   as="p"
                   variant="sm/normal"
-                  className="text-foreground-light"
+                  className="text-muted-foreground"
                 >
                   {description}
                 </Typography>

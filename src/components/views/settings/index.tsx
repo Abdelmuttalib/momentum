@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table-2";
 import { Input } from "@/components/ui/input";
 import { Typography } from "@/components/ui/typography";
-import { api } from "@/utils/api";
+import { api } from "@/lib/api";
 import { useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -11,6 +11,7 @@ import { companyTeamsColumns } from "../company/organization-teams";
 import { teamMembersColumns } from "../team/teamMembersColumns";
 import { companyInvitationsColumns } from "../company/invites/company-invitations-columns";
 import { CreateInvite } from "@/components/views/company/invitations/create-invite";
+import { ButtonLoaderIcon } from "@/components/common/button-loader-icon";
 
 const companyInfoFormSchema = z.object({
   name: z.string(),
@@ -32,7 +33,7 @@ export function CompanySettings() {
   const {
     data: companyMembersData,
     // isLoading: isLoadingCompanyMembers
-  } = api.company.getCompanyMembers.useQuery();
+  } = api.company.getCompanyUsers.useQuery();
   const {
     data: companyTeams,
     // isLoading
@@ -69,7 +70,7 @@ export function CompanySettings() {
     <>
       <div className="flex flex-col gap-7 rounded-lg py-7">
         <div className="w-full">
-          <Typography as="p" variant="lg/medium">
+          <Typography as="h3" variant="lg/medium">
             Company Settings
           </Typography>
         </div>
@@ -109,34 +110,21 @@ export function CompanySettings() {
                     />
                     <Button
                       type="submit"
-                      isLoading={updateCompanyNameMutation.isLoading}
                       disabled={
                         isLoadingCompanyData ||
                         updateCompanyNameMutation.isLoading ||
-                        getValues("name") === companyData?.name
+                        getValues("name") === companyData?.name ||
+                        true
                       }
                     >
+                      <ButtonLoaderIcon
+                        isPending={updateCompanyNameMutation.isLoading}
+                      />
                       Save
                     </Button>
                   </div>
                 </div>
               </form>
-            </div>
-          </div>
-          {/* company members */}
-          <div className="w-full pt-6">
-            <div className="flex flex-col gap-6 pb-8">
-              <div className="flex items-center justify-between">
-                <h2 className="FormLabel-md">Company Teams</h2>
-              </div>
-              <div className="">
-                {companyTeams && (
-                  <DataTable
-                    columns={companyTeamsColumns}
-                    data={companyTeams}
-                  />
-                )}
-              </div>
             </div>
           </div>
 

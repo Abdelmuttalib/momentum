@@ -17,16 +17,13 @@ import {
   LogOut,
   Moon,
   Sun,
-  Bell,
-  CreditCard,
   Users,
   ChevronUp,
-  Crown,
 } from "lucide-react";
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 import { useTheme } from "next-themes";
-import { Role } from "@prisma/client";
+import { routes } from "@/lib/routes";
 
 export function UserMenu() {
   const [isOpen, setIsOpen] = useState(false);
@@ -124,26 +121,26 @@ export function UserMenu() {
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem asChild>
+        {/* <DropdownMenuItem asChild>
           <Link href="/profile" className="cursor-pointer">
             <User className="mr-2 h-4 w-4" />
             <span>Profile</span>
           </Link>
-        </DropdownMenuItem>
+        </DropdownMenuItem> */}
 
         <DropdownMenuItem asChild>
-          <Link href="/settings" className="cursor-pointer">
+          <Link href={routes.settings.index()} className="cursor-pointer">
             <Settings className="mr-2 h-4 w-4" />
             <span>Settings</span>
           </Link>
         </DropdownMenuItem>
 
-        <DropdownMenuItem asChild>
+        {/* <DropdownMenuItem asChild>
           <Link href="/teams" className="cursor-pointer">
             <Users className="mr-2 h-4 w-4" />
             <span>Manage Teams</span>
           </Link>
-        </DropdownMenuItem>
+        </DropdownMenuItem> */}
 
         <DropdownMenuSeparator />
 
@@ -154,7 +151,7 @@ export function UserMenu() {
         </DropdownMenuItem>
 
         <DropdownMenuItem asChild>
-          <Link href="/help" className="cursor-pointer">
+          <Link href={routes.help.index()} className="cursor-pointer">
             <HelpCircle className="mr-2 h-4 w-4" />
             <span>Help & Support</span>
           </Link>

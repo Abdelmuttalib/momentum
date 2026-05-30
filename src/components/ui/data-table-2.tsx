@@ -54,7 +54,7 @@ export function DataTable<TData, TValue>({
                   return (
                     <TableHead
                       key={header.id}
-                      className="text-foreground-light whitespace-nowrap px-3 py-2"
+                      className="whitespace-nowrap px-3 py-2 text-muted-foreground"
                     >
                       {header.isPlaceholder
                         ? null
@@ -74,7 +74,7 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  className="text-foreground-light h-14 rounded-b"
+                  className="h-14 rounded-b text-muted-foreground"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className="px-3">

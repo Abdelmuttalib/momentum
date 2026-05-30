@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 
-import { cn } from "@/utils/cn";
+import { cn } from "@/lib/cn";
 import type { ReactNode } from "react";
 
 export default function CustomTableLayout({

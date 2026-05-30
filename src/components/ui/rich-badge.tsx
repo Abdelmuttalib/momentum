@@ -1,4 +1,4 @@
-import { cn } from "@/utils/cn";
+import { cn } from "@/lib/cn";
 import { cva, type VariantProps } from "class-variance-authority";
 
 const richBadgeVariants = cva(

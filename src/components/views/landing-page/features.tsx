@@ -45,7 +45,7 @@ export default function Features() {
           <Typography
             as="p"
             variant="lg/normal"
-            className="text-foreground-light mx-auto max-w-2xl"
+            className="mx-auto max-w-2xl text-muted-foreground"
           >
             Introducing Momentum, a Next.js-powered application, designed to
             reshape how you approach team collaboration, project management, and

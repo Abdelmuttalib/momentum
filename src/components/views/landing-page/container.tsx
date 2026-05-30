@@ -1,4 +1,4 @@
-import { cn } from "@/utils/cn";
+import { cn } from "@/lib/cn";
 import type { ClassValue } from "clsx";
 import type { ReactNode } from "react";
 

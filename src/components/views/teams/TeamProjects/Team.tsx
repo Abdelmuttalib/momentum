@@ -6,7 +6,7 @@ import type { TTeam } from "types";
 import { UserAvatar } from "@/components/user/user-menu";
 import { FollowLinkArrowIcon } from "./Project";
 import { Folder, FoldersIcon, UsersIcon } from "lucide-react";
-import { cn } from "@/utils/cn";
+import { cn } from "@/lib/cn";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Typography } from "@/components/ui/typography";
 
@@ -99,13 +99,13 @@ export function TeamCard({ team }: TeamProps) {
           <Typography variant="xl/medium">{name}</Typography>
         </div>
 
-        <div className="text-foreground-light flex flex-col gap-y-3 justify-self-end px-1">
+        <div className="flex flex-col gap-y-3 justify-self-end px-1 text-muted-foreground">
           <div className="flex items-center gap-x-6">
             <div className="inline-flex items-center gap-x-2 truncate rounded bg-accent px-3 py-2 font-medium">
               <FoldersIcon className="h-5 w-5" />
               <Typography
                 variant="sm/normal"
-                className="text-foreground-light truncate whitespace-nowrap"
+                className="truncate whitespace-nowrap text-muted-foreground"
               >
                 {projects?.length} Projects
               </Typography>
@@ -114,7 +114,7 @@ export function TeamCard({ team }: TeamProps) {
               <UsersIcon className="h-5 w-5" />
               <Typography
                 variant="sm/normal"
-                className="text-foreground-light truncate whitespace-nowrap"
+                className="truncate whitespace-nowrap text-muted-foreground"
               >
                 {users?.length} Members
               </Typography>

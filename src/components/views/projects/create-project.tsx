@@ -5,6 +5,7 @@ import { PlusIcon } from "@heroicons/react/20/solid";
 import { useCreateProject } from "@/hooks/use-project";
 import { DialogForm } from "@/components/common/dialog-form";
 import { toast } from "sonner";
+import { ButtonLoaderIcon } from "@/components/common/button-loader-icon";
 
 interface CreateProjectFormProps {
   onSuccess: () => void;
@@ -55,20 +56,6 @@ export function CreateProjectForm({
             data-invalid={form.formState.errors.description?.message}
           />
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="teamId">Team ID</Label>
-          <Input
-            id="teamId"
-            type="text"
-            {...form.register("teamId")}
-            placeholder="team id"
-            inputMode="text"
-            value={teamId.toString()}
-            defaultValue={teamId.toString()}
-            disabled={!!teamId}
-            data-invalid={form.formState.errors.teamId?.message}
-          />
-        </div>
 
         <div className="mt-4 flex flex-col-reverse border-t md:flex-row md:gap-2 lg:w-full lg:justify-end">
           <Button
@@ -83,8 +70,8 @@ export function CreateProjectForm({
             type="submit"
             className="flex-1"
             disabled={mutation.isLoading}
-            isLoading={mutation.isLoading}
           >
+            <ButtonLoaderIcon isPending={mutation.isLoading} />
             Create Project
           </Button>
         </div>

@@ -12,82 +12,86 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { UserAvatar } from "@/components/user/user-menu";
-import { api } from "@/utils/api";
-import { cn } from "@/utils/cn";
-import { Priority } from "@/utils/enums";
+import { api } from "@/lib/api";
+import { cn } from "@/lib/cn";
+import { Priority } from "@/lib/enums";
+
+import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { PlusIcon } from "lucide-react";
+import { type Project, TaskStatus } from "@prisma/client";
+import { FormLabel } from "@/components/ui/form-label";
+import { DialogForm } from "@/components/common/dialog-form";
+import { taskFormSchema, type TaskFormSchemaType } from "@/schema";
+import { useSession } from "next-auth/react";
+import { useCreateTask } from "@/features/tasks/hooks/use-task-mutations";
+import { useRouter } from "next/router";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ButtonLoaderIcon } from "@/components/common/button-loader-icon";
+import { CBadge } from "@/components/common/cbadge";
 import {
   getTaskPriorityBadgeColor,
   getTaskStatusBadgeColor,
-} from "@/utils/getBadgeColor";
-import { Controller } from "react-hook-form";
-import { toast } from "sonner";
-import { PlusIcon } from "lucide-react";
-import { TaskStatus } from "@prisma/client";
-import { FormLabel } from "@/components/ui/form-label";
-import { DialogForm } from "@/components/common/dialog-form";
-import { type CreateTaskSchemaType } from "@/schema";
-import { useCreateTask } from "@/hooks/use-task";
+} from "@/lib/color";
 
 interface CreateTaskFormProps {
   onSuccess: () => void;
   onCancel: () => void;
   onError: () => void;
-  teamId: string;
-  projectId: string;
-  defaultValues: CreateTaskSchemaType;
+  projectId?: string;
+  defaultValues: TaskFormSchemaType;
+  projects: Project[];
 }
 
 function CreateTaskForm({
   onSuccess,
   onCancel,
   onError,
-  teamId,
   projectId,
   defaultValues,
+  projects,
 }: CreateTaskFormProps) {
-  const { form, handleSubmit, mutation } = useCreateTask({
-    onSuccess,
-    onError,
-    onCancel,
-    teamId,
-    projectId,
-    defaultValues,
+  const { data: session } = useSession();
+  const { query } = useRouter();
+  const pId = query.projectId as string;
+
+  const { execute, isPending } = useCreateTask();
+
+  async function handleSubmit(data: TaskFormSchemaType) {
+    await execute({
+      ...data,
+    });
+
+    onSuccess();
+  }
+
+  const form = useForm<TaskFormSchemaType>({
+    resolver: zodResolver(taskFormSchema),
+    defaultValues: {
+      ...defaultValues,
+    },
   });
 
-  const data = api.team.getTeamMembers.useQuery(
-    {
-      teamId,
-    },
-    {
-      enabled: !!teamId,
-    }
-  );
-
-  const teamMembers = data?.data;
+  const { data: companyUsers } = api.company.getCompanyUsers.useQuery();
 
   const { data: taskLabels } = api.task.getLabels.useQuery();
-
-  console.log("teamMembers", data, teamMembers);
-  console.log("task labels", taskLabels);
 
   return (
     <form
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
-      onSubmit={handleSubmit}
+      onSubmit={form.handleSubmit(handleSubmit)}
       className="flex flex-col gap-5"
     >
-      {JSON.stringify(teamMembers)}
+      {/* {JSON.stringify(companyUsers)} */}
       <div>
-        <Label htmlFor="title" className="sr-only">
-          Task title:
-        </Label>
+        <Label htmlFor="title">Task title:</Label>
         <Input
           id="title"
           type="text"
           {...form.register("title")}
           placeholder="task title"
           inputMode="text"
-          disabled={mutation.isLoading}
+          disabled={isPending}
           data-invalid={form.formState.errors?.title?.message}
         />
       </div>
@@ -98,7 +102,7 @@ function CreateTaskForm({
           {...form.register("description")}
           placeholder="task description"
           inputMode="text"
-          disabled={mutation.isLoading}
+          disabled={isPending}
           className={cn("h-10 text-lg text-muted-foreground")}
           data-invalid={form.formState.errors?.description?.message}
         />
@@ -114,7 +118,7 @@ function CreateTaskForm({
               <Select
                 {...field}
                 onValueChange={(value) => field.onChange(value as TaskStatus)}
-                disabled={mutation.isLoading}
+                disabled={isPending}
               >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select a status" />
@@ -127,9 +131,12 @@ function CreateTaskForm({
                         value={status}
                         className="capitalize"
                       >
-                        <Badge color={getTaskStatusBadgeColor(status)}>
-                          {status.replace("_", " ")}
-                        </Badge>
+                        <CBadge
+                          color={getTaskStatusBadgeColor(status).color}
+                          className=""
+                        >
+                          {status.replace("_", " ").toLocaleLowerCase()}
+                        </CBadge>
                       </SelectItem>
                     ))}
                   </SelectGroup>
@@ -149,7 +156,7 @@ function CreateTaskForm({
               <Select
                 {...field}
                 onValueChange={(value) => field.onChange(value as Priority)}
-                disabled={mutation.isLoading}
+                disabled={isPending}
               >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select a status" />
@@ -162,11 +169,13 @@ function CreateTaskForm({
                         value={priorityStatus}
                         className="capitalize"
                       >
-                        <Badge
-                          color={getTaskPriorityBadgeColor(priorityStatus)}
+                        <CBadge
+                          color={
+                            getTaskPriorityBadgeColor(priorityStatus).color
+                          }
                         >
                           {priorityStatus.replace("_", " ")}
-                        </Badge>
+                        </CBadge>
                       </SelectItem>
                     ))}
                   </SelectGroup>
@@ -176,54 +185,52 @@ function CreateTaskForm({
           />
         </div>
 
-        <div className="flex items-center gap-x-2">
-          <div>
-            <FormLabel htmlFor="labels">Label</FormLabel>
-            <Controller
-              name="labels"
-              control={form.control}
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  onValueChange={(value) => field.onChange(value)}
-                  disabled={mutation.isLoading}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select labels" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      {taskLabels?.map((taskLabel) => (
-                        <SelectItem
-                          key={taskLabel.id}
-                          value={taskLabel.id}
-                          className="capitalize"
-                        >
-                          <span className="flex items-center gap-x-1.5 capitalize">
-                            <span
-                              className="h-3 w-3 rounded-sm"
-                              style={{
-                                backgroundColor: taskLabel.color,
-                              }}
-                            ></span>
-                            <span>{taskLabel.name}</span>
-                          </span>
-                          {/* <Badge
+        <div>
+          <Label htmlFor="labels">Label</Label>
+          <Controller
+            name="labels"
+            control={form.control}
+            render={({ field }) => (
+              <Select
+                {...field}
+                onValueChange={(value) => field.onChange(value)}
+                disabled={isPending}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select labels" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {taskLabels?.map((taskLabel) => (
+                      <SelectItem
+                        key={taskLabel.id}
+                        value={taskLabel.id}
+                        className="capitalize"
+                      >
+                        <span className="flex items-center gap-x-1.5 capitalize">
+                          <span
+                            className="h-3 w-3 rounded-sm"
+                            style={{
+                              backgroundColor: taskLabel.color,
+                            }}
+                          ></span>
+                          <span>{taskLabel.name}</span>
+                        </span>
+                        {/* <Badge
                             color={getTaskPriorityBadgeColor(priorityStatus)}
                           >
                             {priorityStatus.replace("_", " ")}
                           </Badge> */}
-                        </SelectItem>
-                      ))}
-                      {/* <div className="my-2 -ml-1">
+                      </SelectItem>
+                    ))}
+                    {/* <div className="my-2 -ml-1">
                         <CreateLabel />
                       </div> */}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              )}
-            />
-          </div>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            )}
+          />
         </div>
       </div>
 
@@ -236,25 +243,68 @@ function CreateTaskForm({
           render={({ field }) => (
             <Select
               {...field}
-              onValueChange={(value) => field.onChange(value as Priority)}
-              disabled={mutation.isLoading}
+              onValueChange={(value) => field.onChange(value)}
+              disabled={isPending}
             >
               <SelectTrigger className="h-fit w-full">
                 <SelectValue placeholder="Assign to..." />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  {teamMembers?.users?.map((user) => (
+                  {companyUsers?.map((user) => (
                     <SelectItem
                       key={user.id}
                       value={user.id}
                       className="flex capitalize"
+                      disabled={user.id === session?.user?.id}
                     >
                       <div className="flex items-center gap-2">
                         <UserAvatar user={user} />
 
-                        <p className="font-medium">{user.name}</p>
+                        <p className="font-medium">
+                          {user.name}
+
+                          {user.id === session?.user?.id && (
+                            <span className="">(YOU)</span>
+                          )}
+                        </p>
                       </div>
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          )}
+        />
+      </div>
+
+      <div>
+        <Label htmlFor="projectId">Project</Label>
+        <Controller
+          name="projectId"
+          control={form.control}
+          render={({ field }) => (
+            <Select
+              {...field}
+              onValueChange={(value) => field.onChange(value)}
+              disabled={isPending}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select a project" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {projects?.map((project) => (
+                    <SelectItem
+                      key={project.id}
+                      value={project.id}
+                      className="capitalize"
+                    >
+                      {/* <Badge
+                          color={getTaskPriorityBadgeColor(priorityStatus)}
+                        > */}
+                      {project.name}
+                      {/* </Badge> */}
                     </SelectItem>
                   ))}
                 </SelectGroup>
@@ -269,16 +319,16 @@ function CreateTaskForm({
           type="button"
           variant="outline"
           onClick={onCancel}
-          disabled={mutation.isLoading}
+          disabled={isPending}
         >
           Cancel
         </Button>
         <Button
           type="submit"
           className="flex-1 lg:flex-initial"
-          disabled={mutation.isLoading}
-          isLoading={mutation.isLoading}
+          disabled={isPending}
         >
+          <ButtonLoaderIcon isPending={isPending} />
           Create Task
         </Button>
       </div>
@@ -289,13 +339,15 @@ function CreateTaskForm({
 export function CreateTask({
   type = "project",
   status,
-  teamId,
   projectId,
+  triggerButton,
+  projects,
 }: {
   type?: "project" | "column";
   status?: TaskStatus;
-  teamId: string;
-  projectId: string;
+  projectId?: string;
+  triggerButton?: React.ReactNode;
+  projects: Project[];
 }) {
   return (
     <>
@@ -303,30 +355,30 @@ export function CreateTask({
         title="Create a new Task"
         description="Tasks are a great way to organize your projects and invite other users"
         triggerButton={
-          <Button
-            type="button"
-            className="ml-2 inline-flex gap-1 whitespace-nowrap"
-          >
-            <PlusIcon className="w-5" />
-            Create Task
-          </Button>
+          triggerButton || (
+            <Button
+              type="button"
+              className="ml-2 inline-flex gap-1 whitespace-nowrap"
+            >
+              <PlusIcon className="w-5" />
+              Create Task
+            </Button>
+          )
         }
         dialogContentClassName="sm:max-w-md"
       >
         {({ onClose }) => (
           <CreateTaskForm
             onSuccess={() => {
-              toast.success("Task created successfully");
               onClose();
             }}
             onCancel={onClose}
             onError={() => {
-              toast.error("Failed to create task");
               onClose();
             }}
-            teamId={teamId}
             projectId={projectId}
             defaultValues={{}}
+            projects={projects}
             // defaultValues={{
             //   ...(status && { status }),
             // }}

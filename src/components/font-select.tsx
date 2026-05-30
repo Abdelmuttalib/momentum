@@ -1,7 +1,7 @@
 import { type FontValue, useFont } from "@/hooks/use-font";
 
-import { cn } from "@/utils/cn";
-import { FONTS } from "@/utils/fonts";
+import { cn } from "@/lib/cn";
+import { FONTS } from "@/lib/fonts";
 import {
   Select,
   SelectContent,

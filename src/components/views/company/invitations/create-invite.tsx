@@ -20,9 +20,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Role } from "@prisma/client";
-import { getUserRoleBadgeColor } from "@/utils/getBadgeColor";
-import { useInvite, type UseInviteReturnType } from "@/hooks/use-invite";
+import { getUserRoleBadgeColor } from "@/lib/getBadgeColor";
+import { useInvite } from "@/hooks/use-invite";
 import { RichBadge } from "@/components/ui/rich-badge";
+import { ButtonLoaderIcon } from "@/components/common/button-loader-icon";
+import { UserRoleBadge } from "@/features/users/components/user-role-badge";
 
 interface CreateInviteFormProps {
   onSuccess: () => void;
@@ -60,7 +62,6 @@ function CreateInviteForm({
                   {...field}
                 />
               </FormControl>
-              <FormDescription></FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -78,22 +79,17 @@ function CreateInviteForm({
                   disabled={mutation.isLoading}
                 >
                   <SelectTrigger className="w-full text-foreground">
-                    <SelectValue placeholder="Select a status" />
+                    <SelectValue placeholder="Select a role" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      {Object.values(Role).map((status) => (
+                      {Object.values(Role).map((role) => (
                         <SelectItem
-                          key={status}
-                          value={status}
+                          key={role}
+                          value={role}
                           className="capitalize"
                         >
-                          <RichBadge
-                            color={getUserRoleBadgeColor(status)}
-                            className="capitalize"
-                          >
-                            {status.replace("_", " ")}
-                          </RichBadge>
+                          <UserRoleBadge role={role} />
                         </SelectItem>
                       ))}
                     </SelectGroup>
@@ -119,8 +115,8 @@ function CreateInviteForm({
             type="submit"
             className="flex-1 md:flex-initial"
             disabled={mutation.isLoading}
-            isLoading={mutation.isLoading}
           >
+            <ButtonLoaderIcon isPending={mutation.isLoading} />
             Submit
           </Button>
         </div>

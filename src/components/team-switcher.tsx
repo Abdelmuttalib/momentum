@@ -5,7 +5,7 @@ import {
   // PlusCircle
 } from "lucide-react";
 
-import { cn } from "@/utils/cn";
+import { cn } from "@/lib/cn";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 
@@ -18,7 +18,7 @@ import {
   // DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { api } from "@/utils/api";
+import { api } from "@/lib/api";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface TeamSwitcherProps {

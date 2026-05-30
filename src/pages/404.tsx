@@ -1,10 +1,9 @@
-import { HomeIcon } from "@heroicons/react/20/solid";
 import * as React from "react";
 
 import { Seo } from "@/components/seo";
-import { cn } from "@/utils/cn";
-import { ButtonLink } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
+import Link from "next/link";
 
 export default function NotFoundPage() {
   return (
@@ -26,21 +25,9 @@ export default function NotFoundPage() {
             Sorry, we couldn&apos;t find the page you&apos;re looking for.
           </Typography>
           <div className="mt-10 flex justify-center gap-x-3">
-            {/* <Button
-              onClick={() => back()}
-              size="lg"
-              className="inline-flex items-center"
-            >
-              <ArrowLeftIcon className="mr-1.5 w-5" />
-              Go back
-            </Button> */}
-            <ButtonLink
-              href="/"
-              size="lg"
-              iconLeft={<HomeIcon className="mb-0.5 w-5" />}
-            >
-              Home
-            </ButtonLink>
+            <Button size="lg" asChild>
+              <Link href="/">Home</Link>
+            </Button>
           </div>
         </div>
       </main>

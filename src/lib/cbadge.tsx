@@ -1,0 +1,26 @@
+export const CBADGE_COLORS = [
+  "blue",
+  "indigo",
+  "purple",
+  "violet",
+  "fuchsia",
+  "pink",
+  "rose",
+  "red",
+  "orange",
+  "amber",
+  "yellow",
+  "lime",
+  "green",
+  "emerald",
+  "teal",
+  "cyan",
+  "sky",
+  "slate",
+  "gray",
+  "zinc",
+  "neutral",
+  "stone",
+] as const;
+
+export type BadgeColor = (typeof CBADGE_COLORS)[number];

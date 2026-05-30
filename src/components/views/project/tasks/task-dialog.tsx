@@ -6,7 +6,7 @@ import {
   DialogContent,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { api } from "@/utils/api";
+import { api } from "@/lib/api";
 import { EllipsisVerticalIcon } from "@heroicons/react/20/solid";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { Trash } from "lucide-react";

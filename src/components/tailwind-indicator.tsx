@@ -1,4 +1,4 @@
-import { cn } from "@/utils/cn";
+import { cn } from "@/lib/cn";
 import { FontSelect } from "./font-select";
 import { FontSizeSelect } from "./font-size-select";
 import ThemeSwitcher from "./theme-select";

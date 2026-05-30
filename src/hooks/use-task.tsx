@@ -1,5 +1,5 @@
-import { createTaskFormSchema, type CreateTaskSchemaType } from "@/schema";
-import { api } from "@/utils/api";
+import { taskFormSchema, type TaskFormSchemaType } from "@/schema";
+import { api } from "@/lib/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -9,33 +9,31 @@ interface CreateTaskOptions {
   onSuccess: () => void;
   onCancel: () => void;
   onError: () => void;
-  teamId: string;
   projectId: string;
-  defaultValues: CreateTaskSchemaType;
+  defaultValues: TaskFormSchemaType;
 }
 
 export function useCreateTask({
   onSuccess,
   onError,
   onCancel,
-  teamId,
   projectId,
   defaultValues,
 }: CreateTaskOptions) {
   const apiContext = api.useContext();
 
-  const form = useForm<CreateTaskSchemaType>({
-    resolver: zodResolver(createTaskFormSchema),
+  const form = useForm<TaskFormSchemaType>({
+    resolver: zodResolver(taskFormSchema),
     defaultValues,
   });
-
-  console.log(form.formState.errors);
 
   const mutation = api.task.create.useMutation({
     onSuccess: async () => {
       // Handle the new team. For example, you could redirect to the team's page
       onSuccess();
-      await apiContext.task.getAllProjectTasks.invalidate();
+      await apiContext.task.getAllProjectTasks.invalidate({
+        projectId,
+      });
       form.reset();
       toast.success("New task created!");
     },
@@ -46,11 +44,9 @@ export function useCreateTask({
   });
 
   const handleSubmit = form.handleSubmit(async (data) => {
-    console.log("Form submitted", data);
     await mutation.mutateAsync({
       ...data,
       projectId,
-      teamId,
     });
   });
 

@@ -18,7 +18,7 @@ export default function RegisterPage() {
       <Seo title="New Company/Workspace" />
 
       <AuthLayout>
-        <div className="flex w-full max-w-lg flex-col items-center justify-center px-4">
+        <div className="flex w-full max-w-md flex-col items-center justify-center px-4">
           {registerStep === "company" && (
             <CreateCompanyForm
               setRegisterStep={setRegisterStep}

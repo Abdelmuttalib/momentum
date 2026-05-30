@@ -9,7 +9,7 @@ import {
   protectedAdminProcedure,
   protectedProcedure,
 } from "@/server/api/trpc";
-import { TaskStatus } from "@/utils/enums";
+import { TaskStatus } from "@/lib/enums";
 import { createTeamFormSchema } from "@/schema";
 
 export const teamRouter = createTRPCRouter({
@@ -177,8 +177,6 @@ export const teamRouter = createTRPCRouter({
           users: true,
         },
       });
-
-      console.log("input", input, teamMembers);
 
       return teamMembers;
     }),

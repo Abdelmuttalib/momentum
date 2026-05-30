@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-// @ts-nocheck
-
 import * as React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/router";
@@ -12,10 +9,9 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-import { LogInIcon } from "lucide-react";
-import { Typography } from "@/components/ui/typography";
 import { AuthPageDescription, AuthPageTitle } from "../common";
 import { Label } from "@/components/ui/label";
+import { ButtonLoaderIcon } from "@/components/common/button-loader-icon";
 
 const signInFormSchema = z.object({
   email: z
@@ -124,9 +120,8 @@ export function SignInForm() {
             disabled={
               Object.keys(form.formState.errors).length > 0 || isLoading
             }
-            isLoading={isLoading}
-            iconRight={<LogInIcon className="h-4 w-4" />}
           >
+            <ButtonLoaderIcon isPending={isLoading} />
             Sign in
           </Button>
         </form>

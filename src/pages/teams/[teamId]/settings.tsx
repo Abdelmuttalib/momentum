@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { getServerAuthSession } from "@/server/auth";
 import { prisma } from "@/server/db";
-import { api } from "@/utils/api";
+import { api } from "@/lib/api";
 import type { Team } from "@prisma/client";
 import { type GetServerSideProps } from "next";
 import { useForm } from "react-hook-form";
@@ -19,6 +19,7 @@ import { UsersIcon } from "lucide-react";
 import type { TTeam } from "types";
 import { Seo } from "@/components/seo";
 import { AppLayout } from "@/components/layout/app-layout";
+import { ButtonLoaderIcon } from "@/components/common/button-loader-icon";
 
 interface TeamSettingsPageProps {
   team: Team;
@@ -64,7 +65,7 @@ export default function TeamSettingsPage({ team }: TeamSettingsPageProps) {
   // const { data: companyTeams, isLoading } =
   //   api.team.getAllTeamsByCompanyId.useQuery();
 
-  // getCompanyMembersNotInTeam: protectedProcedure
+  // getCompanyUsersNotInTeam: protectedProcedure
   // .input(
   //   z.object({
   //     teamId: z.string(),
@@ -86,15 +87,13 @@ export default function TeamSettingsPage({ team }: TeamSettingsPageProps) {
   // }),
 
   const { data: companyMembersNotInTeam } =
-    api.company.getCompanyMembersNotInTeam.useQuery({
+    api.company.getCompanyUsersNotInTeam.useQuery({
       teamId: team.id,
     });
 
   const { data: teamMembers } = api.team.getTeamMembers.useQuery({
     teamId: team.id,
   });
-
-  console.log("teamMembers", teamMembers);
 
   return (
     <>
@@ -131,9 +130,11 @@ export default function TeamSettingsPage({ team }: TeamSettingsPageProps) {
                     </div>
                     <Button
                       type="submit"
-                      isLoading={updateTeamNameMutation.isLoading}
                       disabled={updateTeamNameMutation.isLoading}
                     >
+                      <ButtonLoaderIcon
+                        isPending={updateTeamNameMutation.isLoading}
+                      />
                       Save Changes
                     </Button>
                   </div>

@@ -9,10 +9,6 @@ export type FontSizeValue = "default" | "small" | "large";
 
 export const FONTS: FontDataType[] = [
   {
-    name: "General Sans",
-    value: "general-sans",
-  },
-  {
     name: "Inter",
     value: "inter",
   },
