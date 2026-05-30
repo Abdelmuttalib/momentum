@@ -18,8 +18,8 @@ export function useTaskComments(taskId: string) {
   );
 }
 
-export function useProject(projectId: string): UseQueryResult<Project> {
-  return api.project.getProject.useQuery<Project>(
+export function useProject(projectId: string) {
+  return api.project.getProject.useQuery(
     {
       projectId,
     },
