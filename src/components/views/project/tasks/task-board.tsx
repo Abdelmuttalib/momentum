@@ -12,12 +12,13 @@ import { TaskStatus as TaskStatusNativeEnum } from "@/lib/enums";
 import { Skeleton } from "@/components/ui/skeleton";
 import TaskBoardColumn from "./task-board-column";
 import { TaskLoader } from "./task";
+import { type GetProjectTasks } from "@/features/projects/types";
 
 export default function TaskBoard({
   tasks,
   projectId,
 }: {
-  tasks: TaskType[];
+  tasks: GetProjectTasks;
   projectId: Project["id"];
 }) {
   const taskStatuses = Object.keys(TaskStatusNativeEnum) as TaskStatus[];
@@ -31,9 +32,7 @@ export default function TaskBoard({
   //     }
   //   );
 
-  const [currentTasks, setCurrentTasks] = useState<TaskType[] | undefined>(
-    tasks
-  );
+  const [currentTasks, setCurrentTasks] = useState(tasks);
 
   const apiContext = api.useContext();
 

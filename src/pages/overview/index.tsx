@@ -32,7 +32,7 @@ import { CreateTask } from "@/components/views/project/tasks/forms/create-task";
 import { useSession } from "next-auth/react";
 import { useProjects } from "@/features/projects/hooks/use-projects";
 import { TaskStatus } from "@prisma/client";
-import { useTasks } from "@/features/projects/hooks/use-tasks";
+import { useProjectTasks } from "@/features/projects/hooks/use-tasks";
 import { useRecentTasks } from "@/features/tasks/hooks/use-recent-tasks";
 import { TaskPriorityBadge } from "@/features/tasks/components/task-priority-badge";
 import { shortId } from "@/lib/utils";

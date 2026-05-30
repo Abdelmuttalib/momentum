@@ -1,7 +1,4 @@
-// app/projects/[id]/page.tsx
-
 import { useProjectTasks } from "@/features/projects/hooks/use-tasks";
-import { useRouter } from "next/router";
 import { DataLoader } from "@/components/data-loader";
 import { AppLayout } from "@/components/layout/app-layout";
 import TaskBoard from "@/components/views/project/tasks/task-board";
@@ -39,8 +36,6 @@ export default function ProjectPage({
   projectId,
 }: // teamId
 ProjectPageProps) {
-  const { query } = useRouter();
-
   const { data: tasks, isLoading, error } = useProjectTasks(projectId);
 
   return (

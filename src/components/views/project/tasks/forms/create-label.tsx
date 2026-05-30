@@ -105,7 +105,6 @@ function CreateLabelForm({
             type="submit"
             className="flex-1 lg:flex-initial"
             disabled={mutation.isLoading}
-            isLoading={mutation.isLoading}
           >
             Create Label
           </Button>

@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { DialogForm } from "@/components/common/dialog-form";
 import { useCreateTeam } from "@/hooks/use-team";
 import { toast } from "sonner";
+import { ButtonLoaderIcon } from "@/components/common/button-loader-icon";
 
 interface CreateTeamFormProps {
   onSuccess?: () => void;
@@ -61,12 +62,8 @@ export function CreateTeamForm({
         >
           Cancel
         </Button>
-        <Button
-          type="submit"
-          className="flex-1"
-          disabled={mutation.isLoading}
-          isLoading={mutation.isLoading}
-        >
+        <Button type="submit" className="flex-1" disabled={mutation.isLoading}>
+          <ButtonLoaderIcon isPending={mutation.isLoading} />
           Create Team
         </Button>
       </div>

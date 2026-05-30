@@ -19,6 +19,7 @@ import { UsersIcon } from "lucide-react";
 import type { TTeam } from "types";
 import { Seo } from "@/components/seo";
 import { AppLayout } from "@/components/layout/app-layout";
+import { ButtonLoaderIcon } from "@/components/common/button-loader-icon";
 
 interface TeamSettingsPageProps {
   team: Team;
@@ -131,9 +132,11 @@ export default function TeamSettingsPage({ team }: TeamSettingsPageProps) {
                     </div>
                     <Button
                       type="submit"
-                      isLoading={updateTeamNameMutation.isLoading}
                       disabled={updateTeamNameMutation.isLoading}
                     >
+                      <ButtonLoaderIcon
+                        isPending={updateTeamNameMutation.isLoading}
+                      />
                       Save Changes
                     </Button>
                   </div>

@@ -55,11 +55,8 @@ type PopoverTriggerProps = React.ComponentPropsWithoutRef<
 export default function MainSwitcher() {
   const { data: session } = useSession();
 
-  const company = session?.user?.company;
-
   const { query } = useRouter();
-  const { data: companyData, isLoading: isLoadingCompanyData } =
-    api.company.getCompany.useQuery();
+  const { data: companyData } = api.company.getCompany.useQuery();
 
   const { data: teams } = api.team.getAllTeamsByCompanyId.useQuery();
 

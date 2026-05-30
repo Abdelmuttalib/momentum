@@ -1,6 +1,6 @@
 import { api } from "@/lib/api";
 
-export function useTasks(projectId: string) {
+export function useProjectTasks(projectId: string) {
   return api.project.getProjectTasks.useQuery(
     {
       projectId,

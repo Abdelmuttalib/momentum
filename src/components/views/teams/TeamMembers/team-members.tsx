@@ -111,7 +111,6 @@ export const AddUserDialog: FC<{ team: TTeam }> = ({ team }) => {
                             size="sm"
                             variant="destructive-outline"
                             disabled={removeUserFromTeam.isLoading}
-                            isLoading={removeUserFromTeam.isLoading}
                             // eslint-disable-next-line @typescript-eslint/no-misused-promises
                             onClick={async () => {
                               await removeUserFromTeam.mutateAsync({
@@ -139,7 +138,6 @@ export const AddUserDialog: FC<{ team: TTeam }> = ({ team }) => {
                             });
                           }}
                           disabled={addUserToTeamMutation.isLoading}
-                          isLoading={addUserToTeamMutation.isLoading}
                         >
                           <PlusIcon className="w-5" />
                           Add to Team

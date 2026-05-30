@@ -111,7 +111,6 @@ export function AddUserDialog({ team }: { team: TTeam }) {
                             size="sm"
                             variant="destructive-outline"
                             disabled={removeUserFromTeam.isLoading}
-                            isLoading={removeUserFromTeam.isLoading}
                             // eslint-disable-next-line @typescript-eslint/no-misused-promises
                             onClick={async () => {
                               await removeUserFromTeam.mutateAsync({
@@ -140,7 +139,6 @@ export function AddUserDialog({ team }: { team: TTeam }) {
                           className="whitespace-nowrap"
                           size="sm"
                           disabled={addUserToTeamMutation.isLoading}
-                          isLoading={addUserToTeamMutation.isLoading}
                         >
                           <UserPlusIcon className="w-4" />
                           Add to Team

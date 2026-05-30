@@ -13,6 +13,7 @@ import {
   AuthPageTitle,
 } from "@/components/views/auth/common";
 import { siteConfig } from "@/config/site-config";
+import { ButtonLoaderIcon } from "@/components/common/button-loader-icon";
 
 function CreateUserAccountForm() {
   const router = useRouter();
@@ -106,9 +107,9 @@ function CreateUserAccountForm() {
                 Object.keys(form.formState.errors).length > 0 ||
                 mutation.isLoading
               }
-              isLoading={mutation.isLoading}
               className="w-full"
             >
+              <ButtonLoaderIcon isPending={mutation.isLoading} />
               Create Account
             </Button>
           </div>

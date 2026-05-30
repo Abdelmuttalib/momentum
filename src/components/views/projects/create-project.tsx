@@ -56,20 +56,6 @@ export function CreateProjectForm({
             data-invalid={form.formState.errors.description?.message}
           />
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="teamId">Team ID</Label>
-          <Input
-            id="teamId"
-            type="text"
-            {...form.register("teamId")}
-            placeholder="team id"
-            inputMode="text"
-            value={teamId.toString()}
-            defaultValue={teamId.toString()}
-            disabled={!!teamId}
-            data-invalid={form.formState.errors.teamId?.message}
-          />
-        </div>
 
         <div className="mt-4 flex flex-col-reverse border-t md:flex-row md:gap-2 lg:w-full lg:justify-end">
           <Button

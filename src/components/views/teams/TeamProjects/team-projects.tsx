@@ -17,6 +17,7 @@ import {
 import { type FC, useState, useEffect } from "react";
 import { PlusIcon } from "lucide-react";
 import { formatFullDate } from "@/lib/date";
+import { ButtonLoaderIcon } from "@/components/common/button-loader-icon";
 
 type TTeam = Team & {
   users: User[];
@@ -112,7 +113,6 @@ export const AddUserDialog: FC<{ team: TTeam }> = ({ team }) => {
                             size="sm"
                             variant="destructive-outline"
                             disabled={removeUserFromTeam.isLoading}
-                            isLoading={removeUserFromTeam.isLoading}
                             // eslint-disable-next-line @typescript-eslint/no-misused-promises
                             onClick={async () => {
                               await removeUserFromTeam.mutateAsync({
@@ -122,6 +122,9 @@ export const AddUserDialog: FC<{ team: TTeam }> = ({ team }) => {
                               });
                             }}
                           >
+                            <ButtonLoaderIcon
+                              isPending={removeUserFromTeam.isLoading}
+                            />
                             Remove
                           </Button>
                           <Button size="sm" variant="secondary" disabled>
@@ -140,8 +143,10 @@ export const AddUserDialog: FC<{ team: TTeam }> = ({ team }) => {
                             });
                           }}
                           disabled={addUserToTeamMutation.isLoading}
-                          isLoading={addUserToTeamMutation.isLoading}
                         >
+                          <ButtonLoaderIcon
+                            isPending={addUserToTeamMutation.isLoading}
+                          />
                           <PlusIcon className="w-5" />
                           Add to Team
                         </Button>
