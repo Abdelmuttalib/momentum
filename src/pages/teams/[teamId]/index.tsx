@@ -97,9 +97,6 @@ export default function TeamPage({ teamId }: TeamPageProps) {
 
   const { data: invitations } = api.company.getAllInvitations.useQuery();
 
-  console.log("team", team);
-  console.log("invitations", invitations);
-
   if (!isLoadingTeamData && !team) {
     return (
       <AppLayout>

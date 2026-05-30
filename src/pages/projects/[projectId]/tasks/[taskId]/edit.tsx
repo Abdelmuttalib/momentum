@@ -13,8 +13,6 @@ export default function EditTaskPage() {
   const projectId = query.projectId as string;
   const taskId = query.taskId as string;
 
-  console.log("projectId", projectId);
-
   const { data: task, isLoading } = useTask(taskId);
 
   const { execute, isPending } = useUpdateTask();

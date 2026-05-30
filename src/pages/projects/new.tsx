@@ -9,7 +9,6 @@ export default function NewProjectPage() {
   const { execute, isPending } = useCreateProject();
 
   async function handleSubmit(data: ProjectFormSchemaType) {
-    console.log("data", data);
     await execute({
       name: data.name,
       description: data.description,

@@ -33,7 +33,6 @@ export function useCreateLabel({ onSuccess, onError }: CreateLabelOptions) {
   });
 
   const handleSubmit = form.handleSubmit(async (data) => {
-    console.log("Form submitted", data);
     await mutation.mutateAsync(data);
   });
 

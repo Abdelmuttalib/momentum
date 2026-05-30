@@ -95,8 +95,6 @@ export default function TeamSettingsPage({ team }: TeamSettingsPageProps) {
     teamId: team.id,
   });
 
-  console.log("teamMembers", teamMembers);
-
   return (
     <>
       <Seo title={`${team.name} | Momentum`} />

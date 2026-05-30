@@ -23,7 +23,6 @@ function CreateUserAccountForm() {
       // toast.success("Account created successfully");
       router.push(siteConfig.pages.main.links.signIn.href).catch((e) => {
         // redirect to sign in page
-        console.log("ERROR_REGISTER_USER", e);
       });
     },
     onError: () => {

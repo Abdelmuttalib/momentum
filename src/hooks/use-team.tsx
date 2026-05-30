@@ -32,7 +32,6 @@ export function useCreateTeam({ onSuccess, onError }: CreateTeamOptions = {}) {
   });
 
   const handleSubmit = form.handleSubmit(async (data) => {
-    console.log("data", data);
     await mutation.mutateAsync(data);
   });
 

@@ -11,7 +11,6 @@ import { useRouter } from "next/router";
 export default function EditProjectPage() {
   const { query } = useRouter();
   const projectId = query.projectId as string;
-  console.log("projectId", projectId);
   const { data: project, isLoading } = useProject(projectId);
 
   const { execute: updateProject, isPending: isUpdatingProject } =
@@ -35,9 +34,6 @@ export default function EditProjectPage() {
             {(data) => (
               <ProjectForm
                 onSubmit={(data) => void handleSubmit(data)}
-                onSuccess={() => console.log("S")}
-                onCancel={() => console.log("S")}
-                onError={() => console.log("S")}
                 defaultValues={data}
                 isPending={isUpdatingProject}
                 mode="edit"

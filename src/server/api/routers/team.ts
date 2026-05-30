@@ -178,8 +178,6 @@ export const teamRouter = createTRPCRouter({
         },
       });
 
-      console.log("input", input, teamMembers);
-
       return teamMembers;
     }),
 

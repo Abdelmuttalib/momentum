@@ -27,8 +27,6 @@ export function useCreateTask({
     defaultValues,
   });
 
-  console.log(form.formState.errors);
-
   const mutation = api.task.create.useMutation({
     onSuccess: async () => {
       // Handle the new team. For example, you could redirect to the team's page
@@ -46,7 +44,6 @@ export function useCreateTask({
   });
 
   const handleSubmit = form.handleSubmit(async (data) => {
-    console.log("Form submitted", data);
     await mutation.mutateAsync({
       ...data,
       projectId,

@@ -18,8 +18,6 @@ export function useCreateProject({
 }: CreateProjectOptions) {
   const apiContext = api.useContext();
 
-  console.log("projectFormSchema", onSuccess, onError, teamId);
-
   const form = useForm<CreateProjectSchemaType>({
     resolver: zodResolver(projectFormSchema),
   });
@@ -27,8 +25,6 @@ export function useCreateProject({
   // React.useEffect(() => {
   //   form.setValue("teamId", teamId);
   // }, [teamId, form]);
-
-  console.log("formState.errors", form.formState.errors);
 
   const mutation = api.project.createProject.useMutation({
     onSuccess: async () => {
@@ -47,7 +43,6 @@ export function useCreateProject({
   });
 
   const handleSubmit = form.handleSubmit(async (data) => {
-    console.log("Form submitted", data);
     await mutation.mutateAsync({
       ...data,
     });

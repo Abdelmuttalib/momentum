@@ -76,9 +76,6 @@ function CreateTaskForm({
 
   const { data: taskLabels } = api.task.getLabels.useQuery();
 
-  console.log("companyUsers", companyUsers);
-  console.log("task labels", taskLabels);
-
   return (
     <form
       // eslint-disable-next-line @typescript-eslint/no-misused-promises

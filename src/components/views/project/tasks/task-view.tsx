@@ -114,8 +114,6 @@ export default function TaskView({
     });
   }
 
-  console.log("TASK->TASK", task);
-
   return (
     <Dialog
     // open={isOpen} onOpenChange={setIsOpen}
@@ -150,7 +148,7 @@ export default function TaskView({
                 key={label.id}
                 name={label.name}
                 color={label.color}
-             />
+              />
             ))}
 
             <TaskStatusBadge status={task.status} size="sm" />

@@ -26,9 +26,9 @@ import { useFormErrorToast } from "@/hooks/use-form-error-toast";
 
 interface ProjectFormProps {
   onSubmit: (data: ProjectFormSchemaType) => void;
-  onSuccess: () => void;
-  onError: () => void;
-  onCancel: () => void;
+  onSuccess?: () => void;
+  onError?: () => void;
+  onCancel?: () => void;
   defaultValues: ProjectFormSchemaType;
   isPending: boolean;
   mode?: "create" | "edit";
@@ -49,8 +49,6 @@ export function ProjectForm({
       ...defaultValues,
     },
   });
-
-  console.log("form", form.formState);
 
   useFormErrorToast({
     touchedFields: form.formState.touchedFields,

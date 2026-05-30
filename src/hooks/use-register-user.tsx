@@ -35,7 +35,6 @@ export function useRegisterUser({
   });
 
   const handleSubmit = form.handleSubmit(async (data) => {
-    console.log("Form submitted", data);
     await mutation.mutateAsync({
       name: data.name,
       email: data.email,

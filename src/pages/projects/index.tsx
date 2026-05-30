@@ -1,20 +1,16 @@
 import { DataTableLoader } from "@/components/data-loader";
 import { AppLayout } from "@/components/layout/app-layout";
 import { Seo } from "@/components/seo";
-import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/config/site-config";
 import { useProjects } from "@/features/projects/hooks/use-projects";
 import { getServerAuthSession } from "@/server/auth";
-import { api } from "@/lib/api";
 import { type Project } from "@prisma/client";
 import { type ColumnDef } from "@tanstack/react-table";
 import { Eye, Pencil } from "lucide-react";
 import { type GetServerSideProps } from "next";
 import { useSession } from "next-auth/react";
-import Link from "next/link";
 import { shortId } from "@/lib/utils";
 import { DashboardPageHeader } from "@/components/common/dashboard";
-import { PageHeader } from "@/components/page-components";
 import { ButtonLink } from "@/components/common/button-link";
 import { routes } from "@/lib/routes";
 
@@ -22,8 +18,7 @@ export default function ProjectsPage() {
   const { data: session } = useSession();
   const companyId = session?.user?.company.id;
 
-  const { data: projects, isLoading, error } = useProjects(companyId);
-  console.log("projects", projects);
+  const { data: projects, isLoading } = useProjects(companyId);
 
   const columns: ColumnDef<Project>[] = [
     {

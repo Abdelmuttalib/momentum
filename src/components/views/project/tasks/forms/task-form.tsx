@@ -62,8 +62,6 @@ export function TaskForm({
 
   const { data: projects } = useProjects(companyId);
 
-  console.log("TaskForm form", form.formState);
-
   return (
     <form
       onSubmit={(e) => {
