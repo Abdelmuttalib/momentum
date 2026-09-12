@@ -40,3 +40,8 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+
+AI_CONTEXT.txt
+project-context.txt
+collect-ai-context.sh
