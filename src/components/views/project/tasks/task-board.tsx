@@ -11,15 +11,20 @@ import { toast } from "sonner";
 import { TaskStatus as TaskStatusNativeEnum } from "@/lib/enums";
 import { Skeleton } from "@/components/ui/skeleton";
 import TaskBoardColumn from "./task-board-column";
-import { TaskLoader } from "./task";
 import { type GetProjectTasks } from "@/features/projects/types";
+import { type BoardDensity } from "@/features/tasks/hooks/use-board-density";
+import { EmptyState } from "@/components/common/empty-state";
+import { ButtonLink } from "@/components/common/button-link";
+import { routes } from "@/lib/routes";
 
 export default function TaskBoard({
   tasks,
   projectId,
+  density = "compact",
 }: {
   tasks: GetProjectTasks;
   projectId: Project["id"];
+  density?: BoardDensity;
 }) {
   const taskStatuses = Object.keys(TaskStatusNativeEnum) as TaskStatus[];
   // const { data: tasks, isLoading: isLoadingTasks } =
@@ -51,7 +56,6 @@ export default function TaskBoard({
     setCurrentTasks(tasks);
   }, [tasks]);
 
-  console.log("tasks", tasks);
 
   const handleOnDragEnd = async (result: DropResult) => {
     const { source, destination, draggableId: taskId } = result;
@@ -223,55 +227,82 @@ export default function TaskBoard({
   return (
     <DragDropContext onDragEnd={(e) => void handleOnDragEnd(e)}>
       {/* {selectedTask && <TaskView task={selectedTask} />} */}
-      <div className="relative z-10 grid h-full min-h-[75svh] w-full min-w-fit grid-cols-1 justify-between gap-3 overflow-x-auto pb-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-        {currentTasks &&
-          taskStatuses.map((status) => {
-            const tasksForStatus = currentTasks.filter(
-              (task) => task.status === status
-            );
+      {currentTasks && currentTasks.length === 0 ? (
+        <EmptyState
+          title="No tasks yet"
+          description="Create the first task to start tracking work on this board."
+          action={
+            <ButtonLink
+              href={routes.projects.tasks.new({ projectId })}
+              size="sm"
+            >
+              New task
+            </ButtonLink>
+          }
+        />
+      ) : (
+        <div className="flex w-full items-start gap-3 overflow-x-auto pb-4">
+          {currentTasks &&
+            taskStatuses.map((status) => {
+              const tasksForStatus = currentTasks.filter(
+                (task) => task.status === status
+              );
 
-            return (
-              <TaskBoardColumn
-                key={status}
-                status={status}
-                tasks={tasksForStatus}
-              />
-            );
-          })}
-      </div>
+              return (
+                <TaskBoardColumn
+                  key={status}
+                  status={status}
+                  tasks={tasksForStatus}
+                  density={density}
+                />
+              );
+            })}
+        </div>
+      )}
     </DragDropContext>
   );
 }
 
 export function TaskBoardLoader() {
-  return Object.keys(TaskStatusNativeEnum).map((status) => (
-    <div
-      key={status}
-      className="h-full w-full overflow-hidden rounded-lg border shadow-lg"
-    >
-      <div className="flex items-center justify-between gap-3 px-4 py-3">
-        <div className="flex items-center gap-1">
-          <h2 className="font-medium capitalize">
-            {status.replace("_", " ").toLocaleLowerCase()}
-          </h2>
-          <div className="rounded-full px-2.5 py-0.5 text-sm">
-            <Skeleton className="h-5 w-4" />
+  return (
+    <div className="flex w-full items-start gap-3 overflow-x-auto pb-4">
+      {Object.keys(TaskStatusNativeEnum).map((status) => (
+        <div
+          key={status}
+          className="w-72 shrink-0 overflow-hidden rounded-lg border bg-card"
+        >
+          <div className="flex items-center justify-between gap-2 px-3 py-2">
+            <div className="flex items-center gap-1.5">
+              <Skeleton className="h-4 w-20" />
+              <Skeleton className="h-4 w-6 rounded-full" />
+            </div>
+            <Skeleton className="h-7 w-7 rounded-md" />
+          </div>
+
+          <div className={cn("space-y-2 rounded-lg bg-muted/40 p-2")}>
+            {[1, 2, 3].map((n) => (
+              <TaskCardLoader key={n} />
+            ))}
           </div>
         </div>
-        <div>
-          <Skeleton className="h-7 w-7" />
-        </div>
-      </div>
+      ))}
+    </div>
+  );
+}
 
-      <div
-        className={cn(
-          "h-full min-h-[75svh] w-full space-y-4 rounded px-2.5 py-4"
-        )}
-      >
-        {[1, 2, 3, 4, 5].map((n) => (
-          <TaskLoader key={n} />
-        ))}
+function TaskCardLoader() {
+  return (
+    <div className="rounded-md border bg-card p-2.5">
+      <Skeleton className="h-4 w-3/4" />
+      <Skeleton className="mt-2 h-3 w-1/2" />
+      <div className="mt-2.5 flex items-center justify-between gap-2">
+        <Skeleton className="h-5 w-14 rounded-full" />
+        <Skeleton className="h-5 w-16 rounded-full" />
+      </div>
+      <div className="mt-2 flex items-center justify-between">
+        <Skeleton className="h-5 w-5 rounded-full" />
+        <Skeleton className="h-3 w-6" />
       </div>
     </div>
-  ));
+  );
 }

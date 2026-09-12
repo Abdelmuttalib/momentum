@@ -1,16 +1,16 @@
 import { Button } from "@/components/ui/button";
-import { DataTable } from "@/components/ui/data-table-2";
 import { Input } from "@/components/ui/input";
-import { Typography } from "@/components/ui/typography";
+import { Label } from "@/components/ui/label";
+import { Text } from "@/components/typography";
+import {
+  SettingSection,
+} from "@/components/settings/setting-section";
 import { api } from "@/lib/api";
 import { useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { companyTeamsColumns } from "../company/organization-teams";
-import { teamMembersColumns } from "../team/teamMembersColumns";
-import { companyInvitationsColumns } from "../company/invites/company-invitations-columns";
-import { CreateInvite } from "@/components/views/company/invitations/create-invite";
+import Link from "next/link";
 import { ButtonLoaderIcon } from "@/components/common/button-loader-icon";
 
 const companyInfoFormSchema = z.object({
@@ -19,25 +19,18 @@ const companyInfoFormSchema = z.object({
 
 type CompanyInfoFormValues = z.infer<typeof companyInfoFormSchema>;
 
+/**
+ * Workspace configuration only (company name). Member and invitation
+ * management lives on the Company page (/company), which uses a wider
+ * management layout suited to tables.
+ */
 export function CompanySettings() {
   const { data: session } = useSession();
   const companyId = session?.user?.company?.id;
+  const isAdmin = session?.user?.role === "ADMIN";
   const { data: companyData, isLoading: isLoadingCompanyData } =
     api.company.getCompany.useQuery();
 
-  const {
-    data: invitationsData,
-    // isLoading: isLoadingInvitations
-  } = api.company.getAllInvitations.useQuery();
-
-  const {
-    data: companyMembersData,
-    // isLoading: isLoadingCompanyMembers
-  } = api.company.getCompanyUsers.useQuery();
-  const {
-    data: companyTeams,
-    // isLoading
-  } = api.team.getAllTeamsByCompanyId.useQuery();
   const {
     register,
     handleSubmit,
@@ -67,102 +60,73 @@ export function CompanySettings() {
   }
 
   return (
-    <>
-      <div className="flex flex-col gap-7 rounded-lg py-7">
-        <div className="w-full">
-          <Typography as="h3" variant="lg/medium">
-            Company Settings
-          </Typography>
-        </div>
-        <div className="flex flex-col gap-7 divide-y">
-          {/* <MenuExample /> */}
-          <div className="w-full">
-            <div className="flex flex-col gap-2 pb-8">
-              <form
-                // eslint-disable-next-line @typescript-eslint/no-misused-promises
-                onSubmit={handleSubmit(onSubmit)}
-                className="flex flex-col gap-5 divide-y-2"
-              >
-                <div className="border-b py-6 text-sm lg:flex lg:items-start">
-                  <div className="mb-1 space-y-1 lg:mb-0 lg:mr-5 lg:w-2/5 lg:flex-shrink-0">
-                    <h3 className="text-foreground">
-                      Company <span className="text-destructive">*</span>
-                    </h3>
-                    <p className="max-w-[420px] text-muted-foreground">
-                      company name
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-x-2 lg:flex-grow">
-                    <Input
-                      id="companyName"
-                      inputMode="text"
-                      type="text"
-                      placeholder="company"
-                      {...register("name", {
-                        required: true,
-                      })}
-                      defaultValue={companyData?.name}
-                      disabled={true}
-                      // disabled={
-                      //   isLoadingCompanyData ||
-                      //   updateCompanyNameMutation.isLoading
-                      // }
-                    />
-                    <Button
-                      type="submit"
-                      disabled={
-                        isLoadingCompanyData ||
-                        updateCompanyNameMutation.isLoading ||
-                        getValues("name") === companyData?.name ||
-                        true
-                      }
-                    >
-                      <ButtonLoaderIcon
-                        isPending={updateCompanyNameMutation.isLoading}
-                      />
-                      Save
-                    </Button>
-                  </div>
-                </div>
-              </form>
-            </div>
+    <div className="flex flex-col">
+      <SettingSection
+        title="Company name"
+        description={
+          isAdmin
+            ? "Shown across the workspace."
+            : "Only workspace admins can rename the company."
+        }
+      >
+        <form
+          // eslint-disable-next-line @typescript-eslint/no-misused-promises
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex max-w-md flex-col gap-3"
+        >
+          <div>
+            <Label htmlFor="companyName">Name</Label>
+            <Input
+              id="companyName"
+              inputMode="text"
+              type="text"
+              placeholder="Company"
+              {...register("name", {
+                required: true,
+              })}
+              defaultValue={companyData?.name}
+              disabled={
+                !isAdmin ||
+                isLoadingCompanyData ||
+                updateCompanyNameMutation.isLoading
+              }
+              data-invalid={errors?.name?.message}
+            />
           </div>
+          <Button
+            type="submit"
+            size="sm"
+            className="self-start"
+            disabled={
+              !isAdmin ||
+              isLoadingCompanyData ||
+              updateCompanyNameMutation.isLoading ||
+              getValues("name") === companyData?.name
+            }
+          >
+            <ButtonLoaderIcon
+              isPending={updateCompanyNameMutation.isLoading}
+            />
+            Save changes
+          </Button>
+        </form>
+      </SettingSection>
 
-          {/* company members */}
-          <div className="w-full pt-6">
-            <div className="flex flex-col gap-6 pb-8">
-              <div className="flex items-center justify-between">
-                <h2 className="FormLabel-md">Company Members</h2>
-              </div>
-              <div className="">
-                {companyMembersData && (
-                  <DataTable
-                    columns={teamMembersColumns}
-                    data={companyMembersData}
-                  />
-                )}
-              </div>
-            </div>
-          </div>
-          {/* company invites */}
-          <div className="w-full pt-6">
-            <div className="flex flex-col gap-2 pb-8">
-              <div className="flex items-center justify-between">
-                <h2 className="FormLabel-md">Company Invitations</h2>
-                <CreateInvite />
-              </div>
-              <div>
-                {invitationsData && (
-                  <DataTable
-                    columns={companyInvitationsColumns}
-                    data={invitationsData}
-                  />
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
+      <SettingSection
+        title="Members & invitations"
+        description="Manage who has access to this workspace."
+      >
+        <Text size="sm" tone="muted">
+          Workspace members and pending invitations are managed on the{" "}
+          <Link
+            href="/company"
+            className="font-medium text-foreground hover:underline"
+          >
+            Company page
+          </Link>
+          .
+        </Text>
+      </SettingSection>
+    </div>
   );
 }

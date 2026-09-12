@@ -24,6 +24,7 @@ import { BackButton } from "@/components/common/back-button";
 import { TaskStatusBadge } from "@/features/tasks/components/task-status-badge";
 import { TaskPriorityBadge } from "@/features/tasks/components/task-priority-badge";
 import { useProjects } from "@/features/projects/hooks/use-projects";
+import { useFormErrorToast } from "@/hooks/use-form-error-toast";
 
 type TaskFormProps = {
   onSubmit: (data: TaskFormSchemaType) => void;
@@ -62,6 +63,11 @@ export function TaskForm({
 
   const { data: projects } = useProjects(companyId);
 
+  useFormErrorToast({
+    errors: form.formState.errors,
+    touchedFields: form.formState.touchedFields,
+  });
+
   return (
     <form
       onSubmit={(e) => {
@@ -90,7 +96,7 @@ export function TaskForm({
           placeholder="task description"
           inputMode="text"
           disabled={isPending}
-          className={cn("h-10 text-lg text-muted-foreground")}
+          className={cn("min-h-10 text-sm")}
           data-invalid={form.formState.errors?.description?.message}
         />
       </div>

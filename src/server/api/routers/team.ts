@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { z } from "zod";
+import { TRPCError } from "@trpc/server";
 
 import {
   createTRPCRouter,
@@ -38,6 +39,14 @@ export const teamRouter = createTRPCRouter({
     .input(z.object({ id: z.string() }))
     .mutation(async ({ input, ctx }) => {
       // const project = await ctx.prisma.;
+      const companyId = ctx.session.user.company.id;
+      const existing = await ctx.prisma.team.findUnique({
+        where: { id: input.id },
+        select: { companyId: true },
+      });
+      if (!existing || existing.companyId !== companyId) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
       await ctx.prisma.project.deleteMany({
         where: {
           teamId: input.id,
@@ -57,6 +66,14 @@ export const teamRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
+      const companyId = ctx.session.user.company.id;
+      const existing = await ctx.prisma.team.findUnique({
+        where: { id: input.teamId },
+        select: { companyId: true },
+      });
+      if (!existing || existing.companyId !== companyId) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
       const team = await ctx.prisma.team.update({
         where: { id: input.teamId },
         data: {
@@ -84,10 +101,12 @@ export const teamRouter = createTRPCRouter({
   getTeamTasksCompletedThisWeek: protectedProcedure
     .input(z.object({ teamId: z.string() }))
     .query(async ({ input, ctx }) => {
+      const companyId = ctx.session.user.company.id;
       const dateToday = new Date();
       const tasksCompletedThisWeek = await ctx.prisma.team.findMany({
         where: {
           id: input.teamId,
+          companyId,
           tasks: {
             some: {
               status: TaskStatus.COMPLETED,
@@ -105,9 +124,11 @@ export const teamRouter = createTRPCRouter({
   getTeam: protectedProcedure
     .input(z.object({ teamId: z.string() }))
     .query(async ({ input, ctx }) => {
-      const team = await ctx.prisma.team.findUnique({
+      const companyId = ctx.session.user.company.id;
+      const team = await ctx.prisma.team.findFirst({
         where: {
           id: input.teamId,
+          companyId,
         },
         include: {
           users: true,
@@ -147,8 +168,10 @@ export const teamRouter = createTRPCRouter({
 
   getAllUsers: protectedProcedure.query(async ({ ctx }) => {
     const currentUserId = ctx.session.user.id;
+    const companyId = ctx.session.user.company.id;
     const users = await ctx.prisma.user.findMany({
       where: {
+        companyId,
         id: {
           not: currentUserId,
         },
@@ -168,10 +191,12 @@ export const teamRouter = createTRPCRouter({
       })
     )
     .query(async ({ input, ctx }) => {
+      const companyId = ctx.session.user.company.id;
       // const companyId = ctx.session.user.company.id;
-      const teamMembers = await ctx.prisma.team.findUnique({
+      const teamMembers = await ctx.prisma.team.findFirst({
         where: {
           id: input.teamId,
+          companyId,
         },
         include: {
           users: true,
@@ -189,7 +214,22 @@ export const teamRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const team = await ctx.prisma.team.update({
+      const companyId = ctx.session.user.company.id;
+      const team = await ctx.prisma.team.findFirst({
+        where: { id: input.teamId, companyId },
+        select: { id: true },
+      });
+      if (!team) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+      const member = await ctx.prisma.user.findFirst({
+        where: { id: input.userId, companyId },
+        select: { id: true },
+      });
+      if (!member) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+      const updated = await ctx.prisma.team.update({
         where: { id: input.teamId },
         data: {
           users: {
@@ -197,7 +237,7 @@ export const teamRouter = createTRPCRouter({
           },
         },
       });
-      return team;
+      return updated;
     }),
   removeUserFromTeam: protectedProcedure
     .input(
@@ -207,7 +247,15 @@ export const teamRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const team = await ctx.prisma.team.update({
+      const companyId = ctx.session.user.company.id;
+      const team = await ctx.prisma.team.findFirst({
+        where: { id: input.teamId, companyId },
+        select: { id: true },
+      });
+      if (!team) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+      const updated = await ctx.prisma.team.update({
         where: { id: input.teamId },
         data: {
           users: {
@@ -215,7 +263,7 @@ export const teamRouter = createTRPCRouter({
           },
         },
       });
-      return team;
+      return updated;
     }),
 
   // user
@@ -226,6 +274,14 @@ export const teamRouter = createTRPCRouter({
       })
     )
     .query(async ({ input, ctx }) => {
+      const companyId = ctx.session.user.company.id;
+      const member = await ctx.prisma.user.findFirst({
+        where: { id: input.userId, companyId },
+        select: { id: true },
+      });
+      if (!member) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
       const user = await ctx.prisma.user.findUnique({
         where: { id: input.userId },
         include: { teams: true },
@@ -236,10 +292,14 @@ export const teamRouter = createTRPCRouter({
   getTeamUsers: protectedProcedure
     .input(z.object({ teamId: z.string() }))
     .query(async ({ input, ctx }) => {
-      const team = await ctx.prisma.team.findUnique({
-        where: { id: input.teamId },
+      const companyId = ctx.session.user.company.id;
+      const team = await ctx.prisma.team.findFirst({
+        where: { id: input.teamId, companyId },
         include: { users: true },
       });
+      if (!team) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
       return team?.users;
     }),
 
@@ -251,6 +311,9 @@ export const teamRouter = createTRPCRouter({
       })
     )
     .query(async ({ input, ctx }) => {
+      if (input.companyId !== ctx.session.user.company.id) {
+        throw new TRPCError({ code: "FORBIDDEN" });
+      }
       // get all users under this company
       const companyMembers = await ctx.prisma.user.findMany({
         where: {

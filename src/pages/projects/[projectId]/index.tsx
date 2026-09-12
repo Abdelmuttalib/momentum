@@ -8,17 +8,16 @@ import { Seo } from "@/components/seo";
 
 import { Button } from "@/components/ui/button";
 import { DataLoader } from "@/components/data-loader";
-import {
-  PageHeader,
-  PageSubDescription,
-  PageSubTitle,
-  Stack,
-} from "@/components/page-components";
+import { Stack } from "@/components/page-components";
+import { CompactPageHeader } from "@/components/common/page-header";
+import { Heading, Text } from "@/components/typography";
+import { Progress } from "@/components/ui/progress";
 import { TaskCard } from "@/features/tasks/components/task-card";
 import { CreateTask } from "@/components/views/project/tasks/forms/create-task";
 import { useSession } from "next-auth/react";
 import { CBadge } from "@/components/common/cbadge";
 import { ButtonLink } from "@/components/common/button-link";
+import { routes } from "@/lib/routes";
 
 export default function ProjectPage() {
   const { query } = useRouter();
@@ -36,97 +35,60 @@ export default function ProjectPage() {
 
       <AppLayout>
         <Stack spacing="section">
-          <PageHeader
-            title={"Project: " + project?.name}
+          <CompactPageHeader
+            title={project?.name ?? "Project"}
             description={
               project?.description || "No project description provided."
             }
             actions={
               <>
                 <ButtonLink
-                  href={`/projects/${projectId}/edit`}
+                  href={routes.projects.tasks.index({ projectId })}
+                  size="sm"
+                >
+                  Open board
+                </ButtonLink>
+                <ButtonLink
+                  href={routes.projects.edit({ projectId })}
                   variant="outline"
                   size="sm"
                 >
-                  Edit Project
+                  Edit
                 </ButtonLink>
                 <CreateTask
                   projectId={projectId}
                   projects={projects}
-                  triggerButton={<Button size="sm">Add Task</Button>}
+                  triggerButton={
+                    <Button size="sm" variant="outline">
+                      Add Task
+                    </Button>
+                  }
                 />
               </>
             }
           />
 
-          <DataLoader data={project} isLoading={isLoading} error={null}>
+          <DataLoader data={project} isLoading={isLoading} error={error}>
             {(data) => (
               <Stack spacing="section">
-                {/* Header */}
-                <div>
-                  <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
-                    <div className="flex items-center gap-3"></div>
-                  </div>
-
-                  <div>
-                    <div className="grid gap-4 md:grid-cols-3">
-                      <div className="rounded-lg border bg-muted/40 p-4">
-                        <p className="text-sm text-muted-foreground">
-                          Project ID
-                        </p>
-
-                        <p className="mt-1 break-all text-sm font-medium">
-                          {data.id}
-                        </p>
-                      </div>
-
-                      <div className="rounded-lg border bg-muted/40 p-4">
-                        <p className="text-sm text-muted-foreground">Created</p>
-
-                        <p className="mt-1 text-sm font-medium">
-                          {formatDistanceToNow(data.createdAt)}
-                        </p>
-                      </div>
-
-                      <div className="rounded-lg border bg-muted/40 p-4">
-                        <p className="text-sm text-muted-foreground">Updated</p>
-
-                        <p className="mt-1 text-sm font-medium">
-                          {formatDistanceToNow(data.updatedAt)}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <ProjectProgressSummary
+                  tasks={data.tasks}
+                  updatedAt={data.updatedAt}
+                />
 
                 {/* Tasks */}
-                <section className="space-y-5">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div>
-                        <PageSubTitle className="inline-flex items-center gap-2">
-                          Tasks{" "}
-                          <CBadge color="gray" size="sm">
-                            {data?.tasks?.length}{" "}
-                            {data.tasks.length === 1 ? "Task" : "Tasks"}
-                          </CBadge>
-                        </PageSubTitle>
-                      </div>
-
-                      <PageSubDescription>
-                        Manage and track all project tasks.
-                      </PageSubDescription>
+                <section className="space-y-4">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <Heading level="subsection">Tasks</Heading>
+                      <CBadge color="gray" size="sm">
+                        {data?.tasks?.length}{" "}
+                        {data.tasks.length === 1 ? "Task" : "Tasks"}
+                      </CBadge>
                     </div>
-                    <div>
-                      <ButtonLink
-                        href={`/projects/${project.id}/tasks`}
-                        variant="outline"
-                        className="flex-1 lg:flex-initial"
-                        size="sm"
-                      >
-                        View All Tasks
-                      </ButtonLink>
-                    </div>
+                    <Text size="sm" tone="muted">
+                      Manage and track all project tasks.
+                    </Text>
                   </div>
 
                   <ProjectDetailsTasksView data={data} />
@@ -137,6 +99,38 @@ export default function ProjectPage() {
         </Stack>
       </AppLayout>
     </>
+  );
+}
+
+function ProjectProgressSummary({
+  tasks,
+  updatedAt,
+}: {
+  tasks: { status: string }[];
+  updatedAt: Date;
+}) {
+  const total = tasks.length;
+  const done = tasks.filter((t) => t.status === "COMPLETED").length;
+  const active = tasks.filter(
+    (t) => t.status === "TO_DO" || t.status === "IN_PROGRESS"
+  ).length;
+  const percent = total === 0 ? 0 : Math.round((done / total) * 100);
+
+  return (
+    <div className="flex flex-col gap-2 rounded-lg border bg-muted/40 p-4">
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+        <Text size="sm" weight="medium">
+          {done}/{total} done
+        </Text>
+        <Text size="sm" tone="muted">
+          {active} active
+        </Text>
+        <Text size="xs" tone="muted" className="ml-auto">
+          Updated {formatDistanceToNow(updatedAt)}
+        </Text>
+      </div>
+      <Progress value={percent} className="h-1.5" />
+    </div>
   );
 }
 
@@ -202,7 +196,7 @@ export function ProjectDetailsTasksView({
         ))}
       </div>
 
-      <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
         {filteredTasks?.map((task) => (
           <TaskCard key={task.id} task={task} projectId={data.id} />
         ))}

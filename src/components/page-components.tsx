@@ -60,14 +60,14 @@ export function PageHeaderActions({
 }
 
 {
-  /* <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1> */
+  /* Page titles stay compact (Linear-inspired): page ≈ 17-18px. */
 }
 
 export function PageTitle({ ...props }: TypographyProps) {
   return (
     <Typography
       as="h1"
-      variant="2xl/semibold"
+      variant="lg/semibold"
       className="tracking-tight"
       {...props}
     />
@@ -77,7 +77,7 @@ export function PageTitle({ ...props }: TypographyProps) {
 export function PageSubTitle({
   ...props
 }: React.ComponentProps<typeof Typography>) {
-  return <Typography as="h2" variant="xl/medium" {...props} />;
+  return <Typography as="h2" variant="md/medium" {...props} />;
 }
 
 export function PageSubDescription({
@@ -180,7 +180,7 @@ export function FormSectionHeader({
           {icon}
         </div>
       )}
-      <Typography as="h3" variant="lg/semibold">
+      <Typography as="h3" variant="base/semibold">
         {title}
       </Typography>
     </Inline>

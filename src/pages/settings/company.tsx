@@ -1,22 +1,30 @@
-// import DashboardLayout from "@/components/layout/dashboard-layout";
-import { Button } from "@/components/ui/button";
-import { SettingsContentLayout } from ".";
+import { SettingsContentLayout, SettingsSectionTitle } from ".";
 import { CompanySettings } from "@/components/views/settings";
+import { type GetServerSideProps } from "next";
+import { getServerAuthSession } from "@/server/auth";
 
 export default function CompanySettingsPage() {
   return (
-    <SettingsContentLayout
-      title="Company Settings"
-      description="dd"
-      actions={
-        <>
-          <Button>Save Changes</Button>
-        </>
-      }
-    >
-      <div>
-        <CompanySettings />
-      </div>
+    <SettingsContentLayout>
+      <SettingsSectionTitle>Company</SettingsSectionTitle>
+      <CompanySettings />
     </SettingsContentLayout>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  const userSession = await getServerAuthSession({ req, res });
+
+  if (!userSession) {
+    return {
+      redirect: {
+        destination: "/sign-in",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
+};

@@ -16,7 +16,7 @@ export function useTask({
   companyId,
 }: {
   taskId: string;
-  companyId: string;
+  companyId?: string;
 }) {
   return api.task.getTask.useQuery(
     {

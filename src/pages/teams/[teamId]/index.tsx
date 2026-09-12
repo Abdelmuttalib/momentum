@@ -40,7 +40,7 @@ import {
   UserPlus,
   MoreHorizontal,
   FolderOpen,
-  CheckCircle2,
+  Users,
   Clock,
   TrendingUp,
   Calendar,
@@ -54,6 +54,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Typography } from "@/components/ui/typography";
+import { Heading, Text } from "@/components/typography";
+import { EmptyState } from "@/components/common/empty-state";
 import {
   DashboardPageDescription,
   DashboardPageSubTitle,
@@ -100,17 +102,15 @@ export default function TeamPage({ teamId }: TeamPageProps) {
   if (!isLoadingTeamData && !team) {
     return (
       <AppLayout>
-        <div className="flex h-64 items-center justify-center">
-          <div className="text-center">
-            <h2 className="mb-2 text-2xl font-bold">Team not found</h2>
-            <p className="mb-4 text-muted-foreground">
-              The team you&apos;re looking for doesn&apos;t exist.
-            </p>
+        <EmptyState
+          title="Team not found"
+          description="The team you're looking for doesn't exist."
+          action={
             <Link href={getTeamsLink()}>
               <Button>Back to Teams</Button>
             </Link>
-          </div>
-        </div>
+          }
+        />
       </AppLayout>
     );
   }
@@ -134,16 +134,10 @@ export default function TeamPage({ teamId }: TeamPageProps) {
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-3">
                 <div>
-                  <Typography as="h1" variant="2xl/semibold">
-                    Team: {team.name}
-                  </Typography>
-                  <Typography
-                    as={"p"}
-                    variant={"base/normal"}
-                    className="text-muted-foreground"
-                  >
+                  <Heading level="page">Team: {team.name}</Heading>
+                  <Text size="sm" tone="muted">
                     {team.description}
-                  </Typography>
+                  </Text>
                 </div>
               </div>
             </div>
@@ -238,23 +232,6 @@ export default function TeamPage({ teamId }: TeamPageProps) {
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
-                  Total Issues
-                </CardTitle>
-                <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">
-                  {/* {team.stats.totalIssues} */}6
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  Across all projects
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
                   Active Projects
                 </CardTitle>
                 <FolderOpen className="h-4 w-4 text-muted-foreground" />
@@ -262,6 +239,16 @@ export default function TeamPage({ teamId }: TeamPageProps) {
               <CardContent>
                 <div className="text-2xl font-bold">{team.projects.length}</div>
                 <p className="text-xs text-muted-foreground">Active Projects</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Members</CardTitle>
+                <Users className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{team.users.length}</div>
+                <p className="text-xs text-muted-foreground">Team members</p>
               </CardContent>
             </Card>
           </div>

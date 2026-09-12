@@ -103,7 +103,7 @@ function CreateTaskForm({
           placeholder="task description"
           inputMode="text"
           disabled={isPending}
-          className={cn("h-10 text-lg text-muted-foreground")}
+          className={cn("min-h-10 text-sm")}
           data-invalid={form.formState.errors?.description?.message}
         />
       </div>

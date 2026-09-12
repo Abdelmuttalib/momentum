@@ -1,6 +1,7 @@
-import { DataLoader, DataTableLoader } from "@/components/data-loader";
+import { DataLoader } from "@/components/data-loader";
 import { AppLayout } from "@/components/layout/app-layout";
-import { PageHeader, PageStack, Stack } from "@/components/page-components";
+import { Stack } from "@/components/page-components";
+import { CompactPageHeader } from "@/components/common/page-header";
 import { Seo } from "@/components/seo";
 import { Typography } from "@/components/ui/typography";
 import { CreateTask } from "@/components/views/project/tasks/forms/create-task";
@@ -125,7 +126,7 @@ export default function TasksPage() {
   const { data: session } = useSession();
   const companyId = session?.user?.company.id;
 
-  const { data: tasks, isLoading: isLoadingTasks } = useTasks({
+  const { data: tasks, isLoading: isLoadingTasks, error: tasksError } = useTasks({
     companyId: companyId,
   });
 
@@ -136,14 +137,13 @@ export default function TasksPage() {
       <Seo title="Tasks" />
 
       <AppLayout>
-        <PageStack>
-          <PageHeader
+        <div className="space-y-6">
+          <CompactPageHeader
             title="Tasks"
-            description=""
             actions={projects && <CreateTask projects={projects} />}
           />
 
-          <DataLoader data={tasks} isLoading={isLoadingTasks} error={null}>
+          <DataLoader data={tasks} isLoading={isLoadingTasks} error={tasksError}>
             {(data) => (
               <ViewModeContainer
                 defaultView="table"
@@ -152,7 +152,7 @@ export default function TasksPage() {
               />
             )}
           </DataLoader>
-        </PageStack>
+        </div>
       </AppLayout>
     </>
   );

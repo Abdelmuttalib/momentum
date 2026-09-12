@@ -10,7 +10,7 @@ import { Eye, Pencil } from "lucide-react";
 import { type GetServerSideProps } from "next";
 import { useSession } from "next-auth/react";
 import { shortId } from "@/lib/utils";
-import { DashboardPageHeader } from "@/components/common/dashboard";
+import { CompactPageHeader } from "@/components/common/page-header";
 import { ButtonLink } from "@/components/common/button-link";
 import { routes } from "@/lib/routes";
 
@@ -18,7 +18,7 @@ export default function ProjectsPage() {
   const { data: session } = useSession();
   const companyId = session?.user?.company.id;
 
-  const { data: projects, isLoading } = useProjects(companyId);
+  const { data: projects, isLoading, error } = useProjects(companyId);
 
   const columns: ColumnDef<Project>[] = [
     {
@@ -150,11 +150,12 @@ export default function ProjectsPage() {
       <Seo title="Projects | Momentum" />
 
       <AppLayout>
-        <DashboardPageHeader
+        <div className="space-y-6">
+        <CompactPageHeader
           title="Projects"
           description="Manage all projects for your team."
           actions={
-            <ButtonLink href={"/projects/new"} size="sm">
+            <ButtonLink href={routes.projects.new()} size="sm">
               Add Project
             </ButtonLink>
           }
@@ -164,8 +165,9 @@ export default function ProjectsPage() {
           columns={columns}
           data={projects}
           isLoading={isLoading}
-          error={null}
+          error={error}
         />
+        </div>
       </AppLayout>
     </>
   );

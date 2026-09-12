@@ -31,7 +31,6 @@ export function UserMenu() {
   const { data: session } = useSession();
   const user = session?.user;
 
-  console.log("user: ", user);
 
   const { theme, setTheme } = useTheme();
 

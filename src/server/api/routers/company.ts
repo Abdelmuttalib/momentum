@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { z } from "zod";
+import { TRPCError } from "@trpc/server";
 import {
   createTRPCRouter,
   publicProcedure,
@@ -59,6 +60,9 @@ export const companyRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
+      if (input.companyId !== ctx.session.user.company.id) {
+        throw new TRPCError({ code: "FORBIDDEN" });
+      }
       const updatedCompany = await ctx.prisma.company.update({
         where: { id: input.companyId },
         data: {
@@ -191,12 +195,20 @@ export const companyRouter = createTRPCRouter({
   deleteProject: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ input, ctx }) => {
+      const companyId = ctx.session.user.company.id;
+      const existing = await ctx.prisma.project.findUnique({
+        where: { id: input.id },
+        select: { companyId: true },
+      });
+      if (!existing || existing.companyId !== companyId) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
       await ctx.prisma.project.delete({
         where: { id: input.id },
       });
     }),
 
-  getAllCompanyProjects: publicProcedure.query(async ({ input, ctx }) => {
+  getAllCompanyProjects: protectedProcedure.query(async ({ ctx }) => {
     const cId = ctx.session.user.company.id;
     const projects: Project[] = await ctx.prisma.project.findMany({
       where: {
@@ -218,6 +230,14 @@ export const companyRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
+      const companyId = ctx.session.user.company.id;
+      const existing = await ctx.prisma.project.findUnique({
+        where: { id: input.id },
+        select: { companyId: true },
+      });
+      if (!existing || existing.companyId !== companyId) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
       const updatedProject = await ctx.prisma.project.update({
         where: { id: input.id },
         data: {

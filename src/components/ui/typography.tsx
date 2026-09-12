@@ -40,15 +40,52 @@ const fontWeightMap: Record<FontWeight, string> = {
   extrabold: "font-extrabold",
 };
 
-// Generate variant combinations
-const typographyVariants = cva("font-normal text-foreground", {
+const fontLeadingMap: Record<FontSize, string> = {
+  xs: "leading-xs",
+  sm: "leading-sm",
+  base: "leading-base",
+  md: "leading-md",
+  lg: "leading-lg",
+  xl: "leading-xl",
+  "2xl": "leading-2xl",
+  "3xl": "leading-3xl",
+  "4xl": "leading-4xl",
+  "5xl": "leading-5xl",
+  "6xl": "leading-6xl",
+  "7xl": "leading-7xl",
+};
+
+export type TypographyTone =
+  | "default"
+  | "muted"
+  | "subtle"
+  | "destructive"
+  | "inherit";
+
+const toneMap: Record<TypographyTone, string> = {
+  default: "text-foreground",
+  muted: "text-muted-foreground",
+  subtle: "text-subtle-foreground",
+  destructive: "text-destructive",
+  inherit: "",
+};
+
+// Generate variant combinations.
+// Typography owns size, weight, and line-height. Color is flexible via
+// `tone` (theme tokens) or `className` — never hard-code color-specific
+// components on top of this primitive.
+const typographyVariants = cva("font-normal", {
   variants: {
     size: fontSizeMap,
     weight: fontWeightMap,
+    tone: toneMap,
+    leading: fontLeadingMap,
   },
   defaultVariants: {
     size: "md",
     weight: "normal",
+    tone: "default",
+    leading: "md",
   },
 });
 
@@ -60,12 +97,20 @@ interface TypographyProps
     VariantProps<typeof typographyVariants> {
   as?: React.ElementType;
   variant?: TypographyVariant;
+  /** Opt-in balanced wrapping (e.g. marketing headlines). Defaults off so
+   * truncated/meta text is never affected. */
+  balance?: boolean;
 }
 
 function Typography({
   as = "p",
   // variant = "base/normal",
   variant = `base/normal`,
+  size,
+  weight,
+  tone,
+  leading,
+  balance = false,
   className,
   ...props
 }: TypographyProps) {
@@ -85,10 +130,21 @@ function Typography({
   }
 
   const v = getVariant();
+  const resolvedSize = size ?? v?.size ?? "md";
+  const resolvedWeight = weight ?? v?.weight ?? "normal";
 
   return (
     <Comp
-      className={cn("text-balance", typographyVariants(v), className)}
+      className={cn(
+        balance && "text-balance",
+        typographyVariants({
+          size: resolvedSize,
+          weight: resolvedWeight,
+          tone: tone ?? "default",
+          leading: leading ?? resolvedSize,
+        }),
+        className
+      )}
       {...props}
     />
   );

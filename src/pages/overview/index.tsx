@@ -25,7 +25,7 @@ import {
   Plus,
   LayoutList,
 } from "lucide-react";
-import { PageHeader } from "@/components/page-components";
+import { CompactPageHeader } from "@/components/common/page-header";
 import { ButtonLink } from "@/components/common/button-link";
 import { routes } from "@/lib/routes";
 import { CreateTask } from "@/components/views/project/tasks/forms/create-task";
@@ -98,7 +98,7 @@ export default function DashboardPage() {
     <AppLayout>
       <div className="space-y-6">
         {/* Header */}
-        <PageHeader
+        <CompactPageHeader
           title="Dashboard"
           description="Welcome back! Here's what's happening with your projects."
           actions={
@@ -178,7 +178,7 @@ export default function DashboardPage() {
           ))} */}
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-2">
+        <div className="grid gap-4 lg:grid-cols-2">
           {/* Recent Issues */}
           <Card>
             <CardHeader>
@@ -297,7 +297,7 @@ export default function DashboardPage() {
                       // const dueDate = new Date(project.dueDate);
 
                       return (
-                        <div key={project.name} className="space-y-3">
+                        <div key={project.id} className="space-y-3">
                           <div className="flex items-center justify-between">
                             <div>
                               <p className="text-sm font-medium">

@@ -36,12 +36,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { AppLayout } from "@/components/layout/app-layout";
+import { CompactPageHeader } from "@/components/common/page-header";
+import { EmptyState } from "@/components/common/empty-state";
 import { api } from "@/lib/api";
 import { TaskStatus } from "@/lib/enums";
 import { CreateTeam } from "@/components/views/teams/forms/create-team";
 import { getTeamLink } from "@/lib/links";
 import Link from "next/link";
 import { TeamDetailLoader } from "@/components/views/teams/team-detail-loader";
+import { getAvatarUrl } from "@/lib/avatar";
 
 const teams = [
   {
@@ -51,22 +54,22 @@ const teams = [
     members: [
       {
         name: "John Doe",
-        avatar: "https://avatar.vercel.sh",
+        avatar: getAvatarUrl(""),
         role: "Lead",
       },
       {
         name: "Jane Smith",
-        avatar: "https://avatar.vercel.sh",
+        avatar: getAvatarUrl(""),
         role: "Developer",
       },
       {
         name: "Mike Johnson",
-        avatar: "https://avatar.vercel.sh",
+        avatar: getAvatarUrl(""),
         role: "Developer",
       },
       {
         name: "Sarah Wilson",
-        avatar: "https://avatar.vercel.sh",
+        avatar: getAvatarUrl(""),
         role: "Developer",
       },
     ],
@@ -83,17 +86,17 @@ const teams = [
     members: [
       {
         name: "Emily Chen",
-        avatar: "https://avatar.vercel.sh",
+        avatar: getAvatarUrl(""),
         role: "Lead",
       },
       {
         name: "Alex Rodriguez",
-        avatar: "https://avatar.vercel.sh",
+        avatar: getAvatarUrl(""),
         role: "Designer",
       },
       {
         name: "Lisa Park",
-        avatar: "https://avatar.vercel.sh",
+        avatar: getAvatarUrl(""),
         role: "Designer",
       },
     ],
@@ -110,12 +113,12 @@ const teams = [
     members: [
       {
         name: "David Kim",
-        avatar: "https://avatar.vercel.sh",
+        avatar: getAvatarUrl(""),
         role: "Lead",
       },
       {
         name: "Rachel Green",
-        avatar: "https://avatar.vercel.sh",
+        avatar: getAvatarUrl(""),
         role: "Manager",
       },
     ],
@@ -132,17 +135,17 @@ const teams = [
     members: [
       {
         name: "Tom Brown",
-        avatar: "https://avatar.vercel.sh",
+        avatar: getAvatarUrl(""),
         role: "Lead",
       },
       {
         name: "Anna Davis",
-        avatar: "https://avatar.vercel.sh",
+        avatar: getAvatarUrl(""),
         role: "Specialist",
       },
       {
         name: "Chris Lee",
-        avatar: "https://avatar.vercel.sh",
+        avatar: getAvatarUrl(""),
         role: "Specialist",
       },
     ],
@@ -205,7 +208,15 @@ export default function TeamsContent({ companyId }: { companyId: string }) {
   const filteredTeams = teams || [];
 
   if (!isLoadingTeams && !teamsError && !teams) {
-    return <div>no...</div>;
+    return (
+      <AppLayout>
+        <EmptyState
+          title="No teams yet"
+          description="Create a team to organize people and projects."
+          action={<CreateTeam />}
+        />
+      </AppLayout>
+    );
   }
 
   if (isLoadingTeams) {
@@ -223,15 +234,11 @@ export default function TeamsContent({ companyId }: { companyId: string }) {
       <AppLayout>
         <div className="space-y-6">
           {/* Header */}
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-semibold tracking-tight">Teams</h1>
-              <p className="text-muted-foreground">
-                Manage your teams, members, and collaboration.
-              </p>
-            </div>
-            <CreateTeam />
-          </div>
+          <CompactPageHeader
+            title="Teams"
+            description="Manage your teams, members, and collaboration."
+            actions={<CreateTeam />}
+          />
 
           {/* Stats */}
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

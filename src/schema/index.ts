@@ -66,7 +66,7 @@ export const taskFormSchema = z.object({
   status: z.nativeEnum(TaskStatus),
   priority: z.nativeEnum(TaskPriority),
   dueDate: z.date().nullable().optional(),
-  assigneeId: z.string().optional(),
+  assigneeId: z.string().nullable().optional(),
   labels: z.string().optional(),
   projectId: z.string().optional(),
 });

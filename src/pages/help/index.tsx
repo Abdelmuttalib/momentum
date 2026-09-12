@@ -1,11 +1,11 @@
 import { AppLayout } from "@/components/layout/app-layout";
 import {
-  PageHeader,
   PageStack,
   PageSubTitle,
   PageSubDescription,
   Stack,
 } from "@/components/page-components";
+import { CompactPageHeader } from "@/components/common/page-header";
 import { Seo } from "@/components/seo";
 
 export default function HelpPage() {
@@ -15,7 +15,7 @@ export default function HelpPage() {
 
       <AppLayout>
         <PageStack>
-          <PageHeader
+          <CompactPageHeader
             title="Help & Documentation"
             description="Learn how to manage projects, tasks, teams, and your workspace."
           />

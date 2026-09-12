@@ -1,67 +1,57 @@
 import { FontSelect } from "@/components/font-select";
-import { SettingsContentLayout } from ".";
+import { SettingsContentLayout, SettingsSectionTitle } from ".";
 import { ThemeModeSelect } from "@/components/theme-customization";
-import { Button } from "@/components/ui/button";
 import { FontSizeSelect } from "@/components/font-size-select";
+import {
+  SettingDivider,
+  SettingSection,
+} from "@/components/settings/setting-section";
+import { type GetServerSideProps } from "next";
+import { getServerAuthSession } from "@/server/auth";
 
 export default function AppearanceSettings() {
   return (
-    <SettingsContentLayout
-      title="Appearance Settings"
-      description="dd"
-      actions={
-        <>
-          <Button variant="default">Save Changes</Button>
-        </>
-      }
-    >
-      <div>
-        <div className="border-b py-6 text-sm lg:flex lg:items-start">
-          <div className="mb-1 space-y-1 lg:mb-0 lg:mr-5 lg:w-2/5 lg:flex-shrink-0">
-            <h3 className="text-foreground">Theme mode</h3>
-            <p className="max-w-[420px] text-muted-foreground">
-              Choose a theme mode for your store
-            </p>
-          </div>
-          <div className="lg:flex-grow">
-            <ThemeModeSelect className="w-full" />
-          </div>
-        </div>
-        <div className="border-b py-6 text-sm lg:flex lg:items-start">
-          <div className="mb-1 space-y-1 lg:mb-0 lg:mr-5 lg:w-2/5 lg:flex-shrink-0">
-            <h3 className="text-foreground">
-              Font family <span className="text-destructive">*</span>
-            </h3>
-            <p className="max-w-[420px] text-muted-foreground">
-              Choose a font family for your interface
-            </p>
-          </div>
-          <div className="lg:flex-grow">
-            <FontSelect />
-          </div>
-        </div>
-        <div className="border-b py-6 text-sm lg:flex lg:items-start">
-          <div className="mb-1 space-y-1 lg:mb-0 lg:mr-5 lg:w-2/5 lg:flex-shrink-0">
-            <h3 className="text-foreground">Font size</h3>
-            <p className="max-w-[420px] text-muted-foreground">
-              Choose a font size for your interface
-            </p>
-          </div>
-          <div className="lg:flex-grow">
-            <FontSizeSelect />
-          </div>
-        </div>
-        {/* <div className="border-gray-100 border-b py-6 text-sm lg:flex lg:items-start">
-          <div className="mb-1 space-y-1 lg:mb-0 lg:mr-5 lg:w-2/5 lg:flex-shrink-0">
-            <h3 className="text-foreground">Theme color</h3>
-            <p className="max-w-[420px] text-muted-foreground">
-              Choose a color theme for your store
-            </p>
-          </div>
-          <div className="lg:flex-grow">
-          </div>
-        </div> */}
+    <SettingsContentLayout>
+      <SettingsSectionTitle>Appearance</SettingsSectionTitle>
+      <div className="flex flex-col">
+        <SettingSection
+          title="Theme mode"
+          description="Choose a light or dark interface."
+        >
+          <ThemeModeSelect className="w-full max-w-md" />
+        </SettingSection>
+        <SettingDivider />
+        <SettingSection
+          title="Font family"
+          description="Choose a font for your interface."
+        >
+          <FontSelect />
+        </SettingSection>
+        <SettingDivider />
+        <SettingSection
+          title="Font size"
+          description="Choose a text size for your interface."
+        >
+          <FontSizeSelect />
+        </SettingSection>
       </div>
     </SettingsContentLayout>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  const userSession = await getServerAuthSession({ req, res });
+
+  if (!userSession) {
+    return {
+      redirect: {
+        destination: "/sign-in",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
+};
