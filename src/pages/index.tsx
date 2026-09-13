@@ -1,4 +1,5 @@
 import { type GetStaticProps } from "next";
+import { getMessagesProps } from "@/lib/i18n";
 import Header from "@/components/views/landing-page/header";
 import { Seo } from "@/components/seo";
 
@@ -158,7 +159,7 @@ export default function LandingPage() {
 
               <div className="relative mx-auto w-full max-w-5xl">
                 <div className="overflow-hidden rounded-xl border bg-background shadow-xl">
-                  <div className="flex items-center space-x-2 border-b bg-muted/50 px-4 py-3">
+                  <div className="flex items-center gap-2 border-b bg-muted/50 px-4 py-3">
                     <div className="h-3 w-3 rounded-full bg-red-500" />
                     <div className="h-3 w-3 rounded-full bg-yellow-500" />
                     <div className="h-3 w-3 rounded-full bg-green-500" />
@@ -174,7 +175,7 @@ export default function LandingPage() {
                       <p className="text-muted-foreground">Dashboard Preview</p>
                       <Link href="/">
                         <Button variant="outline" className="mt-4">
-                          <Play className="mr-2 h-4 w-4" />
+                          <Play className="me-2 h-4 w-4" />
                           View Live Demo
                         </Button>
                       </Link>
@@ -226,7 +227,7 @@ export default function LandingPage() {
       <footer className="border-t bg-background">
         <Container className="py-8">
           <div className="flex flex-col items-center justify-between md:flex-row">
-            <div className="flex items-center space-x-2 md:mb-0">
+            <div className="flex items-center gap-2 md:mb-0">
               <Typography as="span" variant="base/semibold">
                 Momentum
               </Typography>
@@ -235,10 +236,10 @@ export default function LandingPage() {
               </Typography>
             </div>
 
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center gap-4">
               <Button variant="ghost" size="sm" asChild>
                 <Link href={siteConfig.githubUrl} target="_blank">
-                  <Github className="mr-2 h-4 w-4" />
+                  <Github className="me-2 h-4 w-4" />
                   Source Code
                 </Link>
               </Button>
@@ -253,8 +254,10 @@ export default function LandingPage() {
   );
 }
 
-export const getStaticProps: GetStaticProps = () => {
+export const getStaticProps: GetStaticProps = ({ locale }) => {
   return {
-    props: {},
+    props: {
+      ...getMessagesProps(locale),
+    },
   };
 };

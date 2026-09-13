@@ -11,6 +11,8 @@ import { useProjects } from "@/features/projects/hooks/use-projects";
 import { useSession } from "next-auth/react";
 import { type GetProjectTasks } from "@/features/projects/types";
 import { type BoardDensity } from "@/features/tasks/hooks/use-board-density";
+import { useTranslations } from "next-intl";
+import { useTaskStatusLabel } from "@/features/tasks/components/task-status-label";
 
 interface TaskColumnProps {
   status: TaskStatus;
@@ -34,8 +36,10 @@ export default function TaskBoardColumn({
   const companyId = session?.user?.company.id;
 
   const { data: projects } = useProjects(companyId);
+  const t = useTranslations("tasks");
+  const getStatusLabel = useTaskStatusLabel();
 
-  const statusLabel = status.replace("_", " ").toLocaleLowerCase();
+  const statusLabel = getStatusLabel(status);
 
   return (
     <div key={status} className="w-72 shrink-0 overflow-hidden rounded-lg">
@@ -44,7 +48,7 @@ export default function TaskBoardColumn({
           <Text size="sm" weight="medium" as="h2" className="truncate capitalize">
             {statusLabel}
           </Text>
-          <Text size="xs" tone="muted" as="span" aria-label={`${tasks.length} tasks`}>
+          <Text size="xs" tone="muted" as="span" aria-label={t("tasksInColumn", { count: tasks.length, status: statusLabel })}>
             {tasks.length}
           </Text>
         </div>
@@ -57,8 +61,8 @@ export default function TaskBoardColumn({
             triggerButton={
               <Button
                 type="button"
-                aria-label={`Add task to ${statusLabel}`}
-                title={`Add task to ${statusLabel}`}
+                aria-label={t("addTaskToColumn", { status: statusLabel })}
+                title={t("addTaskToColumn", { status: statusLabel })}
                 className="inline-flex h-7 w-7 whitespace-nowrap"
                 variant="ghost"
                 size="icon"
@@ -93,7 +97,7 @@ export default function TaskBoardColumn({
                 tone="muted"
                 className="px-1 py-3 text-center"
               >
-                No tasks
+                {t("noTasksInColumn")}
               </Text>
             )}
             {tasks?.map((task, index) => (

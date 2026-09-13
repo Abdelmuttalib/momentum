@@ -7,6 +7,8 @@ import { AppLayout } from "@/components/layout/app-layout";
 import { DataLoader } from "@/components/data-loader";
 import { TaskDetailView } from "@/components/views/project/tasks/task-detail-view";
 import { routes } from "@/lib/routes";
+import { requireAuthPage } from "@/server/auth-guard";
+import { type GetServerSideProps } from "next";
 
 export default function ProjectTaskPage() {
   const { query } = useRouter();
@@ -34,3 +36,5 @@ export default function ProjectTaskPage() {
     </>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = requireAuthPage();

@@ -12,6 +12,8 @@ import {
 } from "@/server/api/trpc";
 import { TaskStatus } from "@/lib/enums";
 import { createTeamFormSchema } from "@/schema";
+import { safeUserSelect } from "@/server/db/selects";
+import { requireUserInCompany } from "@/server/authz";
 
 export const teamRouter = createTRPCRouter({
   // admin
@@ -62,7 +64,7 @@ export const teamRouter = createTRPCRouter({
     .input(
       z.object({
         teamId: z.string(),
-        name: z.string(),
+        name: z.string().min(1).max(100),
       })
     )
     .mutation(async ({ input, ctx }) => {
@@ -90,7 +92,7 @@ export const teamRouter = createTRPCRouter({
         companyId,
       },
       include: {
-        users: true,
+        users: { select: safeUserSelect },
         projects: true,
         tasks: true,
       },
@@ -131,7 +133,7 @@ export const teamRouter = createTRPCRouter({
           companyId,
         },
         include: {
-          users: true,
+          users: { select: safeUserSelect },
           projects: true,
           // users: {
           //   select: {
@@ -175,11 +177,8 @@ export const teamRouter = createTRPCRouter({
         id: {
           not: currentUserId,
         },
-        // role: {
-        //   not: Role.ADMIN,
-        // },
       },
-      include: { teams: true },
+      select: { ...safeUserSelect, teams: true },
     });
     return users;
   }),
@@ -199,10 +198,13 @@ export const teamRouter = createTRPCRouter({
           companyId,
         },
         include: {
-          users: true,
+          users: { select: safeUserSelect },
         },
       });
 
+      if (!teamMembers) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
       return teamMembers;
     }),
 
@@ -255,6 +257,7 @@ export const teamRouter = createTRPCRouter({
       if (!team) {
         throw new TRPCError({ code: "NOT_FOUND" });
       }
+      await requireUserInCompany(ctx.prisma, input.userId, companyId);
       const updated = await ctx.prisma.team.update({
         where: { id: input.teamId },
         data: {
@@ -295,7 +298,7 @@ export const teamRouter = createTRPCRouter({
       const companyId = ctx.session.user.company.id;
       const team = await ctx.prisma.team.findFirst({
         where: { id: input.teamId, companyId },
-        include: { users: true },
+        include: { users: { select: safeUserSelect } },
       });
       if (!team) {
         throw new TRPCError({ code: "NOT_FOUND" });
@@ -322,6 +325,7 @@ export const teamRouter = createTRPCRouter({
             id: input.userId,
           },
         },
+        select: safeUserSelect,
       });
 
       return companyMembers;

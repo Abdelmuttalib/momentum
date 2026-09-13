@@ -66,7 +66,7 @@ export function SideBarLink({ href, icon, label, isCurrentPath }: SideBarLink) {
       )}
     >
       {icon}
-      <span className="ml-1 text-sm font-medium first-letter:uppercase">
+      <span className="ms-1 text-sm font-medium first-letter:uppercase">
         {/* {t(`pages.${text}.title`)} */}
         {label}
       </span>
@@ -87,7 +87,7 @@ export function SideBarSubLink({ href, label, isCurrentPath }: SideBarLink) {
       )}
     >
       {/* {icon} */}
-      <span className="ml-1 first-letter:uppercase">
+      <span className="ms-1 first-letter:uppercase">
         {/* {t(`pages.${text}.title`)} */}
         {label}
       </span>

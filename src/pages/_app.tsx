@@ -1,4 +1,6 @@
 import { type AppType } from "next/app";
+import { useRouter } from "next/router";
+import { NextIntlClientProvider, type AbstractIntlMessages } from "next-intl";
 
 import { api } from "@/lib/api";
 
@@ -7,16 +9,24 @@ import Providers from "@/components/providers";
 import type { TNextAuthSession } from "types";
 
 import { ThemeColorWrapper } from "@/components/theme-color-wrapper";
+import { DirectionEffect } from "@/components/direction-effect";
+import { resolveLocale } from "@/i18n/config";
 
-const MyApp: AppType<TNextAuthSession> = ({
-  Component,
-  pageProps: { session, ...pageProps },
-}) => {
+const MyApp: AppType<
+  TNextAuthSession & { messages?: AbstractIntlMessages }
+> = ({ Component, pageProps: { session, ...pageProps } }) => {
+  const { locale } = useRouter();
   return (
     <ThemeColorWrapper>
-      <Providers session={session}>
-        <Component {...pageProps} />
-      </Providers>
+      <NextIntlClientProvider
+        locale={resolveLocale(locale)}
+        messages={pageProps.messages}
+      >
+        <DirectionEffect />
+        <Providers session={session}>
+          <Component {...pageProps} />
+        </Providers>
+      </NextIntlClientProvider>
     </ThemeColorWrapper>
   );
 };

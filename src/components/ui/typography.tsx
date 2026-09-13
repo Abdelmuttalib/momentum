@@ -5,7 +5,7 @@ type FontSize =
   | "xs"
   | "sm"
   | "base"
-  | "md"
+  | "md" // deprecated alias of "base"; do not use in new code
   | "lg"
   | "xl"
   | "2xl"
@@ -74,6 +74,15 @@ const toneMap: Record<TypographyTone, string> = {
 // Typography owns size, weight, and line-height. Color is flexible via
 // `tone` (theme tokens) or `className` — never hard-code color-specific
 // components on top of this primitive.
+// Canonical hierarchy for dense SaaS UI:
+//   page title        -> Heading level="page"      (lg/semibold)
+//   section heading   -> Heading level="section"   (base/semibold)
+//   subsection/group  -> Heading level="subsection"(base/medium)
+//   body              -> Text size="sm"
+//   muted description -> Text size="sm" tone="muted"
+//   metadata/caption  -> Text size="xs" (tone muted as needed)
+//   form/table labels -> Label
+// Do not add color-named components; use `tone` + `className`.
 const typographyVariants = cva("font-normal", {
   variants: {
     size: fontSizeMap,
@@ -82,10 +91,10 @@ const typographyVariants = cva("font-normal", {
     leading: fontLeadingMap,
   },
   defaultVariants: {
-    size: "md",
+    size: "base",
     weight: "normal",
     tone: "default",
-    leading: "md",
+    leading: "base",
   },
 });
 
@@ -126,11 +135,11 @@ function Typography({
       return { size: s, weight: w };
     }
 
-    return { size: "md", weight: "normal" };
+    return { size: "base", weight: "normal" };
   }
 
   const v = getVariant();
-  const resolvedSize = size ?? v?.size ?? "md";
+  const resolvedSize = size ?? v?.size ?? "base";
   const resolvedWeight = weight ?? v?.weight ?? "normal";
 
   return (

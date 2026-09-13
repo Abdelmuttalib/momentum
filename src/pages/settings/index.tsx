@@ -1,23 +1,25 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { cn } from "@/lib/cn";
-import { getServerAuthSession } from "@/server/auth";
+import { localePath, requireAuthPage } from "@/server/auth-guard";
+import { resolveLocale } from "@/i18n/config";
 import { type GetServerSideProps } from "next";
 import { AppLayout } from "@/components/layout/app-layout";
 import { CompactPageHeader } from "@/components/common/page-header";
 import { Heading } from "@/components/typography";
+import { useTranslations } from "next-intl";
 
 export const settingsPaths = [
   {
-    label: "Profile",
+    key: "profile",
     href: "/settings/profile",
   },
   {
-    label: "Company",
+    key: "company",
     href: "/settings/company",
   },
   {
-    label: "Appearance",
+    key: "appearance",
     href: "/settings/appearance",
   },
 ];
@@ -28,24 +30,25 @@ export function SettingsContentLayout({
   children: React.ReactNode;
 }) {
   const { pathname } = useRouter();
+  const t = useTranslations("settings");
 
   return (
     <AppLayout>
       <div className="flex flex-col gap-4">
         <CompactPageHeader
-          title="Settings"
-          description="Manage your account, workspace, and appearance."
+          title={t("title")}
+          description={t("description")}
         />
         <div className="flex flex-col gap-6 lg:flex-row">
           <nav
-            aria-label="Settings"
+            aria-label={t("title")}
             className="flex shrink-0 gap-1 overflow-x-auto lg:w-52 lg:flex-col"
           >
             {settingsPaths.map((path) => {
               const isActive = path.href === pathname;
               return (
                 <Link
-                  key={path.label}
+                  key={path.key}
                   href={path.href}
                   aria-current={isActive ? "page" : undefined}
                   className={cn(
@@ -55,7 +58,7 @@ export function SettingsContentLayout({
                       : "text-muted-foreground"
                   )}
                 >
-                  {path.label}
+                  {t(path.key)}
                 </Link>
               );
             })}
@@ -81,22 +84,16 @@ export default function SettingsIndexPage() {
   return null;
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-  const userSession = await getServerAuthSession({ req, res });
-
-  if (!userSession) {
-    return {
+export const getServerSideProps: GetServerSideProps = requireAuthPage(
+  {},
+  (ctx) =>
+    Promise.resolve({
       redirect: {
-        destination: "/sign-in",
+        destination: localePath(
+          resolveLocale(ctx.locale),
+          "/settings/profile"
+        ),
         permanent: false,
       },
-    };
-  }
-
-  return {
-    redirect: {
-      destination: "/settings/profile",
-      permanent: false,
-    },
-  };
-};
+    })
+);

@@ -1,5 +1,5 @@
 import { Layout } from "@/components/layout";
-import { getServerAuthSession } from "@/server/auth";
+import { requireAuthPage } from "@/server/auth-guard";
 import { prisma } from "@/server/db";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import type { Team } from "@prisma/client";
@@ -30,29 +30,17 @@ export default function DashboardPage({ teams }: DashboardPageProps) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await getServerAuthSession(context);
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/sign-in",
-        permanent: false,
+export const getServerSideProps: GetServerSideProps = requireAuthPage(
+  {},
+  async (_ctx, session) => {
+    const teams = await prisma.team.findMany({
+      where: {
+        companyId: session.user.company.id,
       },
+    });
+
+    return {
+      teams: JSON.parse(JSON.stringify(teams)) as Team[],
     };
   }
-
-  const companyId = session.user.company.id;
-
-  const teams = await prisma.team.findMany({
-    where: {
-      companyId,
-    },
-  });
-
-  return {
-    props: {
-      teams,
-    },
-  };
-};
+);

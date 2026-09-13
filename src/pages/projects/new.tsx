@@ -1,11 +1,15 @@
 import { AppLayout } from "@/components/layout/app-layout";
 import { PageHeader, Stack } from "@/components/page-components";
 import { Seo } from "@/components/seo";
+import { requireAuthPage } from "@/server/auth-guard";
+import { type GetServerSideProps } from "next";
 import { ProjectForm } from "@/features/projects/forms/project-form";
 import { useCreateProject } from "@/features/projects/hooks/use-project-mutations";
 import { type ProjectFormSchemaType } from "@/schema";
+import { useTranslations } from "next-intl";
 
 export default function NewProjectPage() {
+  const t = useTranslations("projects");
   const { execute, isPending } = useCreateProject();
 
   async function handleSubmit(data: ProjectFormSchemaType) {
@@ -21,7 +25,7 @@ export default function NewProjectPage() {
 
       <AppLayout>
         <Stack spacing="section">
-          <PageHeader title="Create Project" />
+          <PageHeader title={t("createProject")} />
           <ProjectForm
             onSubmit={(data) => {
               void handleSubmit(data);
@@ -47,3 +51,5 @@ export default function NewProjectPage() {
     </>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = requireAuthPage();

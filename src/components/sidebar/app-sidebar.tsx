@@ -1,4 +1,5 @@
 import {
+  BarChart3,
   FolderOpen,
   Home,
   Settings,
@@ -6,6 +7,7 @@ import {
   Plus,
   Building,
   List,
+  User,
 } from "lucide-react";
 
 import {
@@ -33,12 +35,14 @@ import { CreateTask } from "../views/project/tasks/forms/create-task";
 import { useRouter } from "next/router";
 import { ButtonLink } from "../common/button-link";
 import { routes } from "@/lib/routes";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { getAvatarUrl } from "@/lib/avatar";
 import { Avatar, AvatarImage } from "../ui/avatar";
 
 export function AppSidebar() {
   const { asPath, query } = useRouter();
+  const t = useTranslations("navigation");
   const projectId = query.projectId as string;
 
   const { data: session } = useSession();
@@ -59,12 +63,17 @@ export function AppSidebar() {
 
   const navigation = [
     {
-      title: "Overview",
+      key: "overview",
       url: routes.dashboard.index(),
       icon: Home,
     },
     {
-      title: "Projects",
+      key: "analytics",
+      url: routes.analytics.index(),
+      icon: BarChart3,
+    },
+    {
+      key: "projects",
       url: routes.projects.index(),
       icon: FolderOpen,
       subItems: visibleProjects.map((project) => ({
@@ -73,20 +82,20 @@ export function AppSidebar() {
       })),
     },
     {
-      title: "Tasks",
+      key: "tasks",
       url: routes.tasks.index(),
       icon: List,
     },
     {
-      title: "Company",
+      key: "company",
       url: routes.company.index(),
       icon: Building,
     },
-    // {
-    //   title: "Teams",
-    //   url: "/teams",
-    //   icon: Users,
-    // },
+    {
+      key: "profile",
+      url: routes.profile.index(),
+      icon: User,
+    },
   ];
 
   return (
@@ -111,15 +120,15 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {navigation.map((item) => (
-                <SidebarMenuItem key={item.title}>
+                <SidebarMenuItem key={item.key}>
                   <SidebarMenuButton
                     asChild
                     isActive={isActive(item.url)}
-                    tooltip={item.title}
+                    tooltip={t(item.key)}
                   >
                     <Link href={item.url}>
                       <item.icon className="h-4 w-4" />
-                      <span>{item.title}</span>
+                      <span>{t(item.key)}</span>
                     </Link>
                   </SidebarMenuButton>
 
@@ -148,12 +157,12 @@ export function AppSidebar() {
                           </SidebarMenuSubButton>
                         </SidebarMenuSubItem>
                       ))}
-                      {item.title === "Projects" && hasMoreProjects && (
+                      {item.key === "projects" && hasMoreProjects && (
                         <SidebarMenuSubItem>
                           <SidebarMenuSubButton asChild>
                             <Link href={routes.projects.index()}>
                               <span className="text-muted-foreground">
-                                View all projects
+                                {t("viewAllProjects")}
                               </span>
                             </Link>
                           </SidebarMenuSubButton>
@@ -168,14 +177,14 @@ export function AppSidebar() {
         </SidebarGroup>
 
         <SidebarGroup>
-          <SidebarGroupLabel>Quick Actions</SidebarGroupLabel>
+          <SidebarGroupLabel>{t("quickActions")}</SidebarGroupLabel>
           <SidebarGroupContent>
             <div className="space-y-1.5 px-2">
               <CreateTask
                 triggerButton={
                   <Button size="sm" className="w-full justify-start">
-                    <Plus className="mr-2 h-4 w-4" />
-                    New Task
+                    <Plus className="me-2 h-4 w-4" />
+                    {t("newTask")}
                   </Button>
                 }
                 projectId={projectId}
@@ -188,8 +197,8 @@ export function AppSidebar() {
                 variant="outline"
                 className="w-full justify-start"
               >
-                <Plus className="mr-2 h-4 w-4" />
-                New Project
+                <Plus className="me-2 h-4 w-4" />
+                {t("newProject")}
               </ButtonLink>
             </div>
           </SidebarGroupContent>
@@ -201,11 +210,11 @@ export function AppSidebar() {
             <SidebarMenuButton
               asChild
               isActive={isActive(routes.settings.index())}
-              tooltip="Settings"
+              tooltip={t("settings")}
             >
               <Link href={routes.settings.index()}>
                 <Settings className="h-4 w-4" />
-                <span>Settings</span>
+                <span>{t("settings")}</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

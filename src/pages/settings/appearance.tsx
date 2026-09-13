@@ -7,30 +7,32 @@ import {
   SettingSection,
 } from "@/components/settings/setting-section";
 import { type GetServerSideProps } from "next";
-import { getServerAuthSession } from "@/server/auth";
+import { requireAuthPage } from "@/server/auth-guard";
+import { useTranslations } from "next-intl";
 
 export default function AppearanceSettings() {
+  const t = useTranslations("settings");
   return (
     <SettingsContentLayout>
-      <SettingsSectionTitle>Appearance</SettingsSectionTitle>
+      <SettingsSectionTitle>{t("appearance")}</SettingsSectionTitle>
       <div className="flex flex-col">
         <SettingSection
-          title="Theme mode"
-          description="Choose a light or dark interface."
+          title={t("themeMode")}
+          description={t("themeModeDescription")}
         >
           <ThemeModeSelect className="w-full max-w-md" />
         </SettingSection>
         <SettingDivider />
         <SettingSection
-          title="Font family"
-          description="Choose a font for your interface."
+          title={t("fontFamily")}
+          description={t("fontFamilyDescription")}
         >
           <FontSelect />
         </SettingSection>
         <SettingDivider />
         <SettingSection
-          title="Font size"
-          description="Choose a text size for your interface."
+          title={t("fontSize")}
+          description={t("fontSizeDescription")}
         >
           <FontSizeSelect />
         </SettingSection>
@@ -39,19 +41,4 @@ export default function AppearanceSettings() {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-  const userSession = await getServerAuthSession({ req, res });
-
-  if (!userSession) {
-    return {
-      redirect: {
-        destination: "/sign-in",
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    props: {},
-  };
-};
+export const getServerSideProps: GetServerSideProps = requireAuthPage();

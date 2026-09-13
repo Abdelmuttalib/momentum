@@ -162,3 +162,17 @@ export function formatDistanceToNowEnglish(date: Date | string) {
 
   return rtf.format(Math.round(value), unit);
 }
+
+/**
+ * Compact duration between two timestamps ("3d", "5h", "45m").
+ * Derived display only — never stored.
+ */
+export function formatCycleTime(from: Date | string, to: Date | string) {
+  const ms = Math.max(0, new Date(to).getTime() - new Date(from).getTime());
+  const minutes = Math.floor(ms / 60000);
+  if (minutes < 1) return "<1m";
+  if (minutes < 60) return `${minutes}m`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 48) return `${hours}h`;
+  return `${Math.floor(hours / 24)}d`;
+}

@@ -1,14 +1,14 @@
 import { CBadge, type CBadgeProps } from "@/components/common/cbadge";
 import { getTaskStatusBadgeColor } from "@/lib/color";
 import { type TaskStatus } from "@prisma/client";
+import { useTaskStatusLabel } from "./task-status-label";
 
 export function TaskStatusBadge({
   status,
   ...props
 }: { status: TaskStatus } & CBadgeProps) {
+  const getLabel = useTaskStatusLabel();
   if (!status) return null;
-
-  const label = status.replace("_", " ").toLocaleLowerCase();
 
   return (
     <CBadge
@@ -16,7 +16,7 @@ export function TaskStatusBadge({
       className="capitalize"
       {...props}
     >
-      {label}
+      {getLabel(status)}
     </CBadge>
   );
 }

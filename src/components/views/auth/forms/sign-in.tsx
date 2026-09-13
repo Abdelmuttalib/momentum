@@ -5,6 +5,7 @@ import { signIn } from "next-auth/react";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { AuthPageDescription, AuthPageTitle } from "../common";
 import { Label } from "@/components/ui/label";
 import { ButtonLoaderIcon } from "@/components/common/button-loader-icon";
+import { safeReturnTo } from "@/lib/return-to";
 
 const signInFormSchema = z.object({
   email: z
@@ -42,7 +44,8 @@ const signInFormSchema = z.object({
 type SignInFormFields = z.infer<typeof signInFormSchema>;
 
 export function SignInForm() {
-  const { push } = useRouter();
+  const { push, query } = useRouter();
+  const t = useTranslations("auth");
 
   const [isLoading, setIsLoading] = React.useState(false);
 
@@ -55,23 +58,23 @@ export function SignInForm() {
     signIn("credentials", {
       email: data.email,
       password: data.password,
-      callbackUrl: "/overview",
+      callbackUrl: safeReturnTo(query.returnTo),
       redirect: false,
       // callbackUrl: `${window.location.origin}/projects`,
     })
       .then(async (response) => {
         if (response?.ok) {
-          toast.success("Signed in successfully");
+          toast.success(t("signedIn"));
           if (response.url) {
             await push(response.url);
           }
         }
         if (!response?.ok) {
-          toast.error("Something went wrong, kindly try again");
+          toast.error(t("signInFailed"));
         }
       })
       .catch(() => {
-        toast.error("Something went wrong, kindly try again");
+        toast.error(t("signInFailed"));
       })
       .finally(() => setIsLoading(false));
   };
@@ -79,11 +82,8 @@ export function SignInForm() {
   return (
     <div className="w-full space-y-3 py-4 sm:space-y-6">
       <div>
-        <AuthPageTitle>Sign in</AuthPageTitle>
-        <AuthPageDescription>
-          {/* description */}
-          Sign in to your account to access your projects, tasks, and more.
-        </AuthPageDescription>
+        <AuthPageTitle>{t("signIn")}</AuthPageTitle>
+        <AuthPageDescription>{t("signInDescription")}</AuthPageDescription>
       </div>
       <div>
         <form
@@ -92,7 +92,7 @@ export function SignInForm() {
           className="flex flex-col gap-4"
         >
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">{t("email")}</Label>
             <Input
               id="email"
               type="email"
@@ -104,7 +104,7 @@ export function SignInForm() {
           </div>
 
           <div className="space-y-2">
-            <Label>Password</Label>
+            <Label>{t("password")}</Label>
             <Input
               id="password"
               type="password"
@@ -122,7 +122,7 @@ export function SignInForm() {
             }
           >
             <ButtonLoaderIcon isPending={isLoading} />
-            Sign in
+            {t("signIn")}
           </Button>
         </form>
       </div>

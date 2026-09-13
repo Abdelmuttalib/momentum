@@ -1,30 +1,17 @@
 import { SettingsContentLayout, SettingsSectionTitle } from ".";
 import { CompanySettings } from "@/components/views/settings";
 import { type GetServerSideProps } from "next";
-import { getServerAuthSession } from "@/server/auth";
+import { requireAuthPage } from "@/server/auth-guard";
+import { useTranslations } from "next-intl";
 
 export default function CompanySettingsPage() {
+  const t = useTranslations("settings");
   return (
     <SettingsContentLayout>
-      <SettingsSectionTitle>Company</SettingsSectionTitle>
+      <SettingsSectionTitle>{t("company")}</SettingsSectionTitle>
       <CompanySettings />
     </SettingsContentLayout>
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-  const userSession = await getServerAuthSession({ req, res });
-
-  if (!userSession) {
-    return {
-      redirect: {
-        destination: "/sign-in",
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    props: {},
-  };
-};
+export const getServerSideProps: GetServerSideProps = requireAuthPage();

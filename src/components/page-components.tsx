@@ -77,7 +77,7 @@ export function PageTitle({ ...props }: TypographyProps) {
 export function PageSubTitle({
   ...props
 }: React.ComponentProps<typeof Typography>) {
-  return <Typography as="h2" variant="md/medium" {...props} />;
+  return <Typography as="h2" variant="base/medium" {...props} />;
 }
 
 export function PageSubDescription({

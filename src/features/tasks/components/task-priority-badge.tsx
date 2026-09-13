@@ -1,14 +1,14 @@
 import { CBadge, type CBadgeProps } from "@/components/common/cbadge";
 import { getTaskPriorityBadgeColor } from "@/lib/color";
 import { type TaskPriority } from "@prisma/client";
+import { useTaskPriorityLabel } from "./task-status-label";
 
 export function TaskPriorityBadge({
   priority,
   ...props
 }: { priority: TaskPriority } & CBadgeProps) {
+  const getLabel = useTaskPriorityLabel();
   if (!priority) return null;
-
-  const label = priority.replace("_", " ").toLocaleLowerCase();
 
   return (
     <CBadge
@@ -16,7 +16,7 @@ export function TaskPriorityBadge({
       className="capitalize"
       {...props}
     >
-      {label}
+      {getLabel(priority)}
     </CBadge>
   );
 }

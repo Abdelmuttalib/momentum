@@ -1,4 +1,4 @@
-import { getServerAuthSession } from "@/server/auth";
+import { requireAuthPage } from "@/server/auth-guard";
 import type { GetServerSideProps } from "next";
 import { api } from "@/lib/api";
 import { Seo } from "@/components/seo";
@@ -7,13 +7,15 @@ import { CompactPageHeader } from "@/components/common/page-header";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DataTableLoader } from "@/components/data-loader";
 import { CreateInvite } from "@/components/views/company/invitations/create-invite";
-import { companyInvitationsColumns } from "@/components/views/company/invites/company-invitations-columns";
+import { getCompanyInvitationsColumns } from "@/components/views/company/invites/company-invitations-columns";
 import { teamMembersColumns } from "@/components/views/team/teamMembersColumns";
 import { useInvites } from "@/features/company/hooks/use-invite";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 
 export default function CompanyPage() {
   const { data: session } = useSession();
+  const t = useTranslations("company");
   const company = session?.user?.company;
   const companyId = company?.id;
 
@@ -38,17 +40,17 @@ export default function CompanyPage() {
       <AppLayout>
         <div className="flex flex-col gap-4">
           <CompactPageHeader
-            title={company?.name ?? "Company"}
-            description="Manage workspace members and invitations."
+            title={company?.name ?? t("title")}
+            description={t("description")}
             actions={<CreateInvite />}
           />
           <Tabs defaultValue="members">
             <TabsList>
               <TabsTrigger value="members">
-                Members ({members?.length ?? 0})
+                {t("members", { count: members?.length ?? 0 })}
               </TabsTrigger>
               <TabsTrigger value="invitations">
-                Invitations ({invitations?.length ?? 0})
+                {t("invitations", { count: invitations?.length ?? 0 })}
               </TabsTrigger>
             </TabsList>
             <TabsContent value="members">
@@ -62,7 +64,7 @@ export default function CompanyPage() {
             <TabsContent value="invitations">
               <DataTableLoader
                 data={invitations}
-                columns={companyInvitationsColumns}
+                columns={getCompanyInvitationsColumns(t)}
                 isLoading={isLoadingInvitations}
                 error={invitationsError}
               />
@@ -74,19 +76,4 @@ export default function CompanyPage() {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-  const userSession = await getServerAuthSession({ req, res });
-
-  if (!userSession) {
-    return {
-      redirect: {
-        destination: "/sign-in",
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    props: {},
-  };
-};
+export const getServerSideProps: GetServerSideProps = requireAuthPage();

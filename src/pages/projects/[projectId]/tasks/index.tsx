@@ -4,7 +4,7 @@ import { AppLayout } from "@/components/layout/app-layout";
 import TaskBoard from "@/components/views/project/tasks/task-board";
 import { BoardHeader } from "@/components/views/project/tasks/board-header";
 import { useBoardDensity } from "@/features/tasks/hooks/use-board-density";
-import { getServerAuthSession } from "@/server/auth";
+import { requireAuthPage } from "@/server/auth-guard";
 import { type GetServerSideProps } from "next";
 import { prisma } from "@/server/db";
 
@@ -68,49 +68,33 @@ ProjectPageProps) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({
-  req,
-  res,
-  params,
-}) => {
-  const userSession = await getServerAuthSession({ req, res });
-  const companyId = userSession?.user?.company?.id;
-
-  if (!userSession) {
-    return {
-      redirect: {
-        destination: "/sign-in",
-        permanent: false,
+export const getServerSideProps: GetServerSideProps = requireAuthPage(
+  {},
+  async (ctx, session) => {
+    const companyId = session.user.company.id;
+    const projectId = ctx.params?.projectId as string;
+    const project = await prisma.project.findUnique({
+      where: {
+        id: projectId,
       },
-    };
-  }
+    });
 
-  const projectId = params?.projectId as string;
-  const project = await prisma.project.findUnique({
-    where: {
-      id: projectId,
-    },
-  });
+    if (!project) {
+      return {
+        notFound: true,
+      };
+    }
 
-  if (!project) {
+    if (companyId !== project.companyId) {
+      return {
+        notFound: true,
+      };
+    }
+
     return {
-      notFound: true,
-    };
-  }
-
-  if (companyId !== project.companyId) {
-    return {
-      notFound: true,
-    };
-  }
-
-  return {
-    props: {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      userSession: JSON.parse(JSON.stringify(userSession)),
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       project: JSON.parse(JSON.stringify(project)),
       projectId: project.id,
-    },
-  };
-};
+    };
+  }
+);

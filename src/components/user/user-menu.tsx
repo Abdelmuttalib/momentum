@@ -45,6 +45,8 @@ import { cn } from "@/lib/cn";
 import Image from "next/image";
 import { getUserName } from "@/lib/user";
 import { type Session } from "next-auth";
+import { Avatar, AvatarImage } from "../ui/avatar";
+import { getAvatarUrl } from "@/lib/avatar";
 
 export function UserAvatar({
   user,
@@ -86,18 +88,19 @@ export function UserAvatar({
               triggerClassName
             )}
           >
-            {user && user?.image ? (
-              <Image
-                src={user?.image}
-                alt="profile image"
-                // width={size === "sm" ? 24 : 32}
-                // height={size === "sm" ? 24 : 32}
-                layout="fill"
-                className="rounded-full object-cover"
+            <Avatar className="h-full w-full">
+              <AvatarImage
+                src={
+                  user && user?.image
+                    ? user.image
+                    : getAvatarUrl(user?.email || "", {
+                        text: user?.email?.[0],
+                        size: 20,
+                      })
+                }
+                alt={user?.name ?? "user avatar"}
               />
-            ) : (
-              <>{user?.name ? user.name[0] : user.email[0]}</>
-            )}
+            </Avatar>
           </div>
         </TooltipTrigger>
         <TooltipContent className={cn("", contentClassName)}>
@@ -156,38 +159,38 @@ export default function UserMenu() {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem onClick={() => void push("/profile")}>
-            <UserIcon className="mr-2 h-5 w-5" />
+            <UserIcon className="me-2 h-5 w-5" />
             <span>Profile</span>
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => void push("/settings")}>
-            <Settings className="mr-2 h-5 w-5" />
+            <Settings className="me-2 h-5 w-5" />
             <span>Settings</span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem onClick={() => void push("/teams")}>
-            <Users className="mr-2 h-5 w-5" />
+            <Users className="me-2 h-5 w-5" />
             <span>Teams</span>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link href="/company">
-              <UserPlus className="mr-2 h-5 w-5" />
+              <UserPlus className="me-2 h-5 w-5" />
               <span>Invite users</span>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <Plus className="mr-2 h-5 w-5" />
+            <Plus className="me-2 h-5 w-5" />
             <span>New Team</span>
           </DropdownMenuItem>
-          {/* <DropdownMenuItem className="space-x-4">
+          {/* <DropdownMenuItem className="gap-4">
             <span>Theme</span>
             <ThemeSwitcher />
           </DropdownMenuItem> */}
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => void signOut()}>
-          <LogOut className="mr-2 h-5 w-5" />
+        <DropdownMenuItem onClick={() => void signOut({ callbackUrl: "/sign-in" })}>
+          <LogOut className="me-2 h-5 w-5" />
           <span>Log out</span>
         </DropdownMenuItem>
       </DropdownMenuContent>

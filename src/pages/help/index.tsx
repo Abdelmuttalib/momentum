@@ -7,8 +7,10 @@ import {
 } from "@/components/page-components";
 import { CompactPageHeader } from "@/components/common/page-header";
 import { Seo } from "@/components/seo";
+import { useTranslations } from "next-intl";
 
 export default function HelpPage() {
+  const t = useTranslations("help");
   return (
     <>
       <Seo title="Help | Momentum" />
@@ -16,59 +18,50 @@ export default function HelpPage() {
       <AppLayout>
         <PageStack>
           <CompactPageHeader
-            title="Help & Documentation"
-            description="Learn how to manage projects, tasks, teams, and your workspace."
+            title={t("title")}
+            description={t("description")}
           />
 
           <Stack>
             <div>
-              <PageSubTitle>Getting Started</PageSubTitle>
+              <PageSubTitle>{t("gettingStartedTitle")}</PageSubTitle>
               <PageSubDescription>
-                Create a project, organize work into tasks, assign team members,
-                and track progress through completion.
+                {t("gettingStartedBody")}
               </PageSubDescription>
             </div>
 
             <div>
-              <PageSubTitle>Projects</PageSubTitle>
+              <PageSubTitle>{t("projectsTitle")}</PageSubTitle>
               <PageSubDescription>
-                Projects are containers for related work. Create projects to
-                group tasks, collaborate with teammates, and track progress
-                toward a goal.
+                {t("projectsBody")}
               </PageSubDescription>
             </div>
 
             <div>
-              <PageSubTitle>Tasks</PageSubTitle>
+              <PageSubTitle>{t("tasksTitle")}</PageSubTitle>
               <PageSubDescription>
-                Tasks represent individual pieces of work. Tasks can be assigned
-                to team members, prioritized, labeled, commented on, and moved
-                through their workflow status.
+                {t("tasksBody")}
               </PageSubDescription>
             </div>
 
             <div>
-              <PageSubTitle>Teams</PageSubTitle>
+              <PageSubTitle>{t("teamsTitle")}</PageSubTitle>
               <PageSubDescription>
-                Teams allow you to organize users and projects. Assign projects
-                to teams to keep work grouped by department or function.
+                {t("teamsBody")}
               </PageSubDescription>
             </div>
 
             <div>
-              <PageSubTitle>Inviting Members</PageSubTitle>
+              <PageSubTitle>{t("invitingTitle")}</PageSubTitle>
               <PageSubDescription>
-                Administrators can invite new members to join the workspace.
-                Once a user accepts an invitation, they will gain access
-                according to their assigned role.
+                {t("invitingBody")}
               </PageSubDescription>
             </div>
 
             <div>
-              <PageSubTitle>Need More Help?</PageSubTitle>
+              <PageSubTitle>{t("needMoreTitle")}</PageSubTitle>
               <PageSubDescription>
-                If you encounter issues or have questions about using the
-                platform, contact your workspace administrator.
+                {t("needMoreBody")}
               </PageSubDescription>
             </div>
           </Stack>

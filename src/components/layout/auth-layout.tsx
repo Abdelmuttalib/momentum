@@ -18,7 +18,7 @@ export function AuthLayout({ children }: { children: ReactNode }) {
         </div>
       </div>
 
-      <div className="relative row-span-5 flex h-full w-full items-center justify-center rounded-t-lg bg-popover lg:col-span-2 lg:row-span-1 lg:rounded-l-lg lg:rounded-tr-none">
+      <div className="relative row-span-5 flex h-full w-full items-center justify-center rounded-t-lg bg-popover lg:col-span-2 lg:row-span-1 lg:rounded-s-lg lg:rounded-se-none">
         {children}
       </div>
     </div>

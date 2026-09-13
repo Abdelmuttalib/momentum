@@ -2,9 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Text } from "@/components/typography";
-import {
-  SettingSection,
-} from "@/components/settings/setting-section";
+import { SettingSection } from "@/components/settings/setting-section";
 import { api } from "@/lib/api";
 import { useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
@@ -12,6 +10,8 @@ import { toast } from "sonner";
 import { z } from "zod";
 import Link from "next/link";
 import { ButtonLoaderIcon } from "@/components/common/button-loader-icon";
+import { isAdmin } from "@/lib/auth/roles";
+import { useTranslations } from "next-intl";
 
 const companyInfoFormSchema = z.object({
   name: z.string(),
@@ -26,8 +26,11 @@ type CompanyInfoFormValues = z.infer<typeof companyInfoFormSchema>;
  */
 export function CompanySettings() {
   const { data: session } = useSession();
+  const t = useTranslations("settings");
+  const tCommon = useTranslations("common");
   const companyId = session?.user?.company?.id;
-  const isAdmin = session?.user?.role === "ADMIN";
+  const isAdminUser = isAdmin(session?.user?.role);
+
   const { data: companyData, isLoading: isLoadingCompanyData } =
     api.company.getCompany.useQuery();
 
@@ -62,11 +65,9 @@ export function CompanySettings() {
   return (
     <div className="flex flex-col">
       <SettingSection
-        title="Company name"
+        title={t("companyName")}
         description={
-          isAdmin
-            ? "Shown across the workspace."
-            : "Only workspace admins can rename the company."
+          isAdminUser ? t("companyNameDescription") : t("companyAdminOnly")
         }
       >
         <form
@@ -75,18 +76,18 @@ export function CompanySettings() {
           className="flex max-w-md flex-col gap-3"
         >
           <div>
-            <Label htmlFor="companyName">Name</Label>
+            <Label htmlFor="companyName">{t("name")}</Label>
             <Input
               id="companyName"
               inputMode="text"
               type="text"
-              placeholder="Company"
+              placeholder={t("companyNamePlaceholder")}
               {...register("name", {
                 required: true,
               })}
               defaultValue={companyData?.name}
               disabled={
-                !isAdmin ||
+                !isAdminUser ||
                 isLoadingCompanyData ||
                 updateCompanyNameMutation.isLoading
               }
@@ -98,33 +99,33 @@ export function CompanySettings() {
             size="sm"
             className="self-start"
             disabled={
-              !isAdmin ||
+              !isAdminUser ||
               isLoadingCompanyData ||
               updateCompanyNameMutation.isLoading ||
               getValues("name") === companyData?.name
             }
           >
-            <ButtonLoaderIcon
-              isPending={updateCompanyNameMutation.isLoading}
-            />
-            Save changes
+            <ButtonLoaderIcon isPending={updateCompanyNameMutation.isLoading} />
+            {tCommon("saveChanges")}
           </Button>
         </form>
       </SettingSection>
 
       <SettingSection
-        title="Members & invitations"
-        description="Manage who has access to this workspace."
+        title={t("membersInvites")}
+        description={t("membersInvitesDescription")}
       >
         <Text size="sm" tone="muted">
-          Workspace members and pending invitations are managed on the{" "}
-          <Link
-            href="/company"
-            className="font-medium text-foreground hover:underline"
-          >
-            Company page
-          </Link>
-          .
+          {t.rich("manageOnCompanyPage", {
+            link: (chunks) => (
+              <Link
+                href="/company"
+                className="font-medium text-foreground hover:underline"
+              >
+                {chunks}
+              </Link>
+            ),
+          })}
         </Text>
       </SettingSection>
     </div>

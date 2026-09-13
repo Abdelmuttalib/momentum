@@ -14,7 +14,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { UserAvatar } from "@/components/user/user-menu";
 import { api } from "@/lib/api";
 import { cn } from "@/lib/cn";
-import { Priority } from "@/lib/enums";
+import { Priority, EFFORT_SCALE } from "@/lib/enums";
 
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -25,6 +25,7 @@ import { DialogForm } from "@/components/common/dialog-form";
 import { taskFormSchema, type TaskFormSchemaType } from "@/schema";
 import { useSession } from "next-auth/react";
 import { useCreateTask } from "@/features/tasks/hooks/use-task-mutations";
+import { TaskEffortBadge } from "@/features/tasks/components/task-effort-badge";
 import { useRouter } from "next/router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ButtonLoaderIcon } from "@/components/common/button-loader-icon";
@@ -33,6 +34,7 @@ import {
   getTaskPriorityBadgeColor,
   getTaskStatusBadgeColor,
 } from "@/lib/color";
+import { useTranslations } from "next-intl";
 
 interface CreateTaskFormProps {
   onSuccess: () => void;
@@ -51,6 +53,7 @@ function CreateTaskForm({
   defaultValues,
   projects,
 }: CreateTaskFormProps) {
+  const t = useTranslations("tasks");
   const { data: session } = useSession();
   const { query } = useRouter();
   const pId = query.projectId as string;
@@ -84,23 +87,23 @@ function CreateTaskForm({
     >
       {/* {JSON.stringify(companyUsers)} */}
       <div>
-        <Label htmlFor="title">Task title:</Label>
+        <Label htmlFor="title">{t("formTitle")}</Label>
         <Input
           id="title"
           type="text"
           {...form.register("title")}
-          placeholder="task title"
+          placeholder={t("formTitlePlaceholder")}
           inputMode="text"
           disabled={isPending}
           data-invalid={form.formState.errors?.title?.message}
         />
       </div>
       <div>
-        <Label htmlFor="description">Task description:</Label>
+        <Label htmlFor="description">{t("formDescription")}</Label>
         <Textarea
           id="description"
           {...form.register("description")}
-          placeholder="task description"
+          placeholder={t("formDescriptionPlaceholder")}
           inputMode="text"
           disabled={isPending}
           className={cn("min-h-10 text-sm")}
@@ -110,7 +113,7 @@ function CreateTaskForm({
       {/* Status Select */}
       <div className="grid w-full grid-cols-1 gap-x-3 gap-y-3 sm:grid-cols-2">
         <div>
-          <Label htmlFor="status">Status</Label>
+          <Label htmlFor="status">{t("statusLabel")}</Label>
           <Controller
             name="status"
             control={form.control}
@@ -121,7 +124,7 @@ function CreateTaskForm({
                 disabled={isPending}
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select a status" />
+                  <SelectValue placeholder={t("selectStatus")} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
@@ -148,7 +151,7 @@ function CreateTaskForm({
 
         {/* Priority Select */}
         <div>
-          <Label htmlFor="priority">Priority</Label>
+          <Label htmlFor="priority">{t("priorityLabel")}</Label>
           <Controller
             name="priority"
             control={form.control}
@@ -159,7 +162,7 @@ function CreateTaskForm({
                 disabled={isPending}
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select a status" />
+                  <SelectValue placeholder={t("selectStatus")} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
@@ -185,8 +188,42 @@ function CreateTaskForm({
           />
         </div>
 
+        {/* Effort Select */}
         <div>
-          <Label htmlFor="labels">Label</Label>
+          <Label htmlFor="effortPoints">{t("effortLabel")}</Label>
+          <Controller
+            name="effortPoints"
+            control={form.control}
+            render={({ field }) => (
+              <Select
+                value={field.value == null ? "none" : String(field.value)}
+                onValueChange={(value) =>
+                  field.onChange(value === "none" ? null : Number(value))
+                }
+                disabled={isPending}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder={t("noEstimate")} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="none">
+                      <span className="text-muted-foreground">{t("noEstimate")}</span>
+                    </SelectItem>
+                    {EFFORT_SCALE.map((points) => (
+                      <SelectItem key={points} value={String(points)}>
+                        <TaskEffortBadge points={points} />
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            )}
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="labels">{t("labelLabel")}</Label>
           <Controller
             name="labels"
             control={form.control}
@@ -197,7 +234,7 @@ function CreateTaskForm({
                 disabled={isPending}
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select labels" />
+                  <SelectValue placeholder={t("selectLabels")} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
@@ -223,7 +260,7 @@ function CreateTaskForm({
                           </Badge> */}
                       </SelectItem>
                     ))}
-                    {/* <div className="my-2 -ml-1">
+                    {/* <div className="my-2 -ms-1">
                         <CreateLabel />
                       </div> */}
                   </SelectGroup>
@@ -236,7 +273,7 @@ function CreateTaskForm({
 
       {/* Assign */}
       <div>
-        <Label htmlFor="assigneeId">Assignee</Label>
+        <Label htmlFor="assigneeId">{t("assigneeLabel")}</Label>
         <Controller
           name="assigneeId"
           control={form.control}
@@ -247,7 +284,7 @@ function CreateTaskForm({
               disabled={isPending}
             >
               <SelectTrigger className="h-fit w-full">
-                <SelectValue placeholder="Assign to..." />
+                <SelectValue placeholder={t("assignTo")} />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
@@ -279,7 +316,7 @@ function CreateTaskForm({
       </div>
 
       <div>
-        <Label htmlFor="projectId">Project</Label>
+        <Label htmlFor="projectId">{t("projectLabel")}</Label>
         <Controller
           name="projectId"
           control={form.control}
@@ -290,7 +327,7 @@ function CreateTaskForm({
               disabled={isPending}
             >
               <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select a project" />
+                <SelectValue placeholder={t("selectProject")} />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
@@ -321,7 +358,7 @@ function CreateTaskForm({
           onClick={onCancel}
           disabled={isPending}
         >
-          Cancel
+          {t("cancelButton")}
         </Button>
         <Button
           type="submit"
@@ -329,7 +366,7 @@ function CreateTaskForm({
           disabled={isPending}
         >
           <ButtonLoaderIcon isPending={isPending} />
-          Create Task
+          {t("createButton")}
         </Button>
       </div>
     </form>
@@ -349,19 +386,20 @@ export function CreateTask({
   triggerButton?: React.ReactNode;
   projects: Project[];
 }) {
+  const t = useTranslations("tasks");
   return (
     <>
       <DialogForm
-        title="Create a new Task"
-        description="Tasks are a great way to organize your projects and invite other users"
+        title={t("createDialogTitle")}
+        description={t("createDialogDescription")}
         triggerButton={
           triggerButton || (
             <Button
               type="button"
-              className="ml-2 inline-flex gap-1 whitespace-nowrap"
+              className="ms-2 inline-flex gap-1 whitespace-nowrap"
             >
               <PlusIcon className="w-5" />
-              Create Task
+              {t("createButton")}
             </Button>
           )
         }

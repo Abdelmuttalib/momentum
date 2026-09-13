@@ -65,7 +65,7 @@ function Header({ pageTitle, actions }: HeaderProps) {
 const Footer = () => {
   return (
     <footer className="mt-auto w-full border-t px-4 py-4 text-gray-700 lg:px-6">
-      <div className="w-full text-center md:text-left">
+      <div className="w-full text-center md:text-start">
         <Typography as="h5" variant="sm/normal" className="mb-1">
           Momentum
         </Typography>

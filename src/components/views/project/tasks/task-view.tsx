@@ -38,6 +38,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ButtonLink } from "@/components/common/button-link";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
+import { useTranslations } from "next-intl";
 
 interface TaskProps {
   task: GetProjectTasks[number];
@@ -54,6 +55,8 @@ export default function TaskView({
   dragHandleProps,
   density = "compact",
 }: TaskProps) {
+  const t = useTranslations("tasks");
+  const tErrors = useTranslations("errors");
   // const [isOpen, setIsOpen] = useState(false);
   const { data: session } = useSession();
   const user = session?.user;
@@ -68,13 +71,13 @@ export default function TaskView({
   const addCommentMutation = api.task.addComment.useMutation({
     onSuccess: async () => {
       // queryClient.invalidateQueries(["task", task.id]);
-      toast.success("Comment added successfully");
+      toast.success(tErrors("commentAdded"));
       await apiContext.task.getTaskComments.invalidate();
       await apiContext.task.getAllProjectTasks.invalidate();
       reset();
     },
     onError: () => {
-      toast.error("Something went wrong");
+      toast.error(tErrors("somethingWrong"));
     },
   });
 
@@ -101,12 +104,12 @@ export default function TaskView({
 
   const deleteCommentMuation = api.task.deleteComment.useMutation({
     onSuccess: async () => {
-      toast.success("Comment deleted successfully");
+      toast.success(tErrors("commentDeleted"));
       await apiContext.task.getTaskComments.invalidate();
       await apiContext.task.getAllProjectTasks.invalidate();
     },
     onError: () => {
-      toast.error("Something went wrong");
+      toast.error(tErrors("somethingWrong"));
     },
   });
 
@@ -116,10 +119,9 @@ export default function TaskView({
     error: taskCommentsError,
   } = useTaskComments(task.id);
 
-  async function onDeleteComment(commentId: string, authorId: string) {
+  async function onDeleteComment(commentId: string) {
     await deleteCommentMuation.mutateAsync({
       id: commentId,
-      authorId,
     });
   }
 
@@ -134,7 +136,7 @@ export default function TaskView({
           ref={innerRef}
           role="button"
           tabIndex={0}
-          aria-label={`Open task: ${task.title}`}
+          aria-label={t("openTask", { title: task.title })}
           // Enter opens the quick-view dialog; Space is reserved for the
           // drag-and-drop keyboard lift so both interactions stay available.
           onKeyDown={(e) => {
@@ -200,9 +202,10 @@ export default function TaskView({
 
             <Link
               href={`/projects/${task.projectId}/tasks/${task.id}`}
+              aria-label={t("openTask", { title: task.title })}
               className="text-muted-foreground hover:text-foreground"
             >
-              <ArrowRight className="h-4 w-4 -rotate-45" />
+              <ArrowRight className="h-4 w-4 -rotate-45 rtl:rotate-[135deg]" />
             </Link>
           </DialogTitle>
           {/* <DialogDescription className="body-sm inline text-muted-foreground">
@@ -215,12 +218,26 @@ export default function TaskView({
           <div className="flex flex-col gap-4 divide-y">
             <div className="flex flex-col gap-y-3 py-3 text-sm">
               <div className="flex gap-x-6">
-                <Text size="sm" weight="medium" tone="muted" className="w-20 shrink-0">Status</Text>
+                <Text
+                  size="sm"
+                  weight="medium"
+                  tone="muted"
+                  className="w-20 shrink-0"
+                >
+                  {t("status")}
+                </Text>
 
                 <TaskStatusBadge status={task.status} size="sm" />
               </div>
               <div className="flex gap-x-6">
-                <Text size="sm" weight="medium" tone="muted" className="w-20 shrink-0">Label</Text>
+                <Text
+                  size="sm"
+                  weight="medium"
+                  tone="muted"
+                  className="w-20 shrink-0"
+                >
+                  {t("labels")}
+                </Text>
                 {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
                 {/* @ts-ignore */}
                 <div className="flex flex-wrap gap-1">
@@ -234,7 +251,14 @@ export default function TaskView({
                 </div>
               </div>
               <div className="flex gap-x-6">
-                <Text size="sm" weight="medium" tone="muted" className="w-20 shrink-0">Assignee</Text>
+                <Text
+                  size="sm"
+                  weight="medium"
+                  tone="muted"
+                  className="w-20 shrink-0"
+                >
+                  {t("assignee")}
+                </Text>
                 <div className="inline-flex items-center gap-x-2">
                   {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
                   {/* @ts-ignore */}
@@ -242,20 +266,26 @@ export default function TaskView({
                   <Text size="sm">
                     {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
                     {/* @ts-ignore */}
-                    {task?.assignee?.name ?? "Unassigned"}
+                    {task?.assignee?.name ?? t("unassigned")}
                   </Text>
                 </div>
               </div>
             </div>
             {/*  */}
             <div className="flex flex-col gap-y-2 pt-4">
-              <Text size="sm" weight="semibold" as="h3">Description</Text>
-              <Text size="sm" tone="muted">{task.description || "No description provided."}</Text>
+              <Text size="sm" weight="semibold" as="h3">
+                {t("description")}
+              </Text>
+              <Text size="sm" tone="muted">
+                {task.description || t("noDescription")}
+              </Text>
             </div>
             {/* Comments */}
             <div className="flex flex-col gap-y-2 pt-4">
               <div className="inline-flex items-center gap-x-2">
-                <Text size="sm" weight="semibold" as="h3">Comments</Text>
+                <Text size="sm" weight="semibold" as="h3">
+                  {t("comments")}
+                </Text>
 
                 {/* <CBadge size="sm">{taskComments?.length} </CBadge> */}
               </div>
@@ -284,7 +314,7 @@ export default function TaskView({
                                   as="span"
                                   size="xs"
                                   tone="muted"
-                                  className="ml-1"
+                                  className="ms-1"
                                 >
                                   {formatDistanceToNow(createdAt)}
                                 </Text>
@@ -300,9 +330,9 @@ export default function TaskView({
                               <Button
                                 variant="link"
                                 size="icon-sm"
-                                aria-label="Delete comment"
-                                className="absolute right-2 top-2 text-destructive/70 outline-none hover:bg-destructive/20 hover:text-destructive focus:outline-none disabled:pointer-events-none"
-                                onClick={() => onDeleteComment(id, authorId)}
+                                aria-label={t("deleteComment")}
+                                className="absolute end-2 top-2 text-destructive/70 outline-none hover:bg-destructive/20 hover:text-destructive focus:outline-none disabled:pointer-events-none"
+                                onClick={() => onDeleteComment(id)}
                                 disabled={deleteCommentMuation.isLoading}
                               >
                                 <Trash2 className="h-4 w-4" />
@@ -320,12 +350,12 @@ export default function TaskView({
                 <div className="flex flex-col gap-y-2">
                   <div>
                     <label htmlFor="comment" className="sr-only">
-                      Add Comment
+                      {t("addComment")}
                     </label>
                     <Textarea
                       id="comment"
                       className="max-h-64"
-                      placeholder="Write a comment..."
+                      placeholder={t("commentPlaceholder")}
                       {...register("comment", {
                         required: true,
                       })}
@@ -351,7 +381,7 @@ export default function TaskView({
                     <ButtonLoaderIcon
                       isPending={addCommentMutation.isPending}
                     />
-                    Save Comment
+                    {t("comment")}
                   </Button>
                 </div>
               </form>

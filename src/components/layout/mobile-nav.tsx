@@ -18,7 +18,7 @@ export function MobileNav() {
       <SheetTrigger asChild>
         <Button
           variant="ghost"
-          className="mr-2 px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 md:hidden"
+          className="me-2 px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 md:hidden"
         >
           <ViewVerticalIcon className="h-5 w-5" />
           <span className="sr-only">Toggle Menu</span>
@@ -31,7 +31,7 @@ export function MobileNav() {
           onOpenChange={setOpen}
         >
           <Image src="/favicon.ico" alt="app icon" width={32} height={32} />
-          {/* <Icons.logo className="mr-2 h-4 w-4" /> */}
+          {/* <Icons.logo className="me-2 h-4 w-4" /> */}
           <span className="h3 font-bold">Momentum</span>
         </MobileLink>
         <ScrollArea className="my-4 h-[calc(100svh)] pb-10">

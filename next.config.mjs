@@ -15,6 +15,11 @@ const nextConfig = {
     domains: ["pvpgmjnmehreieyinspc.supabase.co", "avatar.vercel.sh"],
   },
 
+  i18n: {
+    locales: ["en", "ar"],
+    defaultLocale: "en",
+  },
+
   /**
    * If you have `experimental: { appDir: true }` set, then you must comment the below `i18n` config
    * out.

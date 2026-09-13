@@ -23,6 +23,7 @@ import {
   FormStack,
 } from "@/components/page-components";
 import { useFormErrorToast } from "@/hooks/use-form-error-toast";
+import { useTranslations } from "next-intl";
 
 interface ProjectFormProps {
   onSubmit: (data: ProjectFormSchemaType) => void;
@@ -43,6 +44,8 @@ export function ProjectForm({
   isPending,
   mode = "create",
 }: ProjectFormProps) {
+  const t = useTranslations("projects");
+  const tCommon = useTranslations("common");
   const form = useForm<ProjectFormSchemaType>({
     resolver: zodResolver(projectFormSchema),
     defaultValues: {
@@ -72,10 +75,10 @@ export function ProjectForm({
                 data-invalid={form.formState.errors.name?.message}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel htmlFor="name">Project Name</FormLabel>
+                    <FormLabel htmlFor="name">{t("projectNameLabel")}</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="project name"
+                        placeholder={t("projectNamePlaceholder")}
                         type="text"
                         inputMode="text"
                         aria-invalid={!!form.formState.errors.name?.message}
@@ -94,11 +97,11 @@ export function ProjectForm({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel htmlFor="description">
-                      Project Description
+                      {t("projectDescriptionLabel")}
                     </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="project description"
+                        placeholder={t("projectDescriptionPlaceholder")}
                         type="text"
                         inputMode="text"
                         aria-invalid={
@@ -118,7 +121,7 @@ export function ProjectForm({
             <BackButton
               fallback={`/projects`}
               disabled={isPending}
-              text="Cancel"
+              text={tCommon("cancel")}
               // onClick={onCancel}
             />
 
@@ -128,7 +131,7 @@ export function ProjectForm({
             >
               <ButtonLoaderIcon isPending={isPending} />
               {/* Create Project */}
-              {mode === "create" ? "Create Project" : "Save Changes"}
+              {mode === "create" ? t("createProject") : tCommon("saveChanges")}
             </Button>
           </FormActions>
         </FormStack>

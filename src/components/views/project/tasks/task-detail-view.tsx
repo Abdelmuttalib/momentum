@@ -11,9 +11,11 @@ import {
   useMarkProjectTaskAsDone,
   useMoveTaskToBacklog,
 } from "@/features/tasks/hooks/use-task-mutations";
-import { formatDistanceToNow } from "@/lib/date";
+import { formatCycleTime, formatDistanceToNow } from "@/lib/date";
+import { TaskEffortBadge } from "@/features/tasks/components/task-effort-badge";
 import { type RouterOutputs } from "@/lib/api";
 import { TaskComments } from "./task-comments";
+import { useTranslations } from "next-intl";
 
 export type TaskDetail = NonNullable<
   RouterOutputs["project"]["getProjectTask"]
@@ -53,6 +55,8 @@ export function TaskDetailView({
   projectName,
   editHref,
 }: TaskDetailViewProps) {
+  const t = useTranslations("tasks");
+  const tCommon = useTranslations("common");
   const { execute: markAsDone, isPending: isMarkingDone } =
     useMarkProjectTaskAsDone();
   const { execute: moveToBacklog, isPending: isMovingToBacklog } =
@@ -64,14 +68,16 @@ export function TaskDetailView({
       {/* Context + title */}
       <div className="flex flex-col gap-2">
         <Text size="xs" tone="muted">
-          Projects{projectName ? ` / ${projectName}` : ""} / Task
+          {projectName
+            ? t("contextCrumbWithProject", { project: projectName })
+            : t("contextCrumb")}
         </Text>
         <div className="flex flex-wrap items-start justify-between gap-3">
           <Heading level="page" className="min-w-0 flex-1 break-words">
             {task.title}
           </Heading>
           <ButtonLink href={editHref} variant="outline" size="sm">
-            Edit
+            {tCommon("edit")}
           </ButtonLink>
         </div>
         <div className="flex flex-wrap items-center gap-1.5">
@@ -83,14 +89,14 @@ export function TaskDetailView({
       <div className="grid items-start gap-6 lg:grid-cols-3">
         {/* Main */}
         <div className="flex min-w-0 flex-col gap-6 lg:col-span-2">
-          <section aria-label="Description" className="flex flex-col gap-2">
-            <Heading level="subsection">Description</Heading>
+          <section aria-label={t("description")} className="flex flex-col gap-2">
+            <Heading level="subsection">{t("description")}</Heading>
             <Text
               size="sm"
               tone={task.description ? "default" : "muted"}
               className="whitespace-pre-wrap break-words"
             >
-              {task.description || "No description provided."}
+              {task.description || t("noDescription")}
             </Text>
           </section>
 
@@ -102,11 +108,11 @@ export function TaskDetailView({
         {/* Aside */}
         <div className="flex flex-col gap-4">
           <section
-            aria-label="Task details"
+            aria-label={t("details")}
             className="flex flex-col gap-3 rounded-lg border p-4"
           >
-            <Heading level="subsection">Details</Heading>
-            <MetaRow label="Assignee">
+            <Heading level="subsection">{t("details")}</Heading>
+            <MetaRow label={t("assignee")}>
               {task.assignee ? (
                 <span className="inline-flex items-center gap-2">
                   <UserAvatar user={task.assignee} size="sm" />
@@ -114,27 +120,57 @@ export function TaskDetailView({
                 </span>
               ) : (
                 <Text size="sm" tone="muted">
-                  Unassigned
+                  {t("unassigned")}
                 </Text>
               )}
             </MetaRow>
-            <MetaRow label="Due date">
+            <MetaRow label={t("dueDate")}>
               <Text size="sm">
                 {task.dueDate
                   ? new Date(task.dueDate).toLocaleDateString()
-                  : "No due date"}
+                  : t("noDueDate")}
               </Text>
             </MetaRow>
-            <MetaRow label="Project">
+            <MetaRow label={t("effort")}>
+              {task.effortPoints != null ? (
+                <TaskEffortBadge points={task.effortPoints} />
+              ) : (
+                <Text size="sm" tone="muted">
+                  {t("notEstimated")}
+                </Text>
+              )}
+            </MetaRow>
+            <MetaRow label={t("started")}>
+              <Text size="sm" tone={task.startedAt ? "default" : "muted"}>
+                {task.startedAt
+                  ? formatDistanceToNow(task.startedAt)
+                  : t("notStarted")}
+              </Text>
+            </MetaRow>
+            <MetaRow label={t("completed")}>
+              <Text size="sm" tone={task.completedAt ? "default" : "muted"}>
+                {task.completedAt
+                  ? formatDistanceToNow(task.completedAt)
+                  : t("notCompleted")}
+              </Text>
+            </MetaRow>
+            {task.startedAt && task.completedAt && (
+              <MetaRow label={t("cycleTime")}>
+                <Text size="sm" tone="muted">
+                  {formatCycleTime(task.startedAt, task.completedAt)}
+                </Text>
+              </MetaRow>
+            )}
+            <MetaRow label={t("project")}>
               <Link
                 href={`/projects/${task.projectId}`}
                 className="text-sm font-medium hover:underline"
               >
-                {projectName ?? "View project"}
+                {projectName ?? t("viewProject")}
               </Link>
             </MetaRow>
             {task.labels && task.labels.length > 0 && (
-              <MetaRow label="Labels">
+              <MetaRow label={t("labels")}>
                 <span className="flex flex-wrap gap-1">
                   {task.labels.map((label) => (
                     <LabelBadge
@@ -146,12 +182,12 @@ export function TaskDetailView({
                 </span>
               </MetaRow>
             )}
-            <MetaRow label="Created">
+            <MetaRow label={t("created")}>
               <Text size="sm" tone="muted">
                 {formatDistanceToNow(task.createdAt)}
               </Text>
             </MetaRow>
-            <MetaRow label="Updated">
+            <MetaRow label={t("updated")}>
               <Text size="sm" tone="muted">
                 {formatDistanceToNow(task.updatedAt)}
               </Text>
@@ -159,17 +195,17 @@ export function TaskDetailView({
           </section>
 
           <section
-            aria-label="Task actions"
+            aria-label={t("actions")}
             className="flex flex-col gap-2 rounded-lg border p-4"
           >
-            <Heading level="subsection">Actions</Heading>
+            <Heading level="subsection">{t("actions")}</Heading>
             <Button
               size="sm"
               className="w-full"
               onClick={() => void markAsDone({ taskId: task.id })}
               disabled={isMutating || task.status === "COMPLETED"}
             >
-              Mark as done
+              {t("markDone")}
             </Button>
             <Button
               size="sm"
@@ -178,16 +214,16 @@ export function TaskDetailView({
               onClick={() => void moveToBacklog({ taskId: task.id })}
               disabled={isMutating || task.status === "BACKLOG"}
             >
-              Move to backlog
+              {t("moveToBacklog")}
             </Button>
             <Button
               size="sm"
               variant="destructive"
               className="w-full"
               disabled
-              title="Deleting tasks is not supported yet"
+              title={t("deleteUnsupported")}
             >
-              Delete task
+              {t("deleteTask")}
             </Button>
           </section>
         </div>

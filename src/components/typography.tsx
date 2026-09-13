@@ -16,7 +16,7 @@ type HeadingLevel = "page" | "section" | "subsection";
 
 const headingConfig: Record<
   HeadingLevel,
-  { as: "h1" | "h2" | "h3"; size: "lg" | "md" | "base"; weight: "semibold" | "medium"; className: string }
+  { as: "h1" | "h2" | "h3"; size: "lg" | "base"; weight: "semibold" | "medium"; className: string }
 > = {
   page: {
     as: "h1",
@@ -26,7 +26,7 @@ const headingConfig: Record<
   },
   section: {
     as: "h2",
-    size: "md",
+    size: "base",
     weight: "semibold",
     className: "tracking-tight",
   },

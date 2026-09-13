@@ -1,72 +1,110 @@
 import { DataTableLoader } from "@/components/data-loader";
 import { AppLayout } from "@/components/layout/app-layout";
 import { Seo } from "@/components/seo";
-import { siteConfig } from "@/config/site-config";
 import { useProjects } from "@/features/projects/hooks/use-projects";
-import { getServerAuthSession } from "@/server/auth";
+import { requireAuthPage } from "@/server/auth-guard";
 import { type Project } from "@prisma/client";
 import { type ColumnDef } from "@tanstack/react-table";
 import { Eye, Pencil } from "lucide-react";
 import { type GetServerSideProps } from "next";
 import { useSession } from "next-auth/react";
-import { shortId } from "@/lib/utils";
+import Link from "next/link";
 import { CompactPageHeader } from "@/components/common/page-header";
 import { ButtonLink } from "@/components/common/button-link";
+import { Progress } from "@/components/ui/progress";
+import { Text } from "@/components/typography";
 import { routes } from "@/lib/routes";
+import { formatDistanceToNow } from "@/lib/date";
+import { useFormatter, useTranslations } from "next-intl";
 
-export default function ProjectsPage() {
-  const { data: session } = useSession();
-  const companyId = session?.user?.company.id;
+type ProjectWithTasks = Project & {
+  tasks: { status: string }[];
+};
 
-  const { data: projects, isLoading, error } = useProjects(companyId);
+type ProjectsT = ReturnType<typeof useTranslations<"projects">>;
 
-  const columns: ColumnDef<Project>[] = [
+function getColumns(
+  t: ProjectsT,
+  format: ReturnType<typeof useFormatter>
+): ColumnDef<ProjectWithTasks>[] {
+  return [
     {
-      accessorKey: "id",
-      header: "ID",
-      cell: ({ getValue }) => {
-        const id = getValue() as string;
-        return <span>{shortId(id)}</span>;
+      accessorKey: "name",
+      header: t("name"),
+      cell: ({ row }) => {
+        const project = row.original;
+        return (
+          <Link
+            href={routes.projects.details({ projectId: project.id })}
+            className="font-medium hover:underline"
+          >
+            {project.name}
+          </Link>
+        );
       },
     },
     {
-      accessorKey: "name",
-      header: "Name",
-    },
-    {
       accessorKey: "description",
-      header: "Description",
+      header: t("projectDescription"),
+      cell: ({ row }) => {
+        const description = row.original.description;
+        if (!description) {
+          return (
+            <Text size="xs" tone="muted" as="span">
+              —
+            </Text>
+          );
+        }
+        return (
+          <span className="block max-w-md truncate text-sm text-muted-foreground">
+            {description}
+          </span>
+        );
+      },
     },
     {
-      accessorKey: "createdAt",
-      header: "Created At",
+      id: "progress",
+      header: t("progressColumn"),
       cell: ({ row }) => {
-        const date = new Date(row.getValue("createdAt"));
-        return date.toLocaleDateString();
+        const tasks = row.original.tasks ?? [];
+        const done = tasks.filter((t) => t.status === "COMPLETED").length;
+        const percent =
+          tasks.length === 0 ? 0 : Math.round((done / tasks.length) * 100);
+        return (
+          <span className="flex min-w-28 items-center gap-2">
+            <Progress value={percent} className="h-1.5 w-16" />
+            <Text size="xs" tone="muted" as="span" className="whitespace-nowrap">
+              {format.number(done)}/{format.number(tasks.length)}
+            </Text>
+          </span>
+        );
       },
     },
     {
       accessorKey: "updatedAt",
-      header: "Updated At",
+      header: t("updated"),
       cell: ({ row }) => {
-        const date = new Date(row.getValue("updatedAt"));
-        return date.toLocaleDateString();
+        return (
+          <span className="whitespace-nowrap text-sm text-muted-foreground">
+            {formatDistanceToNow(row.getValue("updatedAt"))}
+          </span>
+        );
       },
     },
     {
       accessorKey: "id",
-      header: "Actions",
+      header: t("actions"),
       cell: ({ getValue }) => {
         const id = getValue() as string;
         return (
-          <div className="flex gap-2 text-muted-foreground">
+          <div className="flex gap-1 text-muted-foreground">
             <ButtonLink
               href={routes.projects.details({ projectId: id })}
               size="sm"
               variant="ghost"
             >
               <Eye className="h-4 w-4" />
-              View
+              {t("view")}
             </ButtonLink>
 
             <ButtonLink
@@ -75,75 +113,23 @@ export default function ProjectsPage() {
               variant="ghost"
             >
               <Pencil className="h-4 w-4" />
-              Edit
+              {t("edit")}
             </ButtonLink>
-
-            {/* <Button
-              size="sm"
-              variant="ghost"
-              disabled
-              className="text-destructive hover:text-destructive"
-            >
-              <Trash2 className="h-4 w-4" />
-              {tDelete}
-            </Button> */}
           </div>
         );
       },
     },
-    // {
-    //   accessorKey: "status",
-    //   header: "Status",
-    //   cell: ({ row }) => (
-    //     <div className="capitalize">{row.getValue("status")}</div>
-    //   ),
-    // },
-
-    // {
-    //   accessorKey: "amount",
-    //   header: () => <div className="text-right">Amount</div>,
-    //   cell: ({ row }) => {
-    //     const amount = parseFloat(row.getValue("amount"));
-
-    //     // Format the amount as a dollar amount
-    //     const formatted = new Intl.NumberFormat("en-US", {
-    //       style: "currency",
-    //       currency: "USD",
-    //     }).format(amount);
-
-    //     return <div className="text-right font-medium">{formatted}</div>;
-    //   },
-    // },
-    // {
-    //   id: "actions",
-    //   enableHiding: false,
-    //   cell: ({ row }) => {
-    //     const payment = row.original;
-
-    //     return (
-    //       <DropdownMenu>
-    //         <DropdownMenuTrigger asChild>
-    //           <Button variant="ghost" className="h-8 w-8 p-0">
-    //             <span className="sr-only">Open menu</span>
-    //             <DotsHorizontalIcon className="h-4 w-4" />
-    //           </Button>
-    //         </DropdownMenuTrigger>
-    //         <DropdownMenuContent align="end">
-    //           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-    //           <DropdownMenuItem
-    //             onClick={() => navigator.clipboard.writeText(payment.id)}
-    //           >
-    //             Copy payment ID
-    //           </DropdownMenuItem>
-    //           <DropdownMenuSeparator />
-    //           <DropdownMenuItem>View customer</DropdownMenuItem>
-    //           <DropdownMenuItem>View payment details</DropdownMenuItem>
-    //         </DropdownMenuContent>
-    //       </DropdownMenu>
-    //     );
-    //   },
-    // },
   ];
+}
+
+export default function ProjectsPage() {
+  const { data: session } = useSession();
+  const t = useTranslations("projects");
+  const format = useFormatter();
+  const companyId = session?.user?.company.id;
+
+  const { data: projects, isLoading, error } = useProjects(companyId);
+  const columns = getColumns(t, format);
 
   return (
     <>
@@ -152,11 +138,11 @@ export default function ProjectsPage() {
       <AppLayout>
         <div className="space-y-6">
         <CompactPageHeader
-          title="Projects"
-          description="Manage all projects for your team."
+          title={t("title")}
+          description={t("description")}
           actions={
             <ButtonLink href={routes.projects.new()} size="sm">
-              Add Project
+              {t("addProject")}
             </ButtonLink>
           }
         />
@@ -173,19 +159,4 @@ export default function ProjectsPage() {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-  const userSession = await getServerAuthSession({ req, res });
-
-  if (!userSession) {
-    return {
-      redirect: {
-        destination: siteConfig.pages.main.links.signIn.href,
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    props: {},
-  };
-};
+export const getServerSideProps: GetServerSideProps = requireAuthPage();

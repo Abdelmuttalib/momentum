@@ -69,7 +69,7 @@ export function AddUserDialog({ team }: { team: TTeam }) {
         triggerButton={
           <Button
             type="button"
-            className="ml-2 inline-flex gap-1 whitespace-nowrap"
+            className="ms-2 inline-flex gap-1 whitespace-nowrap"
           >
             <UsersIcon className="w-[1.125rem]" />
             Manage Team Members
@@ -87,7 +87,7 @@ export function AddUserDialog({ team }: { team: TTeam }) {
                 >
                   <div className="flex items-center justify-between gap-2">
                     <div className="inline-flex items-center gap-x-2">
-                      <div className="flex items-center gap-x-0.5 -space-x-2">
+                      <div className="flex items-center gap-x-0.5 -gap-2">
                         <UserAvatar key={user.id} user={user} size="lg" />
                       </div>
                       <div>
@@ -203,7 +203,7 @@ export const companyTeamsColumns: ColumnDef<Team>[] = [
       const team = original as TTeam;
       const teamUsers = team.users;
       return (
-        <div className="flex items-center gap-x-0.5 -space-x-2">
+        <div className="flex items-center gap-x-0.5 -gap-2">
           {teamUsers.map((user) => (
             <UserAvatar key={user.id} user={user} size="lg" />
             // <p key={user.id}>{user.email},</p>

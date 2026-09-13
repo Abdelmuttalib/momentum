@@ -4,6 +4,8 @@ import {
 } from "@/components/views/auth/forms/create-company";
 import { AuthLayout } from "@/components/layout/auth-layout";
 import { Seo } from "@/components/seo";
+import { requireAnonymousPage } from "@/server/auth-guard";
+import { type GetServerSideProps } from "next";
 import { useState } from "react";
 
 export type RegisterStep = "company" | "user";
@@ -36,3 +38,6 @@ export default function RegisterPage() {
     </>
   );
 }
+
+export const getServerSideProps: GetServerSideProps =
+  requireAnonymousPage();

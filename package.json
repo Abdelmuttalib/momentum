@@ -7,7 +7,11 @@
     "dev": "next dev",
     "postinstall": "prisma generate",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "db:seed:demo": "tsx prisma/seed.demo.ts"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.demo.ts"
   },
   "dependencies": {
     "@auth/supabase-adapter": "^0.1.2",
@@ -68,6 +72,7 @@
     "nanoid": "^4.0.2",
     "next": "^13.4.1",
     "next-auth": "^4.21.0",
+    "next-intl": "^3.26.5",
     "next-themes": "^0.2.1",
     "nextjs-progressbar": "^0.0.16",
     "react": "18.2.0",
@@ -105,6 +110,7 @@
     "prettier-plugin-tailwindcss": "^0.2.6",
     "prisma": "^4.11.0",
     "tailwindcss": "^3.4.1",
+    "tsx": "^4.23.13",
     "typescript": "^5.0.2"
   },
   "ct3aMetadata": {

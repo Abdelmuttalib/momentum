@@ -1,12 +1,14 @@
 import { inviteUserFormSchema, type InviteUserSchemaType } from "@/schema";
-import { api } from "@/lib/api";
+import { api, type RouterOutputs } from "@/lib/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useFormErrorToast } from "./use-form-error-toast";
 
+type CreatedInvitation = RouterOutputs["company"]["inviteUserToCompany"];
+
 interface UseInviteOptions {
-  onSuccess?: () => void;
+  onSuccess?: (invitation: CreatedInvitation) => void;
   onError?: () => void;
 }
 
@@ -17,11 +19,11 @@ export function useInvite({ onSuccess, onError }: UseInviteOptions) {
   });
 
   const mutation = api.company.inviteUserToCompany.useMutation({
-    onSuccess: async () => {
+    onSuccess: async (invitation) => {
       toast.success("User invited successfully");
       form.reset();
       await apiContext.company.getAllInvitations.invalidate();
-      onSuccess?.();
+      onSuccess?.(invitation);
     },
     onError: () => {
       toast.error("Failed to invite user");

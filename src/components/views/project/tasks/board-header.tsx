@@ -6,6 +6,7 @@ import { routes } from "@/lib/routes";
 import { Plus } from "lucide-react";
 import { type BoardDensity } from "@/features/tasks/hooks/use-board-density";
 import { cn } from "@/lib/cn";
+import { useFormatter, useTranslations } from "next-intl";
 
 export type BoardHeaderProps = {
   projectId: string;
@@ -24,12 +25,14 @@ export function BoardHeader({
   density,
   onDensityChange,
 }: BoardHeaderProps) {
+  const t = useTranslations("projects");
+  const format = useFormatter();
   return (
     <div className="flex flex-col gap-2">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex min-w-0 items-center gap-2">
           <Text size="xs" tone="muted" as="span" className="shrink-0">
-            Projects
+            {t("title")}
           </Text>
           <Text size="xs" tone="muted" as="span" aria-hidden="true">
             /
@@ -38,14 +41,14 @@ export function BoardHeader({
             {projectName}
           </Heading>
           <Badge variant="secondary" className="shrink-0">
-            {taskCount}
+            {format.number(taskCount)}
           </Badge>
         </div>
 
         <div className="flex shrink-0 items-center gap-1.5">
           <div
             role="group"
-            aria-label="Board density"
+            aria-label={t("boardDensity")}
             className="flex items-center rounded-md border p-0.5"
           >
             {(["compact", "comfortable"] as BoardDensity[]).map((mode) => (
@@ -61,7 +64,7 @@ export function BoardHeader({
                   density === mode && "bg-accent text-accent-foreground"
                 )}
               >
-                {mode}
+                {t(mode === "compact" ? "densityCompact" : "densityComfortable")}
               </Button>
             ))}
           </div>
@@ -70,7 +73,7 @@ export function BoardHeader({
             size="sm"
           >
             <Plus className="h-4 w-4" />
-            New task
+            {t("newTask")}
           </ButtonLink>
         </div>
       </div>

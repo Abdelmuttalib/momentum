@@ -255,7 +255,7 @@ function Board() {
     <>
       <div className="flex h-full w-full justify-center">
         <DragDropContext onDragEnd={handleOnDragEnd}>
-          <div className="relative flex h-full w-full flex-col gap-1 md:flex-row md:gap-2">
+          <div className="relative flex h-full w-full flex-col gap-1 md:flex-row">
             {/* Column/Status */}
             {statuses.map((status) => {
               const tasksByStatus = tasks.filter(
@@ -265,7 +265,7 @@ function Board() {
                 <>
                   <div
                     key={status}
-                    className="relative w-full space-y-2 rounded border bg-transparent p-3 pb-10 md:min-w-72 lg:w-full lg:min-w-64"
+                    className="relative w-full space-y-2 p-1 pb-10 md:min-w-72 lg:w-full lg:min-w-64"
                   >
                     <div className="inline-flex items-center gap-x-2 ">
                       {status === "backlog" && (

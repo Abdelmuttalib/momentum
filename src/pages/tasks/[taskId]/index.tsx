@@ -9,6 +9,8 @@ import { DataLoader } from "@/components/data-loader";
 import { SpinLoader } from "@/components/spin-loader";
 import { useTask } from "@/features/tasks/hooks/use-tasks";
 import { useSession } from "next-auth/react";
+import { requireAuthPage } from "@/server/auth-guard";
+import { type GetServerSideProps } from "next";
 
 export default function GlobalTaskRedirectPage() {
   const router = useRouter();
@@ -42,3 +44,5 @@ export default function GlobalTaskRedirectPage() {
     </>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = requireAuthPage();

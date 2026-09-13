@@ -3,11 +3,15 @@ import { PageHeader, Stack } from "@/components/page-components";
 import { Seo } from "@/components/seo";
 import { TaskForm } from "@/components/views/project/tasks/forms/task-form";
 import { useCreateTask } from "@/features/tasks/hooks/use-task-mutations";
+import { requireAuthPage } from "@/server/auth-guard";
+import { type GetServerSideProps } from "next";
 import { type TaskFormSchemaType } from "@/schema";
 import { useRouter } from "next/router";
+import { useTranslations } from "next-intl";
 
 export default function NewTaskPage() {
   const { query } = useRouter();
+  const t = useTranslations("projects");
   const projectId = query.projectId as string;
 
   const { execute: createTask, isPending: isCreatingTask } = useCreateTask();
@@ -24,7 +28,7 @@ export default function NewTaskPage() {
 
       <AppLayout>
         <Stack spacing="section">
-          <PageHeader title="New Task" />
+          <PageHeader title={t("newTask")} />
           <div>
             <TaskForm
               onSubmit={(data) => {
@@ -52,3 +56,5 @@ export default function NewTaskPage() {
     </>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = requireAuthPage();

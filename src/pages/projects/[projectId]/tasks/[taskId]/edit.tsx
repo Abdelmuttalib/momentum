@@ -4,6 +4,8 @@ import { Seo } from "@/components/seo";
 import { TaskEditView } from "@/components/views/project/tasks/task-edit-view";
 import { useProjectTask } from "@/features/projects/hooks/use-tasks";
 import { useRouter } from "next/router";
+import { requireAuthPage } from "@/server/auth-guard";
+import { type GetServerSideProps } from "next";
 
 export default function EditTaskPage() {
   const { query } = useRouter();
@@ -29,3 +31,5 @@ export default function EditTaskPage() {
     </>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = requireAuthPage();

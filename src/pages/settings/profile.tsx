@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getServerAuthSession } from "@/server/auth";
+import { requireAuthPage } from "@/server/auth-guard";
 import { api } from "@/lib/api";
 import { cn } from "@/lib/cn";
 import supabase from "@/lib/supabase";
@@ -27,6 +27,7 @@ import {
 } from "@/components/settings/setting-section";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { getAvatarUrl } from "@/lib/avatar";
+import { useTranslations } from "next-intl";
 
 const profileFormSchema = z.object({
   name: z.string(),
@@ -56,9 +57,10 @@ export function UploadIcon({ className }: { className?: ClassValue }) {
 }
 
 export default function SettingsProfilePage() {
+  const t = useTranslations("settings");
   return (
     <SettingsContentLayout>
-      <SettingsSectionTitle>Profile</SettingsSectionTitle>
+      <SettingsSectionTitle>{t("profile")}</SettingsSectionTitle>
       <ProfileSettings />
     </SettingsContentLayout>
   );
@@ -68,6 +70,8 @@ type ImageFile = File | null;
 
 export function ProfileSettings() {
   const { data: session } = useSession();
+  const t = useTranslations("settings");
+  const tCommon = useTranslations("common");
   const user = session?.user;
   const apiContext = api.useContext();
   const form = useForm<ProfileFormValues>();
@@ -207,8 +211,8 @@ export function ProfileSettings() {
   return (
     <div className="flex flex-col">
       <SettingSection
-        title="Photo"
-        description="Your avatar across the workspace."
+        title={t("photo")}
+        description={t("photoDescription")}
       >
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
           <div className="group relative h-20 w-20 shrink-0">
@@ -239,7 +243,7 @@ export function ProfileSettings() {
               !isLoadingUserData && (
                 <Avatar className="h-full w-full">
                   <AvatarImage
-                    src={getAvatarUrl(userData?.name, { text: "S", size: 80 })}
+                    src={getAvatarUrl(userData?.name, { size: 80, text: "S" })}
                     alt="profile image"
                   />
                 </Avatar>
@@ -331,24 +335,25 @@ export function ProfileSettings() {
 
       <SettingDivider />
 
-      <SettingSection title="Name" description="How your name appears.">
+      <SettingSection title={t("name")} description={t("nameDescription")}>
         <form
           // eslint-disable-next-line @typescript-eslint/no-misused-promises
           onSubmit={form.handleSubmit(onUpdateInfo)}
           className="flex max-w-md flex-col gap-3"
         >
           <div>
-            <Label htmlFor="name">Name</Label>
+            <Label htmlFor="name">{t("name")}</Label>
             <Input
               id="name"
               inputMode="text"
               type="text"
-              placeholder="Your name"
+              placeholder={t("yourName")}
               {...form.register("name", {
                 required: true,
               })}
               defaultValue={userData?.name || ""}
-              disabled={controlsDisabled}
+              disabled={true}
+              // disabled={controlsDisabled}
               data-invalid={form.formState.errors?.name?.message}
             />
           </div>
@@ -356,12 +361,13 @@ export function ProfileSettings() {
             type="submit"
             size="sm"
             className="self-start"
-            disabled={controlsDisabled}
+            // disabled={controlsDisabled}
+            disabled={true}
           >
             <ButtonLoaderIcon
               isPending={updateUserInfoMutation.isLoading || uploading}
             />
-            Save changes
+            {tCommon("saveChanges")}
           </Button>
         </form>
       </SettingSection>
@@ -369,19 +375,4 @@ export function ProfileSettings() {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-  const userSession = await getServerAuthSession({ req, res });
-
-  if (!userSession) {
-    return {
-      redirect: {
-        destination: "/sign-in",
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    props: {},
-  };
-};
+export const getServerSideProps: GetServerSideProps = requireAuthPage();

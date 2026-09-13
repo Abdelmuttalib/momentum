@@ -10,6 +10,7 @@ import {
 } from "@/server/api/trpc";
 import { type Project } from "@prisma/client";
 import { projectFormSchema } from "@/schema";
+import { safeUserSelect, safeUserSummarySelect } from "@/server/db/selects";
 
 export const projectRouter = createTRPCRouter({
   createProject: protectedProcedure
@@ -246,8 +247,18 @@ export const projectRouter = createTRPCRouter({
         },
         include: {
           labels: true,
-          assignee: true,
-          comments: true,
+          assignee: { select: safeUserSelect },
+          comments: {
+            select: {
+              id: true,
+              comment: true,
+              createdAt: true,
+              updatedAt: true,
+              authorId: true,
+              taskId: true,
+              author: { select: safeUserSummarySelect },
+            },
+          },
         },
       });
       return projectTasks;
@@ -261,15 +272,7 @@ export const projectRouter = createTRPCRouter({
         where: { id: input.taskId, companyId },
         include: {
           labels: true,
-          assignee: {
-            select: {
-              id: true,
-              name: true,
-              email: true,
-              role: true,
-              image: true,
-            },
-          },
+          assignee: { select: safeUserSelect },
         },
       });
       if (!task) {
