@@ -42,6 +42,8 @@ import { Avatar, AvatarImage } from "../ui/avatar";
 
 export function AppSidebar() {
   const { asPath, query } = useRouter();
+  // locale
+
   const t = useTranslations("navigation");
   const projectId = query.projectId as string;
 

@@ -20,7 +20,7 @@ export default function Providers({ session, children }: ProvidersProps) {
           <Analytics />
           <ToastProvider />
           {/* loader progress bar */}
-          <NextNProgress color="#4740ea" height={4} />
+          <NextNProgress color="#4740ea" height={1} />
           <UICustomizer />
           <TailwindIndicator />
           {children}

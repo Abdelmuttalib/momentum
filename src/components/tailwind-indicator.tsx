@@ -24,7 +24,7 @@ export function UICustomizer({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "fixed right-1 top-1 z-50 mx-auto flex w-fit items-center justify-center gap-2 rounded-lg border px-2 py-1.5 text-sm",
+        "fixed bottom-1 end-1 z-50 mx-auto flex w-fit items-center justify-center gap-2 rounded-lg border px-2 py-1.5 text-sm",
         className
       )}
     >
