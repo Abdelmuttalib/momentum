@@ -1,6 +1,36 @@
-export const locales = ["en", "ar"] as const;
+import { FontName, type FontValue } from "@/hooks/use-font";
 
-export type Locale = (typeof locales)[number];
+export type Locale = "en" | "ar";
+
+export const localesData: Record<
+  Locale,
+  {
+    locale: Locale;
+    name: string;
+    direction: string;
+    fonts: FontValue[];
+    flag: string;
+  }
+> = {
+  en: {
+    locale: "en",
+    name: "English",
+    direction: "ltr",
+    fonts: ["inter", "plus-jakarta", "onest"],
+    flag: "🇺🇸",
+  },
+  ar: {
+    locale: "ar",
+    name: "العربية",
+    direction: "rtl",
+    fonts: ["ibm-plex-sans-arabic"],
+    flag: "🇸🇦",
+  },
+};
+
+export const localesList = Object.values(localesData);
+
+export const locales = Object.values(localesData).map((v) => v.locale);
 
 export const defaultLocale: Locale = "en";
 

@@ -20,6 +20,21 @@ const nextConfig = {
     defaultLocale: "en",
   },
 
+  async redirects() {
+    return [
+      {
+        source: "/FAQ",
+        destination: "/faq",
+        permanent: true,
+      },
+      {
+        source: "/:locale/FAQ",
+        destination: "/:locale/faq",
+        permanent: true,
+      },
+    ];
+  },
+
   /**
    * If you have `experimental: { appDir: true }` set, then you must comment the below `i18n` config
    * out.

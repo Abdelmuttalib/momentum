@@ -32,11 +32,11 @@ function deepMerge(
 }
 
 const catalogs: Record<Locale, AbstractIntlMessages> = {
-  en: en as AbstractIntlMessages,
+  en: en as unknown as AbstractIntlMessages,
   ar: deepMerge(
     en as Record<string, unknown>,
     ar as Record<string, unknown>
-  ) as AbstractIntlMessages,
+  ) as unknown as AbstractIntlMessages,
 };
 
 export function getMessages(locale: Locale): AbstractIntlMessages {

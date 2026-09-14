@@ -10,9 +10,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { localesData, resolveLocale } from "@/i18n/config";
+import { useRouter } from "next/router";
 
 export function FontSelect() {
   const [font, setFont] = useFont();
+
+  const { locale } = useRouter();
+
+  const resolved = resolveLocale(locale);
+
+  const localeDirection = localesData[resolved].direction;
 
   return (
     <>
@@ -25,11 +33,11 @@ export function FontSelect() {
         }}
       >
         <SelectTrigger className="w-full">
-          <SelectValue placeholder="Select a status" />
+          <SelectValue placeholder="Select a font" />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            {FONTS?.map(({ name, value }) => {
+            {FONTS?.map(({ name, value, direction }) => {
               const fontClass = `font-${value}`;
 
               return (
@@ -37,6 +45,7 @@ export function FontSelect() {
                   key={value}
                   value={value}
                   className={cn("capitalize", fontClass)}
+                  disabled={!direction.includes(localeDirection)}
                 >
                   {name}
                 </SelectItem>

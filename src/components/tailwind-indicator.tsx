@@ -2,6 +2,7 @@ import { cn } from "@/lib/cn";
 import { FontSelect } from "./font-select";
 import { FontSizeSelect } from "./font-size-select";
 import ThemeSwitcher from "./theme-select";
+import { LanguageSelect, LanguageSwitcherMenu } from "./language-switcher";
 
 export default function TailwindIndicator() {
   if (process.env.NODE_ENV === "production") return null;
@@ -28,6 +29,8 @@ export function UICustomizer({ className }: { className?: string }) {
         className
       )}
     >
+      {" "}
+      <LanguageSelect />
       <FontSelect />
       <FontSizeSelect />
       <ThemeSwitcher size="icon" />

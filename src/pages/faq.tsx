@@ -1,3 +1,5 @@
+import { type GetStaticProps } from "next";
+import { getMessagesProps } from "@/lib/i18n";
 import { PublicLayout } from "@/components/layout/public-layout";
 import { Seo } from "@/components/seo";
 import { Typography } from "@/components/ui/typography";
@@ -7,59 +9,41 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { type GetStaticProps } from "next";
-import { getMessagesProps } from "@/lib/i18n";
 
-type HelpSection = { title: string; body: string };
+type FaqItem = { question: string; answer: string };
 
-const SECTION_KEYS = [
-  "gettingStarted",
-  "projects",
-  "tasks",
-  "teams",
-  "inviting",
-  "needMore",
-] as const;
-
-export default function HelpPage() {
-  const t = useTranslations("help");
-  const tp = useTranslations("public");
+export default function FaqPage() {
+  const t = useTranslations("public");
+  const items = t.raw("faq.items") as FaqItem[];
 
   return (
     <>
-      <Seo title="Help" />
+      <Seo title="FAQ" />
       <PublicLayout>
-        <section aria-labelledby="help-title" className="mx-auto max-w-3xl py-4">
+        <section aria-labelledby="faq-title" className="mx-auto max-w-3xl py-4">
           <div className="mb-8 space-y-2 text-center">
-            <Typography as="h1" id="help-title" variant="3xl/semibold" className="tracking-tight">
-              {t("title")}
+            <Typography as="h1" id="faq-title" variant="3xl/semibold" className="tracking-tight">
+              {t("faq.title")}
             </Typography>
             <Typography variant="base/normal" className="text-muted-foreground">
-              {t("description")}
+              {t("faq.description")}
             </Typography>
           </div>
           <Accordion type="single" collapsible className="w-full">
-            {SECTION_KEYS.map((key, index) => (
-              <AccordionItem key={key} value={`section-${index}`}>
+            {items.map((item, index) => (
+              <AccordionItem key={index} value={`item-${index}`}>
                 <AccordionTrigger className="text-start">
-                  {t(`${key}Title`)}
+                  {item.question}
                 </AccordionTrigger>
                 <AccordionContent>
                   <Typography variant="sm/normal" className="text-muted-foreground">
-                    {t(`${key}Body`)}
+                    {item.answer}
                   </Typography>
                 </AccordionContent>
               </AccordionItem>
             ))}
           </Accordion>
-          <div className="mt-8 flex justify-center">
-            <Button variant="outline" asChild>
-              <Link href="/faq">{tp("nav.faq")}</Link>
-            </Button>
-          </div>
         </section>
       </PublicLayout>
     </>
@@ -72,4 +56,4 @@ export const getStaticProps: GetStaticProps = ({ locale }) => {
       ...getMessagesProps(locale),
     },
   };
-}
+};

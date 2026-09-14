@@ -1,8 +1,16 @@
 import { useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 
-export type FontName = "Inter" | "Plus Jakarta" | "Onest";
-export type FontValue = "inter" | "plus-jakarta" | "onest";
+export type FontName =
+  | "Inter"
+  | "Plus Jakarta"
+  | "Onest"
+  | "IBM Plex Sans Arabic";
+export type FontValue =
+  | "inter"
+  | "plus-jakarta"
+  | "onest"
+  | "ibm-plex-sans-arabic";
 
 export type Font = {
   font: FontValue;

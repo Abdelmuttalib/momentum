@@ -1,255 +1,223 @@
 import { type GetStaticProps } from "next";
 import { getMessagesProps } from "@/lib/i18n";
-import Header from "@/components/views/landing-page/header";
+import { PublicLayout } from "@/components/layout/public-layout";
 import { Seo } from "@/components/seo";
 
 import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import {
-  ArrowRight,
-  CheckCircle2,
-  Users,
-  Zap,
-  BarChart3,
-  Github,
-  Play,
-} from "lucide-react";
+import { ArrowRight, Users, Zap, BarChart3 } from "lucide-react";
 import Link from "next/link";
 import { Typography } from "@/components/ui/typography";
-import { cn } from "@/lib/cn";
 import Container from "@/components/views/landing-page/container";
-import { GradientBackground } from "@/components/gradient";
 import BoardExample from "@/components/views/landing-page/board-example";
 import { siteConfig } from "@/config/site-config";
+import { useTranslations } from "next-intl";
 
-const features = [
-  {
-    icon: Zap,
-    title: "Fast & Intuitive",
-    description: "Clean interface with real-time updates and instant search.",
-  },
-  {
-    icon: Users,
-    title: "Team Collaboration",
-    description: "Organize teams, assign tasks, and track progress together.",
-  },
-  {
-    icon: BarChart3,
-    title: "Project Analytics",
-    description: "Visualize team performance and project insights.",
-  },
+const FEATURES = [
+  { key: "board", icon: Zap },
+  { key: "analytics", icon: BarChart3 },
+  { key: "collaboration", icon: Users },
+] as const;
+
+const TECH_STACK = [
+  "Next.js",
+  "TypeScript",
+  "Tailwind CSS",
+  "shadcn/ui",
+  "React",
+  "Prisma",
+  "PostgreSQL",
+  "tRPC",
 ];
 
-interface LandingPageSectionProps extends React.HTMLAttributes<HTMLElement> {
-  id?: string;
-}
-
-function LandingPageSection({
-  id,
-  className,
-  children,
-}: LandingPageSectionProps) {
-  return (
-    <section id={id} className={cn("py-20 lg:py-24", className)}>
-      {children}
-    </section>
-  );
-}
-
 export default function LandingPage() {
+  const t = useTranslations("public");
   return (
     <>
       <Seo title="Momentum" />
-      <Header />
-      <main className="mb-40 space-y-40">
+      <PublicLayout>
         {/* Hero */}
-        <div className="relative flex max-h-[80svh] min-h-[80svh] overflow-x-hidden overflow-y-hidden pb-24 pt-24">
-          <Container className="relative isolate">
-            <GradientBackground />
-            <div className="relative grid grid-cols-1 gap-y-6 lg:grid-cols-2">
-              <div className="relative lg:pr-32">
-                <div className="mx-auto space-y-8">
-                  <Typography as="h1" variant="5xl/semibold">
-                    The open source issue tracking tool
-                  </Typography>
-
-                  <Typography
-                    as="p"
-                    variant="lg/normal"
-                    className="mx-auto w-full max-w-4xl text-muted-foreground"
-                  >
-                    A clean, fast issue tracker inspired by Linear. Manage
-                    teams, projects, and tasks with an intuitive interface built
-                    for modern development workflows.
-                  </Typography>
-
-                  <div className="flex flex-col flex-wrap gap-x-4 gap-y-2 sm:flex-row sm:gap-y-4">
-                    <Button asChild>
-                      <Link href={siteConfig.pages.main.links.signIn.href}>
-                        Get Started
-                        <ArrowRight className="h-4 w-4" />
-                      </Link>
-                    </Button>
-                  </div>
-                </div>
-              </div>
-              <div className="h-[45rem] overflow-hidden lg:absolute lg:-right-36">
-                <BoardExample />
-              </div>
-            </div>
-          </Container>
-        </div>
-        <LandingPageSection>
-          <Container>
-            <div className="flex flex-col gap-14">
-              <div className="flex flex-col gap-4">
-                <Typography as="h2" variant="4xl/semibold">
-                  Built for Modern Teams
-                </Typography>
-
-                <Typography
-                  variant="lg/normal"
-                  className="max-w-2xl text-muted-foreground"
-                >
-                  Essential features for effective project management and team
-                  collaboration.
-                </Typography>
-              </div>
-
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-                {features.map((feature, index) => (
-                  <Card key={index}>
-                    <CardHeader>
-                      <div className="mb-2 flex h-11 w-11 items-center justify-center rounded-lg border bg-background">
-                        <feature.icon className="h-6 w-6 text-primary" />
-                      </div>
-                      <CardTitle className="text-xl">{feature.title}</CardTitle>
-                    </CardHeader>
-                    <CardContent className="-mt-4">
-                      <CardDescription className="text-base">
-                        {feature.description}
-                      </CardDescription>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </div>
-          </Container>
-        </LandingPageSection>
-
-        {/* Screenshot Section */}
-        {/* <LandingPageSection>
-          <Container>
-            <div className="flex h-full w-full flex-col gap-14">
-              <div className="text-center">
-                <h2 className="mb-4 text-3xl font-bold">
-                  Clean, Intuitive Interface
-                </h2>
-                <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-                  Designed with simplicity and productivity in mind.
-                </p>
-              </div>
-
-              <div className="relative mx-auto w-full max-w-5xl">
-                <div className="overflow-hidden rounded-xl border bg-background shadow-xl">
-                  <div className="flex items-center gap-2 border-b bg-muted/50 px-4 py-3">
-                    <div className="h-3 w-3 rounded-full bg-red-500" />
-                    <div className="h-3 w-3 rounded-full bg-yellow-500" />
-                    <div className="h-3 w-3 rounded-full bg-green-500" />
-                    <div className="ml-4 text-sm text-muted-foreground">
-                      {siteConfig.appName} Dashboard
-                    </div>
-                  </div>
-                  <div className="flex aspect-video items-center justify-center bg-gradient-to-br from-background to-muted/50">
-                    <div className="text-center">
-                      <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-lg bg-primary/10">
-                        <BarChart3 className="h-8 w-8 text-primary" />
-                      </div>
-                      <p className="text-muted-foreground">Dashboard Preview</p>
-                      <Link href="/">
-                        <Button variant="outline" className="mt-4">
-                          <Play className="me-2 h-4 w-4" />
-                          View Live Demo
-                        </Button>
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Container>
-        </LandingPageSection> */}
-
-        {/* Tech Stack */}
-        <LandingPageSection className="bg-muted/30 py-16">
-          <Container>
-            <div className="flex h-full w-full flex-col gap-8">
-              <div className="space-y-4 text-center">
-                <h2 className="text-3xl font-bold">Built with Modern Tech</h2>
-                <p className="text-lg text-muted-foreground">
-                  Next.js, TypeScript, Tailwind CSS, and shadcn/ui components.
-                </p>
-              </div>
-
-              <div className="mx-auto flex max-w-2xl flex-wrap justify-center gap-4">
-                {[
-                  "Next.js",
-                  "TypeScript",
-                  "Tailwind CSS",
-                  "shadcn/ui",
-                  "React",
-                  "Prisma",
-                  "PostgreSQL",
-                  "Vercel",
-                ].map((tech) => (
-                  <Badge
-                    key={tech}
-                    variant="secondary"
-                    className="px-3 py-1 text-sm"
-                  >
-                    {tech}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-          </Container>
-        </LandingPageSection>
-      </main>
-
-      {/* Footer */}
-      <footer className="border-t bg-background">
-        <Container className="py-8">
-          <div className="flex flex-col items-center justify-between md:flex-row">
-            <div className="flex items-center gap-2 md:mb-0">
-              <Typography as="span" variant="base/semibold">
-                Momentum
+        <section
+          aria-labelledby="hero-title"
+          className="pb-10 pt-6 md:pb-16 md:pt-10"
+        >
+          <div className="grid items-center gap-10 lg:grid-cols-2">
+            <div className="flex max-w-xl flex-col gap-5">
+              {/* <Badge variant="secondary" className="w-fit">
+                {t("hero.badge")}
+              </Badge> */}
+              <Typography
+                as="h1"
+                id="hero-title"
+                variant="4xl/semibold"
+                className="text-balance leading-snug tracking-tight"
+              >
+                {t("hero.title")}
               </Typography>
+              <Typography
+                as="p"
+                variant="lg/normal"
+                className="text-muted-foreground"
+              >
+                {t("hero.description")}
+              </Typography>
+              <div className="flex flex-col gap-2 sm:flex-row">
+                <Button asChild>
+                  <Link href={siteConfig.pages.main.links.signIn.href}>
+                    {t("hero.primaryCta")}
+                    <ArrowRight className="h-4 w-4 rtl:-scale-x-100" />
+                  </Link>
+                </Button>
+                <Button variant="outline" asChild>
+                  <Link href={siteConfig.pages.main.links.signIn.href}>
+                    {t("hero.secondaryCta")}
+                  </Link>
+                </Button>
+              </div>
               <Typography variant="sm/normal" className="text-muted-foreground">
-                Copyright © {new Date().getFullYear()}. All rights reserved.
+                {t("hero.proofNote")}
               </Typography>
             </div>
-
-            <div className="flex items-center gap-4">
-              <Button variant="ghost" size="sm" asChild>
-                <Link href={siteConfig.githubUrl} target="_blank">
-                  <Github className="me-2 h-4 w-4" />
-                  Source Code
-                </Link>
-              </Button>
-              {/* <Link href="/">
-                <Button size="sm">Try Demo</Button>
-              </Link> */}
+            <div
+              className="max-h-[26rem] overflow-hidden rounded-lg border shadow-sm md:max-h-[30rem]"
+              aria-hidden="true"
+            >
+              <BoardExample />
             </div>
           </div>
-        </Container>
-      </footer>
+        </section>
+
+        {/* Features */}
+        <section
+          id="features"
+          aria-labelledby="features-title"
+          className="py-10 md:py-14"
+        >
+          <div className="flex flex-col gap-8">
+            <div className="flex max-w-2xl flex-col gap-3">
+              <Typography
+                as="h2"
+                id="features-title"
+                variant="3xl/semibold"
+                className="tracking-tight"
+              >
+                {t("features.title")}
+              </Typography>
+              <Typography
+                variant="base/normal"
+                className="text-muted-foreground"
+              >
+                {t("features.description")}
+              </Typography>
+            </div>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+              {FEATURES.map(({ key, icon: Icon }) => (
+                <Card key={key}>
+                  <CardHeader>
+                    <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-lg border bg-background">
+                      <Icon className="h-5 w-5 text-primary" />
+                    </div>
+                    <CardTitle className="text-lg">
+                      {key === "board"
+                        ? t("features.boardTitle")
+                        : key === "analytics"
+                        ? t("features.analyticsTitle")
+                        : t("features.collaborationTitle")}
+                    </CardTitle>
+                    <CardDescription className="text-sm">
+                      {key === "board"
+                        ? t("features.boardDescription")
+                        : key === "analytics"
+                        ? t("features.analyticsDescription")
+                        : t("features.collaborationDescription")}
+                    </CardDescription>
+                  </CardHeader>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Tech strip */}
+        <section aria-labelledby="tech-title" className="py-10 md:py-14">
+          <div className="flex flex-col items-center gap-5 text-center">
+            <div className="space-y-2">
+              <Typography
+                as="h2"
+                id="tech-title"
+                variant="2xl/semibold"
+                className="tracking-tight"
+              >
+                {t("tech.title")}
+              </Typography>
+              {/* <Typography variant="sm/normal" className="text-muted-foreground">
+                {t("tech.description")}
+              </Typography> */}
+            </div>
+            <div className="flex max-w-2xl flex-wrap justify-center gap-2">
+              {TECH_STACK.map((tech) => (
+                <Badge key={tech} variant="secondary">
+                  {tech}
+                </Badge>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* CTA */}
+        <section aria-labelledby="cta-title" className="py-10 md:py-14">
+          <div className="flex flex-col items-center gap-4 rounded-xl border bg-muted/40 px-6 py-10 text-center">
+            <Typography
+              as="h2"
+              id="cta-title"
+              variant="3xl/semibold"
+              className="tracking-tight"
+            >
+              {t("cta.title")}
+            </Typography>
+            <Typography
+              variant="base/normal"
+              className="max-w-xl text-muted-foreground"
+            >
+              {t("cta.description")}
+            </Typography>
+            <div className="flex flex-col gap-2 sm:flex-row">
+              <Button asChild>
+                <Link href={siteConfig.pages.main.links.signIn.href}>
+                  {t("cta.primary")}
+                  <ArrowRight className="h-4 w-4 rtl:-scale-x-100" />
+                </Link>
+              </Button>
+              <Button variant="outline" asChild>
+                <Link href="/faq">{t("nav.faq")}</Link>
+              </Button>
+            </div>
+          </div>
+        </section>
+
+        {/* Help teaser */}
+        <section aria-labelledby="help-teaser-title" className="pb-4 pt-2">
+          <div className="flex flex-col items-start justify-between gap-3 rounded-xl border p-6 sm:flex-row sm:items-center">
+            <div className="space-y-1">
+              <Typography as="h2" id="help-teaser-title" variant="xl/semibold">
+                {t("helpTeaser.title")}
+              </Typography>
+              <Typography variant="sm/normal" className="text-muted-foreground">
+                {t("helpTeaser.description")}
+              </Typography>
+            </div>
+            <Button variant="outline" asChild className="shrink-0">
+              <Link href="/help">{t("helpTeaser.action")}</Link>
+            </Button>
+          </div>
+        </section>
+      </PublicLayout>
     </>
   );
 }

@@ -41,6 +41,87 @@
     "quickActions": "Quick actions",
     "viewAllProjects": "View all projects"
   },
+  "public": {
+    "nav": {
+      "main": "Primary",
+      "footer": "Footer",
+      "features": "Features",
+      "faq": "FAQ",
+      "help": "Help",
+      "signIn": "Sign in",
+      "getStarted": "Get started"
+    },
+    "hero": {
+      "badge": "Open source issue tracking",
+      "title": "Manage projects without the chaos",
+      "description": "Momentum is a fast, Linear-inspired workspace for issues, tasks, and team collaboration — boards, analytics, and a calm interface included.",
+      "primaryCta": "Get started",
+      "secondaryCta": "Sign in",
+      "proofNote": "Free for small teams · No credit card required"
+    },
+    "features": {
+      "title": "Everything you need to ship",
+      "description": "A focused toolset for planning, tracking, and delivering work.",
+      "boardTitle": "Task boards",
+      "boardDescription": "Drag-and-drop boards with priorities, labels, assignees, and due dates.",
+      "analyticsTitle": "Analytics",
+      "analyticsDescription": "Effort, cycle time, and contributor insights across every project.",
+      "collaborationTitle": "Team collaboration",
+      "collaborationDescription": "Comments, mentions-free threads, teams, and workspace roles."
+    },
+    "tech": {
+      "title": "Built with modern tech",
+      "description": "Next.js, TypeScript, Tailwind CSS, tRPC, and Prisma on PostgreSQL."
+    },
+    "cta": {
+      "title": "Start tracking work today",
+      "description": "Create a workspace, invite your team, and ship your first project.",
+      "primary": "Get started",
+      "secondary": "Sign in"
+    },
+    "faq": {
+      "title": "Frequently asked questions",
+      "description": "Answers to common questions about Momentum.",
+      "items": [
+        {
+          "question": "What is Momentum?",
+          "answer": "Momentum is an open-source issue tracking and project management tool for teams that want a calm, fast workspace."
+        },
+        {
+          "question": "Is Momentum free?",
+          "answer": "Yes. You can self-host Momentum or run it for your team without licensing costs."
+        },
+        {
+          "question": "How do I invite my team?",
+          "answer": "Create a workspace, open the Company page, and send email invitations with a role for each member."
+        },
+        {
+          "question": "Does Momentum support Arabic and RTL?",
+          "answer": "Yes. The interface is available in English and Arabic with full right-to-left layout support."
+        },
+        {
+          "question": "Where is my data stored?",
+          "answer": "In your own PostgreSQL database (Supabase supported), which you control."
+        },
+        {
+          "question": "How do I get help?",
+          "answer": "Check the help page or open an issue on GitHub."
+        }
+      ]
+    },
+    "helpTeaser": {
+      "title": "Need a hand?",
+      "description": "Browse the help center for guides and answers.",
+      "action": "Visit help center"
+    },
+    "notFound": {
+      "title": "Page not found",
+      "description": "Sorry, we couldn't find the page you're looking for.",
+      "home": "Go home",
+      "dashboard": "Go to dashboard",
+      "signIn": "Sign in"
+    }
+  },
   "auth": {
     "signIn": "Sign in",
     "signInDescription": "Sign in to your account to access your projects, tasks, and more.",
@@ -72,7 +153,8 @@
     "signedIn": "Signed in successfully",
     "signInFailed": "Something went wrong, kindly try again",
     "accountCreated": "Account created successfully",
-    "registerFailed": "Something went wrong, kindly try again!"
+    "registerFailed": "Something went wrong, kindly try again!",
+    "backHome": "Back home"
   },
   "overview": {
     "title": "Dashboard",

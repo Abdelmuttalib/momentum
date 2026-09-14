@@ -36,13 +36,13 @@ import { useRouter } from "next/router";
 import { ButtonLink } from "../common/button-link";
 import { routes } from "@/lib/routes";
 import { useTranslations } from "next-intl";
+import { locales } from "@/i18n/config";
 import Image from "next/image";
 import { getAvatarUrl } from "@/lib/avatar";
 import { Avatar, AvatarImage } from "../ui/avatar";
 
 export function AppSidebar() {
   const { asPath, query } = useRouter();
-  // locale
 
   const t = useTranslations("navigation");
   const projectId = query.projectId as string;
@@ -55,10 +55,22 @@ export function AppSidebar() {
 
   const { data: projects } = useProjects(companyId);
 
-  const isActive = (url: string) =>
-    url === "/"
-      ? asPath === url
-      : asPath === url || asPath.startsWith(`${url}/`);
+  const normalizePath = (path: string) => {
+    const withoutQuery = path.split("?")[0]?.split("#")[0] ?? path;
+    for (const locale of locales) {
+      if (withoutQuery === `/${locale}`) return "/";
+      if (withoutQuery.startsWith(`/${locale}/`))
+        return withoutQuery.slice(locale.length + 1) || "/";
+    }
+    return withoutQuery;
+  };
+
+  const isActive = (url: string) => {
+    const normalized = normalizePath(asPath);
+    return url === "/"
+      ? normalized === url
+      : normalized === url || normalized.startsWith(`${url}/`);
+  };
 
   const visibleProjects = (projects ?? []).slice(0, 5);
   const hasMoreProjects = (projects ?? []).length > visibleProjects.length;
@@ -141,7 +153,7 @@ export function AppSidebar() {
                         <SidebarMenuSubItem key={sub.url}>
                           <SidebarMenuSubButton
                             asChild
-                            isActive={asPath === sub.url}
+                            isActive={normalizePath(asPath) === sub.url}
                           >
                             <Link href={sub.url}>
                               <Avatar className="me-0.5 h-5 w-5">
