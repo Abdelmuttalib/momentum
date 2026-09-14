@@ -13,7 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { UserAvatar } from "@/components/user/user-menu";
 import { api } from "@/lib/api";
 import { cn } from "@/lib/cn";
-import { Priority } from "@/lib/enums";
+import { Priority, EFFORT_SCALE } from "@/lib/enums";
 import { Controller, useForm } from "react-hook-form";
 import { TaskStatus } from "@prisma/client";
 import { taskFormSchema, type TaskFormSchemaType } from "@/schema";
@@ -23,7 +23,10 @@ import { ButtonLoaderIcon } from "@/components/common/button-loader-icon";
 import { BackButton } from "@/components/common/back-button";
 import { TaskStatusBadge } from "@/features/tasks/components/task-status-badge";
 import { TaskPriorityBadge } from "@/features/tasks/components/task-priority-badge";
+import { TaskEffortBadge } from "@/features/tasks/components/task-effort-badge";
 import { useProjects } from "@/features/projects/hooks/use-projects";
+import { useFormErrorToast } from "@/hooks/use-form-error-toast";
+import { useTranslations } from "next-intl";
 
 type TaskFormProps = {
   onSubmit: (data: TaskFormSchemaType) => void;
@@ -46,6 +49,7 @@ export function TaskForm({
   mode = "create",
   isPending,
 }: TaskFormProps) {
+  const t = useTranslations("tasks");
   const { data: session } = useSession();
   const companyId = session?.user?.company.id;
 
@@ -62,6 +66,11 @@ export function TaskForm({
 
   const { data: projects } = useProjects(companyId);
 
+  useFormErrorToast({
+    errors: form.formState.errors,
+    touchedFields: form.formState.touchedFields,
+  });
+
   return (
     <form
       onSubmit={(e) => {
@@ -71,33 +80,33 @@ export function TaskForm({
     >
       {/* {JSON.stringify(companyUsers)} */}
       <div>
-        <Label htmlFor="title">Title</Label>
+        <Label htmlFor="title">{t("formTitle")}</Label>
         <Input
           id="title"
           type="text"
           {...form.register("title")}
-          placeholder="task title"
+          placeholder={t("formTitlePlaceholder")}
           inputMode="text"
           disabled={isPending}
           data-invalid={form.formState.errors?.title?.message}
         />
       </div>
       <div>
-        <Label htmlFor="description">Description</Label>
+        <Label htmlFor="description">{t("formDescription")}</Label>
         <Textarea
           id="description"
           {...form.register("description")}
-          placeholder="task description"
+          placeholder={t("formDescriptionPlaceholder")}
           inputMode="text"
           disabled={isPending}
-          className={cn("h-10 text-lg text-muted-foreground")}
+          className={cn("min-h-10 text-sm")}
           data-invalid={form.formState.errors?.description?.message}
         />
       </div>
       {/* Status Select */}
       <div className="grid w-full grid-cols-1 gap-x-3 gap-y-3 sm:grid-cols-2 lg:grid-cols-3">
         <div>
-          <Label htmlFor="status">Status</Label>
+          <Label htmlFor="status">{t("statusLabel")}</Label>
           <Controller
             name="status"
             control={form.control}
@@ -108,7 +117,7 @@ export function TaskForm({
                 disabled={isPending}
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select a status" />
+                  <SelectValue placeholder={t("selectStatus")} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
@@ -133,7 +142,7 @@ export function TaskForm({
 
         {/* Priority Select */}
         <div>
-          <Label htmlFor="priority">Priority</Label>
+          <Label htmlFor="priority">{t("priorityLabel")}</Label>
           <Controller
             name="priority"
             control={form.control}
@@ -144,7 +153,7 @@ export function TaskForm({
                 disabled={isPending}
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select a status" />
+                  <SelectValue placeholder={t("selectStatus")} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
@@ -164,8 +173,42 @@ export function TaskForm({
           />
         </div>
 
+        {/* Effort Select */}
         <div>
-          <Label htmlFor="labels">Label</Label>
+          <Label htmlFor="effortPoints">{t("effortLabel")}</Label>
+          <Controller
+            name="effortPoints"
+            control={form.control}
+            render={({ field }) => (
+              <Select
+                value={field.value == null ? "none" : String(field.value)}
+                onValueChange={(value) =>
+                  field.onChange(value === "none" ? null : Number(value))
+                }
+                disabled={isPending}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder={t("noEstimate")} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="none">
+                      <span className="text-muted-foreground">{t("noEstimate")}</span>
+                    </SelectItem>
+                    {EFFORT_SCALE.map((points) => (
+                      <SelectItem key={points} value={String(points)}>
+                        <TaskEffortBadge points={points} />
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            )}
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="labels">{t("labelLabel")}</Label>
           <Controller
             name="labels"
             control={form.control}
@@ -176,7 +219,7 @@ export function TaskForm({
                 disabled={isPending}
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select labels" />
+                  <SelectValue placeholder={t("selectLabels")} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
@@ -202,7 +245,7 @@ export function TaskForm({
                           </Badge> */}
                       </SelectItem>
                     ))}
-                    {/* <div className="my-2 -ml-1">
+                    {/* <div className="my-2 -ms-1">
                         <CreateLabel />
                       </div> */}
                   </SelectGroup>
@@ -214,7 +257,7 @@ export function TaskForm({
       </div>
       {/* Project */}
       <div>
-        <Label htmlFor="projectId">Project</Label>
+        <Label htmlFor="projectId">{t("projectLabel")}</Label>
         <Controller
           name="projectId"
           control={form.control}
@@ -225,7 +268,7 @@ export function TaskForm({
               disabled={isPending}
             >
               <SelectTrigger className="h-fit w-full">
-                <SelectValue placeholder="Select a project" />
+                <SelectValue placeholder={t("selectProject")} />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
@@ -248,7 +291,7 @@ export function TaskForm({
       </div>
       {/* Assign */}
       <div>
-        <Label htmlFor="assigneeId">Assignee</Label>
+        <Label htmlFor="assigneeId">{t("assigneeLabel")}</Label>
         <Controller
           name="assigneeId"
           control={form.control}
@@ -259,7 +302,7 @@ export function TaskForm({
               disabled={isPending}
             >
               <SelectTrigger className="h-fit w-full">
-                <SelectValue placeholder="Assign to..." />
+                <SelectValue placeholder={t("assignTo")} />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
@@ -292,7 +335,7 @@ export function TaskForm({
       <div className="mt-2 flex flex-col-reverse md:flex-row md:gap-2 lg:justify-end">
         <BackButton
           disabled={isPending}
-          text="Cancel"
+          text={t("cancelButton")}
           // onClick={onCancel}
         />
         <Button
@@ -302,7 +345,7 @@ export function TaskForm({
           disabled={isPending || !form.formState.isDirty}
         >
           <ButtonLoaderIcon isPending={isPending} />
-          {mode === "create" ? "Create Task" : "Save Changes"}
+          {mode === "create" ? t("createButton") : t("saveButton")}
         </Button>
       </div>
     </form>

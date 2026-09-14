@@ -3,6 +3,10 @@ import { cva, type VariantProps } from "class-variance-authority";
 import Link, { type LinkProps } from "next/link";
 import React from "react";
 
+// DEPRECATED: prefer `Button` (`ui/button.tsx`) with `size="icon"`,
+// `size="icon-sm"`, or the new `size="xs"` for icon-only controls.
+// IconButton remains as a compatibility alias for existing consumers;
+// do not use it in new code.
 const iconButtonVariants = cva(
   "cursor-pointer border-0 border-transparent ring-1 ring-inset ring-transparent transition duration-150 ease-linear outline-transparent focus:outline-transparent whitespace-nowrap rounded inline-flex items-center justify-center focus:ring-2 focus:ring-inset",
   {

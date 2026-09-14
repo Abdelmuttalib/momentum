@@ -23,7 +23,9 @@ import {
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 import { useTheme } from "next-themes";
+import { useTranslations } from "next-intl";
 import { routes } from "@/lib/routes";
+import { LanguageSwitcherMenu } from "@/components/language-switcher";
 
 export function UserMenu() {
   const [isOpen, setIsOpen] = useState(false);
@@ -31,16 +33,16 @@ export function UserMenu() {
   const { data: session } = useSession();
   const user = session?.user;
 
-  console.log("user: ", user);
 
   const { theme, setTheme } = useTheme();
+  const tNav = useTranslations("navigation");
 
   function handleThemeToggle() {
     setTheme(theme === "light" ? "dark" : "light");
   }
 
   async function handleSignOut() {
-    await signOut();
+    await signOut({ callbackUrl: "/sign-in" });
   }
 
   if (!user) {
@@ -54,7 +56,7 @@ export function UserMenu() {
           variant="ghost"
           className="h-auto w-full justify-start p-2 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
         >
-          <div className="flex w-full items-center space-x-3">
+          <div className="flex w-full items-center gap-3">
             <Avatar className="h-9 w-9">
               <AvatarImage
                 src={user.image ?? `https://avatar.vercel.sh/${user.email}`}
@@ -64,14 +66,14 @@ export function UserMenu() {
                 {user.name}
               </AvatarFallback>
             </Avatar>
-            <div className="min-w-0 flex-1 text-left">
-              <div className="flex items-center space-x-1">
+            <div className="min-w-0 flex-1 text-start">
+              <div className="flex items-center gap-1">
                 <p className="truncate text-sm font-medium">{user.name}</p>
                 <Badge variant="secondary" className="h-4 px-1 py-0 text-xs">
                   {user.role}
                 </Badge>
               </div>
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center gap-2">
                 <p className="truncate text-xs text-muted-foreground">
                   {user.email}
                 </p>
@@ -90,7 +92,7 @@ export function UserMenu() {
       >
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-2">
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center gap-2">
               <Avatar className="h-9 w-9">
                 <AvatarImage
                   src={user.image || `https://avatar.vercel.sh/${user.name}`}
@@ -123,21 +125,21 @@ export function UserMenu() {
 
         {/* <DropdownMenuItem asChild>
           <Link href="/profile" className="cursor-pointer">
-            <User className="mr-2 h-4 w-4" />
+            <User className="me-2 h-4 w-4" />
             <span>Profile</span>
           </Link>
         </DropdownMenuItem> */}
 
         <DropdownMenuItem asChild>
           <Link href={routes.settings.index()} className="cursor-pointer">
-            <Settings className="mr-2 h-4 w-4" />
-            <span>Settings</span>
+            <Settings className="me-2 h-4 w-4" />
+            <span>{tNav("settings")}</span>
           </Link>
         </DropdownMenuItem>
 
         {/* <DropdownMenuItem asChild>
           <Link href="/teams" className="cursor-pointer">
-            <Users className="mr-2 h-4 w-4" />
+            <Users className="me-2 h-4 w-4" />
             <span>Manage Teams</span>
           </Link>
         </DropdownMenuItem> */}
@@ -145,14 +147,16 @@ export function UserMenu() {
         <DropdownMenuSeparator />
 
         <DropdownMenuItem onClick={handleThemeToggle}>
-          <Sun className="mr-2 h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-          <Moon className="absolute mr-2 h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+          <Sun className="me-2 h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+          <Moon className="absolute me-2 h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
           <span>Toggle theme</span>
         </DropdownMenuItem>
 
+        <LanguageSwitcherMenu />
+
         <DropdownMenuItem asChild>
           <Link href={routes.help.index()} className="cursor-pointer">
-            <HelpCircle className="mr-2 h-4 w-4" />
+            <HelpCircle className="me-2 h-4 w-4" />
             <span>Help & Support</span>
           </Link>
         </DropdownMenuItem>
@@ -164,8 +168,8 @@ export function UserMenu() {
           onClick={handleSignOut}
           className="bg-destructive/10 text-destructive hover:bg-destructive hover:text-destructive-foreground focus:bg-destructive/70 focus:text-destructive-foreground"
         >
-          <LogOut className="mr-2 h-4 w-4" />
-          <span>Sign out</span>
+          <LogOut className="me-2 h-4 w-4" />
+          <span>{tNav("signOut")}</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

@@ -1,5 +1,5 @@
 import { type GetServerSideProps } from "next";
-import { getServerAuthSession } from "@/server/auth";
+import { requireAnonymousPage } from "@/server/auth-guard";
 import { Typography } from "@/components/ui/typography";
 import { AuthLayout } from "@/components/layout/auth-layout";
 import { Seo } from "@/components/seo";
@@ -9,8 +9,10 @@ import { cn } from "@/lib/cn";
 import { buttonVariants } from "@/components/ui/button";
 import { ArrowRightIcon } from "lucide-react";
 import { BuildingOfficeIcon } from "@heroicons/react/24/outline";
+import { useTranslations } from "next-intl";
 
 export default function SignInPage() {
+  const t = useTranslations("auth");
   return (
     <>
       <Seo title="Sign in" />
@@ -38,10 +40,10 @@ export default function SignInPage() {
               )}
             >
               <span className="p-2.5">
-                <ArrowRightIcon className="h-5 w-5" />
+                <ArrowRightIcon className="h-5 w-5 rtl:-scale-x-100" />
               </span>
               <Typography variant="sm/medium" className="text-current">
-                Setup a new company account
+                {t("setupCompanyAccount")}
               </Typography>
             </Link>
             <Link
@@ -57,7 +59,7 @@ export default function SignInPage() {
                 <BuildingOfficeIcon className="h-5 w-5" />
               </span>
               <Typography variant="sm/medium" className="text-current">
-                Join your company
+                {t("joinCompany")}
               </Typography>
             </Link>
           </div>
@@ -67,21 +69,5 @@ export default function SignInPage() {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await getServerAuthSession(context);
-
-  if (session?.user) {
-    return {
-      redirect: {
-        destination: "/teams",
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    props: {
-      session,
-    },
-  };
-};
+export const getServerSideProps: GetServerSideProps =
+  requireAnonymousPage();

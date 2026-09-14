@@ -1,22 +1,17 @@
-// import DashboardLayout from "@/components/layout/dashboard-layout";
-import { Button } from "@/components/ui/button";
-import { SettingsContentLayout } from ".";
+import { SettingsContentLayout, SettingsSectionTitle } from ".";
 import { CompanySettings } from "@/components/views/settings";
+import { type GetServerSideProps } from "next";
+import { requireAuthPage } from "@/server/auth-guard";
+import { useTranslations } from "next-intl";
 
 export default function CompanySettingsPage() {
+  const t = useTranslations("settings");
   return (
-    <SettingsContentLayout
-      title="Company Settings"
-      description="dd"
-      actions={
-        <>
-          <Button>Save Changes</Button>
-        </>
-      }
-    >
-      <div>
-        <CompanySettings />
-      </div>
+    <SettingsContentLayout>
+      <SettingsSectionTitle>{t("company")}</SettingsSectionTitle>
+      <CompanySettings />
     </SettingsContentLayout>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = requireAuthPage();

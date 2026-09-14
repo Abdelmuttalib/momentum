@@ -14,6 +14,9 @@ const InputOTP = React.forwardRef<
 >(({ className, containerClassName, ...props }, ref) => (
   <OTPInput
     ref={ref}
+    // OTP codes are inherently LTR data: pin the container direction so the
+    // slot sequence never mirrors under RTL (physical classes below stay).
+    dir="ltr"
     containerClassName={cn(
       "flex items-center gap-2 has-[:disabled]:opacity-50",
       containerClassName as ClassValue

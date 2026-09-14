@@ -47,7 +47,7 @@ export function CreateCompanyForm({
         onSubmit={form.handleSubmit(onCreateCompany)}
         className="w-full space-y-4"
       >
-        <div className="space-y-2">
+        <div>
           <Label htmlFor="name">Name</Label>
           <Input
             id="name"
@@ -59,10 +59,10 @@ export function CreateCompanyForm({
         </div>
         <div className="flex justify-between">
           <Button type="button" variant="outline" onClick={() => router.back()}>
-            <ArrowLeftIcon className="-ml-1 h-4 w-4" />
+            <ArrowLeftIcon className="-ms-1 h-4 w-4" />
             Back
           </Button>
-          <Button type="submit">Create Company</Button>
+          <Button type="submit">Next</Button>
         </div>
       </form>
     </div>
@@ -93,8 +93,8 @@ export function CreateAdminAccountForm({
         onSubmit={handleSubmit}
         className="w-full space-y-6"
       >
-        <div className="w-full space-y-2">
-          <div className="space-y-2">
+        <div className="w-full space-y-4">
+          <div>
             <Label htmlFor="company">Company</Label>
             <Input
               id="company"
@@ -107,7 +107,7 @@ export function CreateAdminAccountForm({
               data-invalid={form.formState.errors.company?.message}
             />
           </div>
-          <div className="space-y-2">
+          <div>
             <Label htmlFor="email">Email</Label>
             <Input
               id="email"
@@ -118,7 +118,7 @@ export function CreateAdminAccountForm({
             />
           </div>
 
-          <div className="space-y-2">
+          <div>
             <Label htmlFor="name">Name</Label>
             <Input
               {...form.register("name")}
@@ -127,7 +127,7 @@ export function CreateAdminAccountForm({
               data-invalid={form.formState.errors.name?.message}
             />
           </div>
-          <div className="space-y-2">
+          <div>
             <Label htmlFor="password">Password</Label>
             <Input
               id="password"
@@ -137,7 +137,7 @@ export function CreateAdminAccountForm({
               data-invalid={form.formState.errors.password?.message}
             />
           </div>
-          <div className="space-y-2">
+          <div>
             <Label htmlFor="confirmPassword">Confirm Password</Label>
             <Input
               id="confirmPassword"
@@ -155,7 +155,7 @@ export function CreateAdminAccountForm({
             onClick={() => setRegisterStep("company")}
             disabled={mutation.isLoading}
           >
-            <ArrowLeftIcon className="-ml-2 mr-1 h-4 w-4" />
+            <ArrowLeftIcon className="-ms-1 h-4 w-4" />
             Back
           </Button>
           <Button type="submit" disabled={mutation.isLoading}>

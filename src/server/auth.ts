@@ -1,22 +1,18 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
-
 import { type GetServerSidePropsContext } from "next";
 import {
   getServerSession,
   type NextAuthOptions,
   type DefaultSession,
+  type User as NextAuthUser,
 } from "next-auth";
-// import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "@/server/db";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 import bcrypt from "bcryptjs";
 import type { Company, Invitation, Role, User } from "@prisma/client";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-// import { SupabaseAdapter } from "@auth/supabase-adapter";
-// import { default as jsonwebtoken } from "jsonwebtoken";
+import { type JWT } from "next-auth/jwt";
+import { type AdapterUser } from "next-auth/adapters";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -32,7 +28,6 @@ declare module "next-auth" {
       email: string;
       image?: string;
       role: Role;
-      // companyId: string;
       emailVerified: boolean;
       sentInvitations?: Invitation[];
       company: Company;
@@ -43,77 +38,70 @@ declare module "next-auth" {
 export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
+    // Explicit rolling-session behavior (matches NextAuth v4 defaults).
+    maxAge: 30 * 24 * 60 * 60,
+    updateAge: 24 * 60 * 60,
   },
-  // adapter: SupabaseAdapter({
-  //   url: process.env.NEXT_PUBLIC_SUPABASE_URL,
-  //   secret: process.env.SUPABASE_SERVICE_ROLE_KEY,
-  // }),
   adapter: PrismaAdapter(prisma),
   callbacks: {
-    async jwt({ token, user }: { token: any; user: User }) {
-      // if (user && user.phoneNumber) {
-      //   token.phoneNumber = user.phoneNumber;
-      // }
-      // if (user && user.id) {
-      //   token.id = user.id;
-      // }
-      // return token;
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      let company: Company;
+    async jwt({
+      token,
+      user,
+    }: {
+      token: JWT;
+      user?: NextAuthUser | AdapterUser;
+    }) {
+      const companyId =
+        user && "companyId" in user
+          ? (user as Pick<User, "companyId">).companyId
+          : undefined;
+      let company: Company | null = null;
 
-      if (user && user.companyId) {
+      if (companyId) {
         company = await prisma.company.findUnique({
           where: {
-            id: user.companyId,
+            id: companyId,
           },
         });
       }
+      const appUser = user as Partial<User> | undefined;
       return {
         ...token,
-        ...(user && user.id ? { id: user.id } : {}),
-        ...(user && user.name ? { name: user.name } : {}),
-        ...(user && user.email ? { email: user.email } : {}),
-        ...(user && user.emailVerified
-          ? { emailVerified: user.emailVerified }
+        ...(appUser?.id ? { id: appUser.id } : {}),
+        ...(appUser?.name ? { name: appUser.name } : {}),
+        ...(appUser?.email ? { email: appUser.email } : {}),
+        ...(appUser?.emailVerified
+          ? { emailVerified: appUser.emailVerified }
           : {}),
-        ...(user && user.role ? { role: user.role } : {}),
+        ...(appUser?.role ? { role: appUser.role } : {}),
         ...(company ? { company: company } : {}),
       };
     },
     session: ({ session, token }) => {
-      // const signingSecret = process.env.SUPABASE_JWT_SECRET;
-      // if (signingSecret) {
-      //   const payload = {
-      //     aud: "authenticated",
-      //     exp: Math.floor(new Date(session.expires).getTime() / 1000),
-      //     sub: token.id,
-      //     email: token.email,
-      //     role: "authenticated",
-      //   };
-      //   session.supabaseAccessToken = jsonwebtoken.sign(payload, signingSecret);
-      // }
       return {
         ...session,
         user: {
           ...session.user,
-          ...(token && token.id ? { id: token.id } : {}),
-          ...(token && token.name ? { name: token.name } : {}),
-          ...(token && token.email ? { email: token.email } : {}),
-          ...(token && token.emailVerified
+          ...(token?.id ? { id: token.id } : {}),
+          ...(token?.name ? { name: token.name } : {}),
+          ...(token?.email ? { email: token.email } : {}),
+          ...(token?.emailVerified
             ? { emailVerified: token.emailVerified }
             : {}),
-          ...(token && token.role ? { role: token.role } : {}),
-          ...(token && token.company ? { company: token.company } : {}),
+          ...(token?.role ? { role: token.role } : {}),
+          ...(token?.company ? { company: token.company } : {}),
         },
       };
     },
   },
-  // adapter: PrismaAdapter(prisma),
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/ban-ts-comment
 
   providers: [
     CredentialsProvider({
       name: "Credentials",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
+      },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
           return Promise.resolve(null);
@@ -140,6 +128,7 @@ export const authOptions: NextAuthOptions = {
           if (isPasswordMatch) {
             return Promise.resolve(user);
           }
+          return Promise.resolve(null);
         } else {
           // If you return null or false then the credentials will be rejected
           return Promise.resolve(null);
@@ -149,10 +138,6 @@ export const authOptions: NextAuthOptions = {
         }
       },
     }),
-    // DiscordProvider({
-    //   clientId: env.DISCORD_CLIENT_ID,
-    //   clientSecret: env.DISCORD_CLIENT_SECRET,
-    // }),
     /**
      * ...add more providers here.
      *

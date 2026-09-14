@@ -1,23 +1,30 @@
-import type { Task as TaskType, TaskStatus } from "@prisma/client";
+import type { TaskStatus } from "@prisma/client";
 import { CreateTask } from "./forms/create-task";
 import { cn } from "@/lib/cn";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import TaskView from "./task-view";
-import { Typography } from "@/components/ui/typography";
+import { Text } from "@/components/typography";
 import { useRouter } from "next/router";
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
 import { useProjects } from "@/features/projects/hooks/use-projects";
 import { useSession } from "next-auth/react";
 import { type GetProjectTasks } from "@/features/projects/types";
+import { type BoardDensity } from "@/features/tasks/hooks/use-board-density";
+import { useTranslations } from "next-intl";
+import { useTaskStatusLabel } from "@/features/tasks/components/task-status-label";
 
 interface TaskColumnProps {
   status: TaskStatus;
   tasks: GetProjectTasks;
+  density?: BoardDensity;
 }
 
-export default function TaskBoardColumn({ status, tasks }: TaskColumnProps) {
-  console.log("TASKS->COLUMN", status, tasks);
+export default function TaskBoardColumn({
+  status,
+  tasks,
+  density = "compact",
+}: TaskColumnProps) {
   const router = useRouter();
 
   const [teamId, projectId] = [
@@ -29,17 +36,21 @@ export default function TaskBoardColumn({ status, tasks }: TaskColumnProps) {
   const companyId = session?.user?.company.id;
 
   const { data: projects } = useProjects(companyId);
+  const t = useTranslations("tasks");
+  const getStatusLabel = useTaskStatusLabel();
+
+  const statusLabel = getStatusLabel(status);
 
   return (
-    <div key={status} className="h-full w-full overflow-hidden rounded-lg">
-      <div className="flex items-center justify-between gap-3 py-1">
-        <div className="flex items-center gap-1">
-          <Typography variant="sm/medium" className="capitalize">
-            {status.replace("_", " ").toLocaleLowerCase()}
-          </Typography>
-          <span className="rounded-full px-2.5 py-0.5 text-sm">
+    <div key={status} className="w-72 shrink-0 overflow-hidden rounded-lg">
+      <div className="flex items-center justify-between gap-2 px-1 py-1.5">
+        <div className="flex min-w-0 items-center gap-1.5">
+          <Text size="sm" weight="medium" as="h2" className="truncate capitalize">
+            {statusLabel}
+          </Text>
+          <Text size="xs" tone="muted" as="span" aria-label={t("tasksInColumn", { count: tasks.length, status: statusLabel })}>
             {tasks.length}
-          </span>
+          </Text>
         </div>
         <div>
           <CreateTask
@@ -50,11 +61,13 @@ export default function TaskBoardColumn({ status, tasks }: TaskColumnProps) {
             triggerButton={
               <Button
                 type="button"
-                className="ml-2 inline-flex gap-1 whitespace-nowrap"
+                aria-label={t("addTaskToColumn", { status: statusLabel })}
+                title={t("addTaskToColumn", { status: statusLabel })}
+                className="inline-flex h-7 w-7 whitespace-nowrap"
                 variant="ghost"
-                size="icon-sm"
+                size="icon"
               >
-                <PlusIcon className="w-5" />
+                <PlusIcon className="h-4 w-4" />
               </Button>
             }
           />
@@ -71,12 +84,22 @@ export default function TaskBoardColumn({ status, tasks }: TaskColumnProps) {
             {...provided.droppableProps}
             ref={provided.innerRef}
             className={cn(
-              "h-full min-h-[75svh] w-full space-y-4 rounded py-4",
+              "max-h-[calc(100vh-16rem)] min-h-[12rem] w-full overflow-y-auto rounded-lg bg-muted/40",
+              density === "compact" ? "space-y-1.5 p-1.5" : "space-y-2 p-2",
               {
-                "bg-secondary": snapshot.isDraggingOver,
+                "bg-accent": snapshot.isDraggingOver,
               }
             )}
           >
+            {tasks.length === 0 && (
+              <Text
+                size="xs"
+                tone="muted"
+                className="px-1 py-3 text-center"
+              >
+                {t("noTasksInColumn")}
+              </Text>
+            )}
             {tasks?.map((task, index) => (
               <Draggable
                 key={task.id}
@@ -89,6 +112,7 @@ export default function TaskBoardColumn({ status, tasks }: TaskColumnProps) {
                     dragHandleProps={provided.dragHandleProps}
                     innerRef={provided.innerRef}
                     task={task}
+                    density={density}
                   />
                 )}
               </Draggable>

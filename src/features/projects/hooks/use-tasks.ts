@@ -11,7 +11,7 @@ export function useProjectTasks(projectId: string) {
   );
 }
 
-export function useTask(taskId: string) {
+export function useProjectTask(taskId: string) {
   return api.project.getProjectTask.useQuery(
     {
       taskId,

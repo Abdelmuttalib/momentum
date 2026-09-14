@@ -10,11 +10,11 @@ export function MainNav() {
 
   return (
     <div className="mr-4 hidden md:flex">
-      <Link href="/" className="mr-6 flex items-center space-x-2">
+      <Link href="/" className="mr-6 flex items-center gap-2">
         <Image src="/favicon.ico" alt="app icon" width={32} height={32} />
         <span className="hidden font-bold sm:inline-block">Momentu</span>
       </Link>
-      <nav className="flex items-center space-x-6 text-sm font-medium">
+      <nav className="flex items-center gap-6 text-sm font-medium">
         {dashboardLinks.map((item) => (
           <Link
             key={item.label}

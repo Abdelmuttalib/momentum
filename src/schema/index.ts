@@ -1,4 +1,4 @@
-import { Priority } from "@/lib/enums";
+import { EFFORT_SCALE, Priority } from "@/lib/enums";
 import { Role, TaskPriority, TaskStatus } from "@prisma/client";
 import { z } from "zod";
 
@@ -60,13 +60,26 @@ export const createCompanyWithAdminAccountFormSchema = z.object({
   password: z.string().min(8),
 });
 
+export const effortPointsSchema = z
+  .union([
+    z.literal(1),
+    z.literal(2),
+    z.literal(3),
+    z.literal(5),
+    z.literal(8),
+    z.literal(13),
+  ])
+  .nullable()
+  .optional();
+
 export const taskFormSchema = z.object({
-  title: z.string().min(1, "Please enter a team name"),
-  description: z.string().optional(),
+  title: z.string().min(1, "Please enter a task title").max(200),
+  description: z.string().max(10000).optional(),
   status: z.nativeEnum(TaskStatus),
   priority: z.nativeEnum(TaskPriority),
+  effortPoints: effortPointsSchema,
   dueDate: z.date().nullable().optional(),
-  assigneeId: z.string().optional(),
+  assigneeId: z.string().nullable().optional(),
   labels: z.string().optional(),
   projectId: z.string().optional(),
 });
@@ -94,6 +107,12 @@ export const registerUserFormSchema = z
     confirmPassword: z
       .string()
       .min(8, "confirm password must be at least 8 characters"),
+    token: z.string().min(1, "invitation token is required"),
+    inviteCode: z
+      .string()
+      .trim()
+      .toUpperCase()
+      .length(6, "invite code must be 6 characters"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     path: ["confirmPassword"],

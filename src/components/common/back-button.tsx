@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import { useRouter } from "next/router";
+import { useTranslations } from "next-intl";
 
 export type BackButtonProps = {
   fallback?: string;
@@ -14,12 +15,14 @@ export type BackButtonProps = {
 export function BackButton({
   fallback,
   href,
-  text = "Back",
+  text,
   disabled,
   onClick,
   withArrow = false,
 }: BackButtonProps) {
+  const t = useTranslations("common");
   const router = useRouter();
+  const label = text ?? t("back");
 
   async function onBack() {
     if (onClick) {
@@ -38,15 +41,15 @@ export function BackButton({
   return (
     <Button
       type="button"
-      title={text}
+      title={label}
       variant="outline"
       onClick={() => {
         void onBack();
       }} // Go back
       disabled={disabled}
     >
-      {withArrow && <ArrowLeftIcon className="h-4 w-4" />}
-      {text}
+      {withArrow && <ArrowLeftIcon className="h-4 w-4 rtl:-scale-x-100" />}
+      {label}
     </Button>
   );
 }

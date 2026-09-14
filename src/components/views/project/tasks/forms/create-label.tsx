@@ -121,7 +121,7 @@ function CreateLabelForm({
 //       <DialogTrigger asChild>
 //         <Button
 //           size="sm"
-//           className="ml-2 inline-flex gap-1 whitespace-nowrap capitalize"
+//           className="ms-2 inline-flex gap-1 whitespace-nowrap capitalize"
 //         >
 //           <PlusIcon className="w-5" /> Create Label
 //         </Button>
@@ -154,7 +154,7 @@ export function CreateLabel() {
         triggerButton={
           <Button
             type="button"
-            className="ml-2 inline-flex gap-1 whitespace-nowrap"
+            className="ms-2 inline-flex gap-1 whitespace-nowrap"
           >
             <PlusIcon className="w-4" />
             Create Label

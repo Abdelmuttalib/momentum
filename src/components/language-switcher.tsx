@@ -1,22 +1,125 @@
 import { useRouter } from "next/router";
-import { IconLink } from "./ui/icon-button";
-import { LanguageIcon } from "@heroicons/react/20/solid";
+import { Check, Languages } from "lucide-react";
+import {
+  DropdownMenuItem,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  locales,
+  localeNames,
+  resolveLocale,
+  type Locale,
+  localesData,
+  localesList,
+} from "@/i18n/config";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { cn } from "@/lib/cn";
 
-export default function LanguageSwitcher() {
-  const { asPath, locale } = useRouter();
+/**
+ * Language submenu preserving route, params, query and hash via
+ * Next locale-aware routing (no duplicate page trees).
+ */
+export function LanguageSwitcherMenu() {
+  const router = useRouter();
+  const active = resolveLocale(router.locale);
+
+  async function switchTo(next: Locale) {
+    if (next === active) return;
+    const { pathname, query, asPath } = router;
+    const hash = typeof window !== "undefined" ? window.location.hash : "";
+    await router.push({ pathname, query }, `${asPath.split("#")[0]}${hash}`, {
+      locale: next,
+    });
+  }
+
   return (
-    <IconLink
-      href={asPath}
-      locale={locale === "en" ? "zh" : "en"}
-      variant="outline"
-      size="sm"
-      className="inline-flex h-10 w-24 items-center justify-center gap-2 border-gray-100 p-0 text-primary hover:border-gray-200"
-    >
-      <LanguageIcon className="h-6 w-6 text-gray-800" />
-      <div className="h-7 w-0.5 bg-slate-200"></div>
-      <p className="label-md font-bold uppercase">
-        {locale === "en" ? "zh" : "en"}
-      </p>
-    </IconLink>
+    <DropdownMenuSub>
+      <DropdownMenuSubTrigger>
+        <Languages className="mr-2 h-4 w-4" />
+        <span>{localeNames[active]}</span>
+      </DropdownMenuSubTrigger>
+      <DropdownMenuSubContent>
+        {locales.map((locale) => (
+          <DropdownMenuItem
+            key={locale}
+            disabled={locale === active}
+            onClick={() => void switchTo(locale)}
+          >
+            <span className="flex-1">{localeNames[locale]}</span>
+            {locale === active && <Check className="h-4 w-4" />}
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuSubContent>
+    </DropdownMenuSub>
+  );
+}
+
+export function LanguageSelect() {
+  const router = useRouter();
+  const active = resolveLocale(router.locale);
+
+  async function switchTo(next: Locale) {
+    if (next === active) return;
+    const { pathname, query, asPath } = router;
+    const hash = typeof window !== "undefined" ? window.location.hash : "";
+    await router.push({ pathname, query }, `${asPath.split("#")[0]}${hash}`, {
+      locale: next,
+    });
+  }
+
+  return (
+    <>
+      <Select
+        defaultValue={active}
+        onValueChange={(value) => void switchTo(value as Locale)}
+      >
+        <SelectTrigger className="w-full">
+          <SelectValue placeholder="Select a language" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            {localesList?.map(({ locale, name }) => {
+              return (
+                <SelectItem
+                  key={locale}
+                  value={locale}
+                  className={cn("capitalize")}
+                >
+                  {name}
+                </SelectItem>
+              );
+            })}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+
+      {/* <DropdownMenuSub>
+        <DropdownMenuSubTrigger>
+          <Languages className="mr-2 h-4 w-4" />
+          <span>{localeNames[active]}</span>
+        </DropdownMenuSubTrigger>
+        <DropdownMenuSubContent>
+          {locales.map((locale) => (
+            <DropdownMenuItem
+              key={locale}
+              disabled={locale === active}
+              onClick={() => void switchTo(locale)}
+            >
+              <span className="flex-1">{localeNames[locale]}</span>
+              {locale === active && <Check className="h-4 w-4" />}
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuSubContent>
+      </DropdownMenuSub> */}
+    </>
   );
 }

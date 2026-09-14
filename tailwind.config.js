@@ -23,6 +23,7 @@ module.exports = {
         inter: "var(--font-inter)",
         "plus-jakarta": "var(--font-plus-jakarta)",
         onest: "var(--font-onest)",
+        "ibm-plex-sans-arabic": "var(--font-ibm-plex-sans-arabic)",
       },
 
       fontSize: {

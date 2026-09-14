@@ -1,4 +1,5 @@
 import { createTRPCRouter } from "@/server/api/trpc";
+import { analyticsRouter } from "./routers/analytics";
 import { teamRouter } from "./routers/team";
 import { projectRouter } from "./routers/project";
 import { taskRouter } from "./routers/task";
@@ -11,6 +12,7 @@ import { userRouter } from "./routers/user";
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
+  analytics: analyticsRouter,
   company: companyRouter,
   team: teamRouter,
   project: projectRouter,

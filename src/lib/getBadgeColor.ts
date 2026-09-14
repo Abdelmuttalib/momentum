@@ -1,3 +1,6 @@
+// NOTE: RichBadge-specific palette. Canonical domain status colors live in
+// `@/lib/status-colors` (CBadge-based wrappers). Kept separate so existing
+// RichBadge consumers don't change appearance.
 import { InvitationStatus, Role, TaskStatus } from "@prisma/client";
 import { Priority } from "@/lib/enums";
 import { type RichBadgeColor } from "types";

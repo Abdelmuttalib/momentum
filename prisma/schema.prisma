@@ -82,6 +82,7 @@ model Company {
   invitations Invitation[]
   tasks       Task[]
   projects    Project[]
+  labels      Label[]
 }
 
 model Team {
@@ -138,6 +139,17 @@ model Task {
   labels      Label[]      @relation("TaskLabels")
 
   orderIndex Int
+
+  // Estimation + lifecycle (server-controlled; see server/tasks/lifecycle.ts).
+  // NULL = not estimated / never started / never completed (historical rows
+  // keep NULL intentionally — no backfill).
+  effortPoints Int?
+  startedAt    DateTime?
+  completedAt  DateTime?
+
+  @@index([companyId, status])
+  @@index([companyId, projectId])
+  @@index([assigneeId])
 }
 
 model Label {
@@ -145,6 +157,14 @@ model Label {
   name  String
   color String
   tasks Task[] @relation("TaskLabels")
+
+  // Company scope. Nullable to preserve legacy labels created before
+  // scoping: rows with NULL are invisible to every company (never returned,
+  // never attachable) rather than deleted or mis-attributed.
+  companyId String?
+  company   Company? @relation(fields: [companyId], references: [id])
+
+  @@index([companyId])
 }
 
 enum TaskStatus {
@@ -182,6 +202,16 @@ model Invitation {
   role        Role             @default(MEMBER)
   invitedById String //  the user who sent the invitation
   invitedBy   User             @relation(fields: [invitedById], references: [id]) // This creates a relation with User
+  // Single-use acceptance token. Null once consumed. Compared in constant
+  // time semantics via unique lookup; expiry enforced in application logic.
+  token     String?   @unique
+  expiresAt DateTime?
+  // Short human-friendly second factor. Plaintext (consistent with token:
+  // required for admin re-display; brute force is mitigated by the token
+  // gate plus the failedAttempts cap). Null once consumed; legacy rows
+  // created before invite codes keep NULL and require regeneration.
+  inviteCode     String?
+  failedAttempts Int     @default(0)
 }
 
 enum InvitationStatus {

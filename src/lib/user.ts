@@ -6,7 +6,7 @@ export function getUserName(user: User | null | Session["user"]) {
   return `${user.name}`;
 }
 
-export function getUserInitials(user: User) {
+export function getUserInitials(user: { name?: string | null } | null) {
   if (!user) return "";
   if (!user.name) return "";
 

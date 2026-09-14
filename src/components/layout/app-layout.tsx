@@ -30,11 +30,11 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       <SidebarProvider>
         <AppSidebar />
         <SidebarInset className="min-w-0">
-          <header className="sticky top-0 z-10 flex h-14 shrink-0 items-center gap-2 border-b bg-background/[0.3] px-4 backdrop-blur-xl">
-            <SidebarTrigger className="-ml-1" />
-            <Separator orientation="vertical" className="mr-2 h-4" />
+          <header className="sticky top-0 z-10 flex h-12 shrink-0 items-center gap-2 border-b bg-background px-4">
+            <SidebarTrigger className="-ms-1" />
+            <Separator orientation="vertical" className="me-2 h-4" />
             <Breadcrumb>
-              <BreadcrumbList>
+              <BreadcrumbList className="text-[13px]">
                 <BreadcrumbItem className="hidden md:block">
                   <BreadcrumbLink asChild>
                     <Link href={routes.dashboard.index()}>Overview</Link>
@@ -74,15 +74,15 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             </Breadcrumb>
           </header>
 
-          <div className="flex min-h-0 flex-1 flex-col overflow-hidden pb-20 sm:pb-56">
+          <div className="flex min-h-0 flex-1 flex-col overflow-hidden pb-10">
             <DashboardPageContainer
               size="full"
-              className="flex flex-1 flex-col"
+              className="flex flex-1 flex-col py-0"
             >
               {/* <div className="pt-4">
                 <Breadcrumbs />
               </div> */}
-              <PageStack className="py-2 lg:py-4">{children}</PageStack>
+              <PageStack className="space-y-6 py-4">{children}</PageStack>
             </DashboardPageContainer>
           </div>
         </SidebarInset>

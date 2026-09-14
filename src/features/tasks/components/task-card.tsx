@@ -3,6 +3,7 @@ import { ButtonLink } from "@/components/common/button-link";
 import LabelBadge from "@/components/ui/label-badge";
 import { Separator } from "@/components/ui/separator";
 import { Typography } from "@/components/ui/typography";
+import { routes } from "@/lib/routes";
 
 import { type Label, type Task, type Role } from "@prisma/client";
 import { TaskStatusBadge } from "./task-status-badge";
@@ -40,87 +41,17 @@ type TaskCardProps = {
 export function TaskCard({ task, projectId }: TaskCardProps) {
   const { data: taskComments, isLoading: isLoadingTaskComments } =
     useTaskComments(task.id);
+  const resolvedProjectId = projectId ?? task.projectId;
 
   return (
     <>
-      {/* <Card key={task.id} className="transition-colors hover:bg-muted/30">
-        <CardHeader className="space-y-4">
-          <div className="flex items-start justify-between gap-3">
-            <div className="space-y-1">
-              <CardTitle className="text-lg">{task.title}</CardTitle>
-
-              <CardDescription>
-                {task.description || "No description provided."}
-              </CardDescription>
-            </div>
-
-            <CBadge
-              color={getTaskStatusBadgeColor(task.status).color}
-              className="capitalize"
-            >
-              {task.status.replace("_", " ").toLowerCase()}
-            </CBadge>
-          </div>
-
-          <div>
-            <CBadge
-              color={getTaskPriorityBadgeColor(task.priority).color}
-              className="capitalize"
-              size="sm"
-            >
-              {task.priority.toLowerCase()}
-            </CBadge>
-          </div>
-        </CardHeader>
-
-        <CardContent className="space-y-4">
-          <Separator />
-
-          <div className="flex items-center justify-between text-sm">
-            <div>
-              <p className="text-muted-foreground">Created</p>
-
-              <p className="font-medium">
-                {formatDistanceToNow(task.updatedAt)}
-              </p>
-            </div>
-
-            <div className="text-right">
-              <p className="text-muted-foreground">Updated</p>
-
-              <p className="font-medium">
-                {formatDistanceToNow(task.updatedAt)}
-              </p>
-            </div>
-          </div>
-
-          <div className="flex justify-end gap-2 pt-2">
-            <ButtonLink
-              href={`/projects/${projectId}/tasks/${task.id}/edit`}
-              variant="outline"
-              size="sm"
-            >
-              Edit
-            </ButtonLink>
-
-            <ButtonLink
-              href={`/projects/${projectId}/tasks/${task.id}`}
-              variant="outline"
-              size="sm"
-            >
-              View
-            </ButtonLink>
-          </div>
-        </CardContent>
-      </Card> */}
-
       <div
         key={task.id}
         className="rounded-lg border bg-card p-4 hover:bg-popover"
         // onClick={() => setSelectedTask(task)}
       >
         <div className="flex justify-between">
-          <Typography as="h3" variant="md/medium" className="mb-2">
+          <Typography as="h3" variant="base/medium" className="mb-2">
             {task.title}
           </Typography>
 
@@ -159,7 +90,10 @@ export function TaskCard({ task, projectId }: TaskCardProps) {
         <Separator />
         <div className="flex justify-end gap-2 pt-2">
           <ButtonLink
-            href={`/projects/${projectId}/tasks/${task.id}/edit`}
+            href={routes.projects.tasks.edit({
+              projectId: resolvedProjectId,
+              taskId: task.id,
+            })}
             variant="outline"
             size="sm"
           >
@@ -167,7 +101,10 @@ export function TaskCard({ task, projectId }: TaskCardProps) {
           </ButtonLink>
 
           <ButtonLink
-            href={`/projects/${projectId}/tasks/${task.id}`}
+            href={routes.projects.tasks.details({
+              projectId: resolvedProjectId,
+              taskId: task.id,
+            })}
             variant="outline"
             size="sm"
           >

@@ -8,7 +8,7 @@ import { DataTable } from "@/components/ui/data-table";
 export type DataLoaderProps<T> = {
   data: T | null | undefined;
   isLoading: boolean;
-  error?: Error | string | null;
+  error?: unknown;
   emptyMessage?: string;
   children: (data: T) => React.ReactNode;
   wrapperClassName?: ClassValue;
@@ -28,7 +28,11 @@ export function DataLoader<T>({
       <div className="py-10 text-center text-destructive">
         {typeof error === "string"
           ? error
-          : error?.message || "Something went wrong"}
+          : error instanceof Error
+            ? error.message
+            : typeof (error as { message?: unknown })?.message === "string"
+              ? (error as { message: string }).message
+              : "Something went wrong"}
       </div>
     );
 
@@ -46,7 +50,7 @@ export function DataLoader<T>({
 export type DataTableLoaderProps<T> = {
   data: T[] | null | undefined;
   isLoading: boolean;
-  error?: Error | string | null;
+  error?: unknown;
   columns: ColumnDef<T>[];
 };
 

@@ -40,7 +40,7 @@ import {
   UserPlus,
   MoreHorizontal,
   FolderOpen,
-  CheckCircle2,
+  Users,
   Clock,
   TrendingUp,
   Calendar,
@@ -54,13 +54,15 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Typography } from "@/components/ui/typography";
+import { Heading, Text } from "@/components/typography";
+import { EmptyState } from "@/components/common/empty-state";
 import {
   DashboardPageDescription,
   DashboardPageSubTitle,
 } from "@/components/common/dashboard";
 import { getTeamProjectLink, getTeamsLink } from "@/lib/links";
 
-import { getServerAuthSession } from "@/server/auth";
+import { requireAuthPage } from "@/server/auth-guard";
 import { api } from "@/lib/api";
 import { Seo } from "@/components/seo";
 import { AppLayout } from "@/components/layout/app-layout";
@@ -80,6 +82,7 @@ import {
 } from "@/lib/date";
 import { CreateLabel } from "@/components/views/project/tasks/forms/create-label";
 import { getUserInitials } from "@/lib/user";
+import { useTranslations } from "next-intl";
 
 interface TeamPageProps {
   companyId: string;
@@ -87,6 +90,8 @@ interface TeamPageProps {
 }
 
 export default function TeamPage({ teamId }: TeamPageProps) {
+  const t = useTranslations("teams");
+  const tCommon = useTranslations("common");
   const {
     data: team,
     isLoading: isLoadingTeamData,
@@ -100,17 +105,15 @@ export default function TeamPage({ teamId }: TeamPageProps) {
   if (!isLoadingTeamData && !team) {
     return (
       <AppLayout>
-        <div className="flex h-64 items-center justify-center">
-          <div className="text-center">
-            <h2 className="mb-2 text-2xl font-bold">Team not found</h2>
-            <p className="mb-4 text-muted-foreground">
-              The team you&apos;re looking for doesn&apos;t exist.
-            </p>
+        <EmptyState
+          title={t("notFoundTitle")}
+          description={t("notFoundDescription")}
+          action={
             <Link href={getTeamsLink()}>
-              <Button>Back to Teams</Button>
+              <Button>{t("backToTeams")}</Button>
             </Link>
-          </div>
-        </div>
+          }
+        />
       </AppLayout>
     );
   }
@@ -131,31 +134,25 @@ export default function TeamPage({ teamId }: TeamPageProps) {
         <div className="space-y-6">
           {/* Header */}
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-3">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3">
                 <div>
-                  <Typography as="h1" variant="2xl/semibold">
-                    Team: {team.name}
-                  </Typography>
-                  <Typography
-                    as={"p"}
-                    variant={"base/normal"}
-                    className="text-muted-foreground"
-                  >
+                  <Heading level="page">{t("teamTitle", { name: team.name })}</Heading>
+                  <Text size="sm" tone="muted">
                     {team.description}
-                  </Typography>
+                  </Text>
                 </div>
               </div>
             </div>
 
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center gap-2">
               {/* <Dialog
                 open={isInviteDialogOpen}
                 onOpenChange={setIsInviteDialogOpen}
               >
                 <DialogTrigger asChild>
                   <Button>
-                    <UserPlus className="mr-2 h-4 w-4" />
+                    <UserPlus className="me-2 h-4 w-4" />
                     Invite Member
                   </Button>
                 </DialogTrigger>
@@ -189,7 +186,7 @@ export default function TeamPage({ teamId }: TeamPageProps) {
                       </Select>
                     </div>
                   </div>
-                  <div className="mt-6 flex justify-end space-x-2">
+                  <div className="mt-6 flex justify-end gap-2">
                     <Button
                       variant="outline"
                       onClick={() => setIsInviteDialogOpen(false)}
@@ -216,17 +213,17 @@ export default function TeamPage({ teamId }: TeamPageProps) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem>
-                    <Edit className="mr-2 h-4 w-4" />
-                    Edit Team
+                    <Edit className="me-2 h-4 w-4" />
+                    {t("editTeam")}
                   </DropdownMenuItem>
                   <DropdownMenuItem>
-                    <Settings className="mr-2 h-4 w-4" />
-                    Team Settings
+                    <Settings className="me-2 h-4 w-4" />
+                    {t("teamSettings")}
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem className="text-destructive">
-                    <Trash2 className="mr-2 h-4 w-4" />
-                    Delete Team
+                    <Trash2 className="me-2 h-4 w-4" />
+                    {t("deleteTeam")}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -238,30 +235,23 @@ export default function TeamPage({ teamId }: TeamPageProps) {
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
-                  Total Issues
-                </CardTitle>
-                <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">
-                  {/* {team.stats.totalIssues} */}6
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  Across all projects
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Active Projects
+                  {t("activeProjects")}
                 </CardTitle>
                 <FolderOpen className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{team.projects.length}</div>
-                <p className="text-xs text-muted-foreground">Active Projects</p>
+                <p className="text-xs text-muted-foreground">{t("activeProjectsHint")}</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">{t("members")}</CardTitle>
+                <Users className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{team.users.length}</div>
+                <p className="text-xs text-muted-foreground">{t("teamMembersHint")}</p>
               </CardContent>
             </Card>
           </div>
@@ -269,21 +259,21 @@ export default function TeamPage({ teamId }: TeamPageProps) {
           {/* Main Content Tabs */}
           <Tabs defaultValue="overview" className="space-y-6">
             <TabsList>
-              <TabsTrigger value="overview">Overview</TabsTrigger>
+              <TabsTrigger value="overview">{t("overview")}</TabsTrigger>
               <TabsTrigger value="members">
-                Members ({team.users.length})
+                {t("membersTab", { count: team.users.length })}
               </TabsTrigger>
               <TabsTrigger value="projects">
-                Projects ({team.projects.length})
+                {t("projectsTab", { count: team.projects.length })}
               </TabsTrigger>
             </TabsList>
 
             <TabsContent value="overview" className="space-y-6">
               <div className="flex flex-col gap-6">
                 <div>
-                  <DashboardPageSubTitle>Active Projects</DashboardPageSubTitle>
+                  <DashboardPageSubTitle>{t("activeProjects")}</DashboardPageSubTitle>
                   <DashboardPageDescription>
-                    Current projects assigned to this team
+                    {t("overviewDescription")}
                   </DashboardPageDescription>
                 </div>
                 <div className="space-y-6">
@@ -291,7 +281,7 @@ export default function TeamPage({ teamId }: TeamPageProps) {
                     <Card key={project.id}>
                       <CardContent className="p-4">
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-3">
+                          <div className="flex items-center gap-3">
                             <h3 className="font-medium">{project.name}</h3>
                           </div>
                           <div className="inline-flex items-center text-sm text-muted-foreground">
@@ -300,8 +290,9 @@ export default function TeamPage({ teamId }: TeamPageProps) {
                               variant="xs/normal"
                               className="text-muted-foreground"
                             >
-                              Created{" "}
-                              {formatShortDateWithYear(project.createdAt)}
+                              {t("createdLabel", {
+                                date: formatShortDateWithYear(project.createdAt),
+                              })}
                             </Typography>
                           </div>
                         </div>
@@ -316,19 +307,19 @@ export default function TeamPage({ teamId }: TeamPageProps) {
                         <Progress value={project.progress} className="h-2" />
                       </div> */}
                         <div className="flex items-center justify-between text-sm text-muted-foreground">
-                          <div className="flex items-center space-x-4">
+                          <div className="flex items-center gap-4">
                             <span>
                               {/* {project.}/{project.issues.total}{" "} */}
-                              issues completed
+                              {t("issuesCompletedLabel")}
                             </span>
                             <span>
                               {/* {project.issues.inProgress} */}
-                              in progress
+                              {t("inProgressLabel")}
                             </span>
                           </div>
                           <Button variant="ghost" size="sm" asChild>
                             <Link href={getTeamProjectLink(teamId, project.id)}>
-                              View Project
+                              {t("viewProject")}
                             </Link>
                           </Button>
                         </div>
@@ -344,11 +335,11 @@ export default function TeamPage({ teamId }: TeamPageProps) {
                   <div>
                     <div className="flex items-center justify-between">
                       <DashboardPageSubTitle>
-                        Team Members
+                        {t("teamMembers")}
                       </DashboardPageSubTitle>
                       <Button variant="outline" size="sm" asChild>
                         <Link href={`/teams/${teamId}?tab=members`}>
-                          View All
+                          {t("viewAll")}
                         </Link>
                       </Button>
                     </div>
@@ -367,7 +358,7 @@ export default function TeamPage({ teamId }: TeamPageProps) {
                               </AvatarFallback>
                             </Avatar>
                             <div>
-                              <div className="flex items-center space-x-2">
+                              <div className="flex items-center gap-2">
                                 <p className="text-sm font-medium">
                                   {user.name}
                                 </p>
@@ -394,16 +385,16 @@ export default function TeamPage({ teamId }: TeamPageProps) {
                   <div className="flex items-center justify-between">
                     <div>
                       <DashboardPageSubTitle>
-                        Team Members
+                        {t("teamMembers")}
                       </DashboardPageSubTitle>
                       <DashboardPageDescription>
-                        Manage team members and their roles
+                        {t("manageMembersDescription")}
                       </DashboardPageDescription>
                     </div>
                     <CreateInvite />
                     <Button>
-                      <UserPlus className="mr-2 h-4 w-4" />
-                      Invite Member
+                      <UserPlus className="me-2 h-4 w-4" />
+                      {t("inviteMember")}
                     </Button>
                   </div>
                 </div>
@@ -414,7 +405,7 @@ export default function TeamPage({ teamId }: TeamPageProps) {
                         key={user.id}
                         className="flex items-center justify-between rounded-lg border p-3"
                       >
-                        <div className="flex items-center space-x-4">
+                        <div className="flex items-center gap-4">
                           <Avatar className="h-10 w-10">
                             <AvatarImage
                               src={`https://avatar.vercel.sh/${user.id}`}
@@ -424,7 +415,7 @@ export default function TeamPage({ teamId }: TeamPageProps) {
                             </AvatarFallback>
                           </Avatar>
                           <div>
-                            <div className="flex items-center space-x-2">
+                            <div className="flex items-center gap-2">
                               <p className="font-medium">{user.name}</p>
                               {getUserRoleBadgeColor(user.role)}
                             </div>
@@ -437,7 +428,7 @@ export default function TeamPage({ teamId }: TeamPageProps) {
                             </p> */}
                           </div>
                         </div>
-                        <div className="flex items-center space-x-2">
+                        <div className="flex items-center gap-2">
                           <Select defaultValue={user.role}>
                             <SelectTrigger className="w-32">
                               <SelectValue />
@@ -467,17 +458,17 @@ export default function TeamPage({ teamId }: TeamPageProps) {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                               <DropdownMenuItem>
-                                <Mail className="mr-2 h-4 w-4" />
-                                Send Message
+                                <Mail className="me-2 h-4 w-4" />
+                                {t("sendMessage")}
                               </DropdownMenuItem>
                               <DropdownMenuItem>
-                                <Settings className="mr-2 h-4 w-4" />
-                                Member Settings
+                                <Settings className="me-2 h-4 w-4" />
+                                {t("memberSettings")}
                               </DropdownMenuItem>
                               <DropdownMenuSeparator />
                               <DropdownMenuItem className="text-destructive">
-                                <Trash2 className="mr-2 h-4 w-4" />
-                                Remove from Team
+                                <Trash2 className="me-2 h-4 w-4" />
+                                {t("removeFromTeam")}
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
@@ -492,9 +483,9 @@ export default function TeamPage({ teamId }: TeamPageProps) {
                 <div>
                   <div className="flex items-center justify-between">
                     <div>
-                      <DashboardPageSubTitle>Invitations</DashboardPageSubTitle>
+                      <DashboardPageSubTitle>{t("invitations")}</DashboardPageSubTitle>
                       <DashboardPageDescription>
-                        invite new members to your company
+                        {t("invitationsDescription")}
                       </DashboardPageDescription>
                     </div>
                     <CreateInvite />
@@ -507,7 +498,7 @@ export default function TeamPage({ teamId }: TeamPageProps) {
                         key={invitation.id}
                         className="flex items-center justify-between rounded-lg border p-3"
                       >
-                        <div className="flex items-center space-x-4">
+                        <div className="flex items-center gap-4">
                           <Avatar className="h-9 w-9">
                             <AvatarImage
                               src={`https://avatar.vercel.sh/${invitation.email}${invitation.id}`}
@@ -521,16 +512,17 @@ export default function TeamPage({ teamId }: TeamPageProps) {
                             </AvatarFallback>
                           </Avatar>
                           <div>
-                            <div className="flex items-center space-x-2">
+                            <div className="flex items-center gap-2">
                               <p className="font-medium">{invitation.email}</p>
                             </div>
                             <p className="text-xs text-muted-foreground">
-                              invited •{" "}
-                              {formatShortDateWithYear(invitation.createdAt)}
+                              {t("invitedLabel", {
+                                date: formatShortDateWithYear(invitation.createdAt),
+                              })}
                             </p>
                           </div>
                         </div>
-                        <div className="flex items-center space-x-2">
+                        <div className="flex items-center gap-2">
                           <RichBadge
                             color={getUserRoleBadgeColor(invitation.role)}
                             className="capitalize"
@@ -555,14 +547,14 @@ export default function TeamPage({ teamId }: TeamPageProps) {
             <TabsContent value="projects" className="space-y-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <DashboardPageSubTitle>Team Projects</DashboardPageSubTitle>
+                  <DashboardPageSubTitle>{t("teamProjects")}</DashboardPageSubTitle>
                   <DashboardPageDescription>
-                    Projects assigned to the {team.name} team
+                    {t("teamProjectsDescription", { name: team.name })}
                   </DashboardPageDescription>
                 </div>
                 <Button>
-                  <FolderOpen className="mr-2 h-4 w-4" />
-                  New Project
+                  <FolderOpen className="me-2 h-4 w-4" />
+                  {t("newProject")}
                 </Button>
               </div>
               <div className="space-y-6">
@@ -572,7 +564,7 @@ export default function TeamPage({ teamId }: TeamPageProps) {
                     className="space-y-4 rounded-lg border p-6"
                   >
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-3">
+                      <div className="flex items-center gap-3">
                         <h3 className="text-lg font-medium">{project.name}</h3>
                       </div>
                       <DropdownMenu>
@@ -583,17 +575,17 @@ export default function TeamPage({ teamId }: TeamPageProps) {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem>
-                            <Edit className="mr-2 h-4 w-4" />
-                            Edit Project
+                            <Edit className="me-2 h-4 w-4" />
+                            {t("editProject")}
                           </DropdownMenuItem>
                           <DropdownMenuItem>
-                            <Settings className="mr-2 h-4 w-4" />
-                            Project Settings
+                            <Settings className="me-2 h-4 w-4" />
+                            {t("projectSettings")}
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem className="text-destructive">
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            Archive Project
+                            <Trash2 className="me-2 h-4 w-4" />
+                            {t("archiveProject")}
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -609,14 +601,14 @@ export default function TeamPage({ teamId }: TeamPageProps) {
                           <div className="font-medium text-green-600">
                             {/* {project.issues.completed} */}
                           </div>
-                          <div className="text-muted-foreground">Completed</div>
+                          <div className="text-muted-foreground">{t("completed")}</div>
                         </div>
                         <div className="rounded bg-muted/50 p-2 text-center">
                           <div className="font-medium text-blue-600">
                             {/* {project.issues.inProgress} */}
                           </div>
                           <div className="text-muted-foreground">
-                            In Progress
+                            {t("inProgress")}
                           </div>
                         </div>
                       </div>
@@ -624,8 +616,10 @@ export default function TeamPage({ teamId }: TeamPageProps) {
 
                     <div className="flex items-center justify-between border-t pt-2">
                       <div className="flex items-center text-sm text-muted-foreground">
-                        <Calendar className="mr-1 h-4 w-4" />
-                        Created {new Date(project.createdAt).toDateString()}
+                        <Calendar className="me-1 h-4 w-4" />
+                        {t("createdLabel", {
+                          date: new Date(project.createdAt).toDateString(),
+                        })}
                       </div>
                       <Button variant="outline" size="sm" asChild>
                         <Link
@@ -634,7 +628,7 @@ export default function TeamPage({ teamId }: TeamPageProps) {
                             project.id.toString()
                           )}
                         >
-                          View Project
+                          {t("viewProject")}
                         </Link>
                       </Button>
                     </div>
@@ -648,47 +642,47 @@ export default function TeamPage({ teamId }: TeamPageProps) {
           <Dialog>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Edit Team</DialogTitle>
+                <DialogTitle>{t("editTeam")}</DialogTitle>
                 <DialogDescription>
-                  Update team information and settings.
+                  {t("editTeamDescription")}
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="teamName">Team Name</Label>
+                  <Label htmlFor="teamName">{t("teamName")}</Label>
                   <Input id="teamName" defaultValue={team.name} />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="teamDescription">Description</Label>
+                  <Label htmlFor="teamDescription">{t("descriptionLabel")}</Label>
                   <Input id="teamDescription" defaultValue={team.description} />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="teamColor">Team Color</Label>
+                  <Label htmlFor="teamColor">{t("teamColor")}</Label>
                   <Select defaultValue="blue">
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="blue">Blue</SelectItem>
-                      <SelectItem value="purple">Purple</SelectItem>
-                      <SelectItem value="green">Green</SelectItem>
-                      <SelectItem value="orange">Orange</SelectItem>
-                      <SelectItem value="red">Red</SelectItem>
+                      <SelectItem value="blue">{t("colorBlue")}</SelectItem>
+                      <SelectItem value="purple">{t("colorPurple")}</SelectItem>
+                      <SelectItem value="green">{t("colorGreen")}</SelectItem>
+                      <SelectItem value="orange">{t("colorOrange")}</SelectItem>
+                      <SelectItem value="red">{t("colorRed")}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
-              <div className="mt-6 flex justify-end space-x-2">
+              <div className="mt-6 flex justify-end gap-2">
                 <Button
                   variant="outline"
                   // onClick={() => setIsEditDialogOpen(false)}
                 >
-                  Cancel
+                  {tCommon("cancel")}
                 </Button>
                 <Button
                 // onClick={() => setIsEditDialogOpen(false)}
                 >
-                  Save Changes
+                  {tCommon("saveChanges")}
                 </Button>
               </div>
             </DialogContent>
@@ -699,27 +693,7 @@ export default function TeamPage({ teamId }: TeamPageProps) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({
-  params,
-  req,
-  res,
-}) => {
-  const userSession = await getServerAuthSession({ req, res });
-
-  if (!userSession) {
-    return {
-      redirect: {
-        destination: "/sign-in",
-        permanent: false,
-      },
-    };
-  }
-
-  const teamId = params?.teamId as string;
-
-  return {
-    props: {
-      teamId,
-    },
-  };
-};
+export const getServerSideProps: GetServerSideProps = requireAuthPage(
+  {},
+  (ctx) => Promise.resolve({ teamId: ctx.params?.teamId as string })
+);

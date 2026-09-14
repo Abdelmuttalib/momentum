@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 const defaultMeta = {
   title: "Momentum",
   siteName: "Momentum",
-  description: "Momentum, The Open Source issue tracking tool",
+  description: "The Open Source issue tracking tool",
   url: "",
   type: "website",
   robots: "follow, index",
@@ -36,9 +36,13 @@ export function Seo(props: SeoProps) {
   //   templateTitle: props.templateTitle,
   // });
 
+  const pageTitle = props.templateTitle
+    ? `${props.templateTitle} | ${meta.siteName}`
+    : meta.title;
+
   return (
     <Head>
-      <title>{meta.title} | Momentum</title>
+      <title>{pageTitle}</title>
       <meta name="robots" content={meta.robots} />
       <meta content={meta.description} name="description" />
       <meta property="og:url" content={`${meta.url}${router.asPath}`} />

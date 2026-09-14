@@ -1,211 +1,99 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Layout } from "@/components/layout";
-import { getServerAuthSession } from "@/server/auth";
-import { type GetServerSideProps } from "next";
-import { ProfileSettings } from "./profile";
-import { useRouter } from "next/router";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { cn } from "@/lib/cn";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { localePath, requireAuthPage } from "@/server/auth-guard";
+import { resolveLocale } from "@/i18n/config";
+import { type GetServerSideProps } from "next";
 import { AppLayout } from "@/components/layout/app-layout";
+import { CompactPageHeader } from "@/components/common/page-header";
+import { Heading } from "@/components/typography";
+import { useTranslations } from "next-intl";
+
+export const settingsPaths = [
+  {
+    key: "profile",
+    href: "/settings/profile",
+  },
+  {
+    key: "company",
+    href: "/settings/company",
+  },
+  {
+    key: "appearance",
+    href: "/settings/appearance",
+  },
+];
 
 export function SettingsContentLayout({
   children,
-  actions,
-  title,
-  description,
 }: {
   children: React.ReactNode;
-  actions: React.ReactNode;
-  title: string;
-  description: string;
 }) {
   const { pathname } = useRouter();
+  const t = useTranslations("settings");
 
   return (
     <AppLayout>
-      <div className="space-y-8">
-        <div className="flex flex-col">
-          <ul className="relative flex w-full border-b text-sm">
+      <div className="flex flex-col gap-4">
+        <CompactPageHeader
+          title={t("title")}
+          description={t("description")}
+        />
+        <div className="flex flex-col gap-6 lg:flex-row">
+          <nav
+            aria-label={t("title")}
+            className="flex shrink-0 gap-1 overflow-x-auto lg:w-52 lg:flex-col"
+          >
             {settingsPaths.map((path) => {
               const isActive = path.href === pathname;
               return (
-                <li
-                  key={path.label}
-                  className={`${isActive ? "border-b-2 border-primary" : ""}`}
+                <Link
+                  key={path.key}
+                  href={path.href}
+                  aria-current={isActive ? "page" : undefined}
+                  className={cn(
+                    "whitespace-nowrap rounded-md px-3 py-1.5 text-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                    isActive
+                      ? "bg-accent font-medium text-accent-foreground"
+                      : "text-muted-foreground"
+                  )}
                 >
-                  <Link
-                    href={path.href}
-                    className={`${
-                      isActive
-                        ? "bg-accent/70 text-foreground"
-                        : "text-muted-foreground"
-                    } mb-2 block rounded-md px-3.5 py-2.5 hover:bg-accent/70`}
-                  >
-                    {path.label}
-                  </Link>
-                </li>
+                  {t(path.key)}
+                </Link>
               );
             })}
-          </ul>
+          </nav>
+          <div className="min-w-0 flex-1">
+            <div className="max-w-2xl">{children}</div>
+          </div>
         </div>
-        {children}
       </div>
     </AppLayout>
   );
 }
 
-export function SettingsPageTabs() {
+export function SettingsSectionTitle({ children }: { children: React.ReactNode }) {
   return (
-    <Tabs defaultValue="company" className="w-full px-0">
-      <TabsList className="ml-auto grid h-12 w-full max-w-[15rem] grid-cols-2 rounded-b-none bg-gray-100 p-0 dark:bg-gray-800/50">
-        <TabsTrigger
-          value="company"
-          className="data-[state=active]:border-b-brand-500 h-full rounded-none border-b-2 border-transparent font-semibold data-[state=active]:shadow-none"
-        >
-          Company
-        </TabsTrigger>
-        <TabsTrigger
-          value="profile"
-          className="data-[state=active]:border-b-brand-500 h-full rounded-none border-b-2 border-transparent font-semibold data-[state=active]:shadow-none"
-        >
-          Profile
-        </TabsTrigger>
-      </TabsList>
-
-      <TabsContent value="profile" className="">
-        <ProfileSettings />
-      </TabsContent>
-    </Tabs>
+    <div className="mb-4">
+      <Heading level="section">{children}</Heading>
+    </div>
   );
 }
-
-export const settingsPaths = [
-  {
-    label: "General",
-    href: "/settings",
-  },
-  // { label: "Account", href: "/dashboard/settings/account" },
-  {
-    label: "Company",
-    href: "/settings/company",
-  },
-  {
-    label: "Appearance",
-    href: "/settings/appearance",
-  },
-];
 
 export default function SettingsIndexPage() {
-  return (
-    <SettingsContentLayout
-      title="General Settings"
-      description="dd"
-      actions={
-        <>
-          <Button>Save Changes</Button>
-        </>
-      }
-    >
-      <></>
-      {/* <div className="border-b py-6 text-sm lg:flex lg:items-start">
-        <div className="space-y-1 lg:mb-0 lg:mr-5 lg:w-2/5 lg:flex-shrink-0">
-          <h3 className="text-foreground">
-            Store name <span className="text-destructive">*</span>
-          </h3>
-          <p className="max-w-[420px] text-muted-foreground">
-            Appears on receipts, invoices, and more{" "}
-          </p>
-        </div>
-        <div className="lg:flex-grow">
-          <Input
-            id="input_name"
-            type="text"
-            className=""
-            placeholder="store name"
-          />
-        </div>
-      </div>
-
-      <div className="border-b py-6 text-sm lg:flex lg:items-start">
-        <div className="mb-1 space-y-1 lg:mb-0 lg:mr-5 lg:w-2/5 lg:flex-shrink-0">
-          <h3 className="text-foreground">
-            Email <span className="text-destructive">*</span>
-          </h3>
-          <p className="max-w-[420px] text-muted-foreground">
-            Contact email address
-          </p>
-        </div>
-        <div className="lg:flex-grow">
-          <Input
-            id="input_name"
-            type="text"
-            className=""
-            placeholder="store name"
-          />
-        </div>
-      </div>
-      <div className="border-b py-6 text-sm lg:flex lg:items-start">
-        <div className="mb-1 space-y-1 lg:mb-0 lg:mr-5 lg:w-2/5 lg:flex-shrink-0">
-          <h3 className="text-foreground">
-            Contact number <span className="text-destructive">*</span>
-          </h3>
-          <p className="max-w-[420px] text-muted-foreground">
-            Contact number for your store
-          </p>
-        </div>
-        <div className="lg:flex-grow">
-          <Input
-            id="input_name"
-            type="text"
-            className=""
-            placeholder="store name"
-          />
-        </div>
-      </div>
-      <div className="border-b py-6 text-sm lg:flex lg:items-start">
-        <div className="mb-1 space-y-1 lg:mb-0 lg:mr-5 lg:w-2/5 lg:flex-shrink-0">
-          <h3 className="text-foreground">
-            Address <span className="text-destructive">*</span>
-          </h3>
-          <p className="max-w-[420px] text-muted-foreground">
-            Address for your store
-          </p>
-        </div>
-        <div className="flex gap-x-4 lg:flex-grow">
-          <Input
-            id="input_address"
-            type="text"
-            className=""
-            placeholder="address"
-          />
-
-          <Input id="input_city" type="text" className="" placeholder="city" />
-        </div>
-      </div> */}
-    </SettingsContentLayout>
-  );
+  return null;
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-  const userSession = await getServerAuthSession({ req, res });
-
-  if (!userSession) {
-    return {
+export const getServerSideProps: GetServerSideProps = requireAuthPage(
+  {},
+  (ctx) =>
+    Promise.resolve({
       redirect: {
-        destination: "/sign-in",
+        destination: localePath(
+          resolveLocale(ctx.locale),
+          "/settings/profile"
+        ),
         permanent: false,
       },
-    };
-  }
-
-  const company = userSession?.user?.company;
-
-  return {
-    props: {
-      company: JSON.parse(JSON.stringify(company)),
-    },
-  };
-};
+    })
+);

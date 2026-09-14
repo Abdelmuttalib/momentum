@@ -11,6 +11,7 @@
 # database
 /prisma/db.sqlite
 /prisma/db.sqlite-journal
+/prisma/demo/.manifest.*.json
 
 # next.js
 /.next/
@@ -40,3 +41,8 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+
+AI_CONTEXT.txt
+project-context.txt
+collect-ai-context.sh

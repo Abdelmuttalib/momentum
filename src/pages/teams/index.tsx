@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import type { GetServerSideProps } from "next";
-import { getServerAuthSession } from "@/server/auth";
+import { requireAuthPage } from "@/server/auth-guard";
 import { Seo } from "@/components/seo";
 import { useState } from "react";
 import {
@@ -36,12 +36,16 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { AppLayout } from "@/components/layout/app-layout";
+import { CompactPageHeader } from "@/components/common/page-header";
+import { EmptyState } from "@/components/common/empty-state";
 import { api } from "@/lib/api";
 import { TaskStatus } from "@/lib/enums";
 import { CreateTeam } from "@/components/views/teams/forms/create-team";
 import { getTeamLink } from "@/lib/links";
 import Link from "next/link";
 import { TeamDetailLoader } from "@/components/views/teams/team-detail-loader";
+import { getAvatarUrl } from "@/lib/avatar";
+import { useTranslations } from "next-intl";
 
 const teams = [
   {
@@ -51,22 +55,22 @@ const teams = [
     members: [
       {
         name: "John Doe",
-        avatar: "https://avatar.vercel.sh",
+        avatar: getAvatarUrl(""),
         role: "Lead",
       },
       {
         name: "Jane Smith",
-        avatar: "https://avatar.vercel.sh",
+        avatar: getAvatarUrl(""),
         role: "Developer",
       },
       {
         name: "Mike Johnson",
-        avatar: "https://avatar.vercel.sh",
+        avatar: getAvatarUrl(""),
         role: "Developer",
       },
       {
         name: "Sarah Wilson",
-        avatar: "https://avatar.vercel.sh",
+        avatar: getAvatarUrl(""),
         role: "Developer",
       },
     ],
@@ -83,17 +87,17 @@ const teams = [
     members: [
       {
         name: "Emily Chen",
-        avatar: "https://avatar.vercel.sh",
+        avatar: getAvatarUrl(""),
         role: "Lead",
       },
       {
         name: "Alex Rodriguez",
-        avatar: "https://avatar.vercel.sh",
+        avatar: getAvatarUrl(""),
         role: "Designer",
       },
       {
         name: "Lisa Park",
-        avatar: "https://avatar.vercel.sh",
+        avatar: getAvatarUrl(""),
         role: "Designer",
       },
     ],
@@ -110,12 +114,12 @@ const teams = [
     members: [
       {
         name: "David Kim",
-        avatar: "https://avatar.vercel.sh",
+        avatar: getAvatarUrl(""),
         role: "Lead",
       },
       {
         name: "Rachel Green",
-        avatar: "https://avatar.vercel.sh",
+        avatar: getAvatarUrl(""),
         role: "Manager",
       },
     ],
@@ -132,17 +136,17 @@ const teams = [
     members: [
       {
         name: "Tom Brown",
-        avatar: "https://avatar.vercel.sh",
+        avatar: getAvatarUrl(""),
         role: "Lead",
       },
       {
         name: "Anna Davis",
-        avatar: "https://avatar.vercel.sh",
+        avatar: getAvatarUrl(""),
         role: "Specialist",
       },
       {
         name: "Chris Lee",
-        avatar: "https://avatar.vercel.sh",
+        avatar: getAvatarUrl(""),
         role: "Specialist",
       },
     ],
@@ -154,30 +158,36 @@ const teams = [
   },
 ];
 
-const teamStats = [
+const teamStats: {
+  key: "totalTeams" | "totalMembers" | "activeProjects" | "issuesCompleted";
+  value: string;
+  change: string;
+  trend: string;
+  icon: typeof Users;
+}[] = [
   {
-    title: "Total Teams",
+    key: "totalTeams",
     value: "4",
     change: "+1",
     trend: "up",
     icon: Users,
   },
   {
-    title: "Total Members",
+    key: "totalMembers",
     value: "12",
     change: "+2",
     trend: "up",
     icon: UserPlus,
   },
   {
-    title: "Active Projects",
+    key: "activeProjects",
     value: "11",
     change: "+3",
     trend: "up",
     icon: FolderOpen,
   },
   {
-    title: "Issues Completed",
+    key: "issuesCompleted",
     value: "29",
     change: "+15%",
     trend: "up",
@@ -187,6 +197,8 @@ const teamStats = [
 
 export default function TeamsContent({ companyId }: { companyId: string }) {
   const [searchQuery, setSearchQuery] = useState("");
+  const t = useTranslations("teams");
+  const tNav = useTranslations("navigation");
   const [selectedTeam, setSelectedTeam] = useState(null);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
 
@@ -205,7 +217,15 @@ export default function TeamsContent({ companyId }: { companyId: string }) {
   const filteredTeams = teams || [];
 
   if (!isLoadingTeams && !teamsError && !teams) {
-    return <div>no...</div>;
+    return (
+      <AppLayout>
+        <EmptyState
+          title={t("emptyTitle")}
+          description={t("emptyDescription")}
+          action={<CreateTeam />}
+        />
+      </AppLayout>
+    );
   }
 
   if (isLoadingTeams) {
@@ -223,23 +243,19 @@ export default function TeamsContent({ companyId }: { companyId: string }) {
       <AppLayout>
         <div className="space-y-6">
           {/* Header */}
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-semibold tracking-tight">Teams</h1>
-              <p className="text-muted-foreground">
-                Manage your teams, members, and collaboration.
-              </p>
-            </div>
-            <CreateTeam />
-          </div>
+          <CompactPageHeader
+            title={tNav("teams")}
+            description={t("description")}
+            actions={<CreateTeam />}
+          />
 
           {/* Stats */}
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             {teamStats.map((stat) => (
-              <Card key={stat.title}>
+              <Card key={stat.key}>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
-                    {stat.title}
+                    {t(stat.key)}
                   </CardTitle>
                   <stat.icon className="h-5 w-5 text-muted-foreground" />
                 </CardHeader>
@@ -253,15 +269,15 @@ export default function TeamsContent({ companyId }: { companyId: string }) {
           <Tabs defaultValue="overview" className="space-y-6">
             <div className="flex items-center justify-between">
               <TabsList>
-                <TabsTrigger value="overview">Overview</TabsTrigger>
-                <TabsTrigger value="analytics">Analytics</TabsTrigger>
+                <TabsTrigger value="overview">{t("overview")}</TabsTrigger>
+                <TabsTrigger value="analytics">{t("analytics")}</TabsTrigger>
               </TabsList>
 
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center gap-2">
                 <div className="relative">
                   <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                   <Input
-                    placeholder="Search teams..."
+                    placeholder={t("searchPlaceholder")}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="w-64 pl-8"
@@ -280,7 +296,7 @@ export default function TeamsContent({ companyId }: { companyId: string }) {
                     >
                       <CardHeader>
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-3">
+                          <div className="flex items-center gap-3">
                             <div className="rounded-md border bg-muted/40 p-2">
                               <Users className="h-5 w-5" />
                             </div>
@@ -301,16 +317,16 @@ export default function TeamsContent({ companyId }: { companyId: string }) {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                               <DropdownMenuItem>
-                                <Settings className="mr-2 h-4 w-4" />
-                                Team Settings
+                                <Settings className="me-2 h-4 w-4" />
+                                {t("teamSettings")}
                               </DropdownMenuItem>
                               <DropdownMenuItem>
-                                <UserPlus className="mr-2 h-4 w-4" />
-                                Add Member
+                                <UserPlus className="me-2 h-4 w-4" />
+                                {t("addMember")}
                               </DropdownMenuItem>
                               <DropdownMenuItem>
-                                <FolderOpen className="mr-2 h-4 w-4" />
-                                View Projects
+                                <FolderOpen className="me-2 h-4 w-4" />
+                                {t("viewProjects")}
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
@@ -319,12 +335,12 @@ export default function TeamsContent({ companyId }: { companyId: string }) {
                       <CardContent className="space-y-4">
                         <div>
                           <div className="mb-2 flex items-center justify-between">
-                            <span className="text-sm font-medium">Members</span>
+                            <span className="text-sm font-medium">{t("members")}</span>
                             <span className="text-sm text-muted-foreground">
                               {team.users.length}
                             </span>
                           </div>
-                          <div className="flex -space-x-2">
+                          <div className="flex -gap-2">
                             {team.users.map((member, index) => (
                               <Avatar
                                 key={index}
@@ -359,7 +375,7 @@ export default function TeamsContent({ companyId }: { companyId: string }) {
                               {team.projects.length}
                             </div>
                             <div className="text-xs text-muted-foreground">
-                              Projects
+                              {t("projects")}
                             </div>
                           </div>
                           <div className="text-center">
@@ -372,7 +388,7 @@ export default function TeamsContent({ companyId }: { companyId: string }) {
                               }
                             </div>
                             <div className="text-xs text-muted-foreground">
-                              Active Issues
+                              {t("activeIssues")}
                             </div>
                           </div>
                           <div className="text-center">
@@ -384,7 +400,7 @@ export default function TeamsContent({ companyId }: { companyId: string }) {
                               }
                             </div>
                             <div className="text-xs text-muted-foreground">
-                              Completed
+                              {t("completed")}
                             </div>
                           </div>
                         </div>
@@ -392,8 +408,8 @@ export default function TeamsContent({ companyId }: { companyId: string }) {
                         {/* Recent Activity */}
                         <div className="flex items-center justify-between border-t pt-2 text-sm text-muted-foreground">
                           <div className="flex items-center">
-                            <Activity className="mr-1 h-3 w-3" />
-                            Last activity
+                            <Activity className="me-1 h-3 w-3" />
+                            {t("lastActivity")}
                             {/* {team.recentActivity} */}2
                           </div>
                           <Button
@@ -403,7 +419,7 @@ export default function TeamsContent({ companyId }: { companyId: string }) {
                             asChild
                           >
                             <Link href={getTeamLink(team.id)}>
-                              View Details
+                              {t("viewDetails")}
                             </Link>
                           </Button>
                         </div>
@@ -417,14 +433,14 @@ export default function TeamsContent({ companyId }: { companyId: string }) {
               <div className="grid gap-6 md:grid-cols-2">
                 <Card>
                   <CardHeader>
-                    <CardTitle>Team Performance</CardTitle>
-                    <CardDescription>Issues completed by team</CardDescription>
+                    <CardTitle>{t("performanceTitle")}</CardTitle>
+                    <CardDescription>{t("performanceDescription")}</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     {teams?.map((team) => (
                       <div key={team.id} className="space-y-2">
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-2">
+                          <div className="flex items-center gap-2">
                             <div className={`h-2 w-2 rounded-full`} />
                             <span className="text-sm font-medium">
                               {team.name}
@@ -436,7 +452,7 @@ export default function TeamsContent({ companyId }: { companyId: string }) {
                                 (task) => task.status === TaskStatus.COMPLETED
                               ).length
                             }{" "}
-                            issues
+                            {t("issues")}
                           </span>
                         </div>
                         <Progress
@@ -458,9 +474,9 @@ export default function TeamsContent({ companyId }: { companyId: string }) {
 
                 <Card>
                   <CardHeader>
-                    <CardTitle>Team Workload Distribution</CardTitle>
+                    <CardTitle>{t("workloadTitle")}</CardTitle>
                     <CardDescription>
-                      Current active issues across teams
+                      {t("workloadDescription")}
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -478,13 +494,13 @@ export default function TeamsContent({ companyId }: { companyId: string }) {
                         return (
                           <div key={team.id} className="space-y-2">
                             <div className="flex items-center justify-between">
-                              <div className="flex items-center space-x-2">
+                              <div className="flex items-center gap-2">
                                 <div className={`h-2 w-2 rounded-full`} />
                                 <span className="text-sm font-medium">
                                   {team.name}
                                 </span>
                               </div>
-                              <div className="flex items-center space-x-2">
+                              <div className="flex items-center gap-2">
                                 <span className="text-sm text-muted-foreground">
                                   {/* {team.activeIssues} issues */}
                                   {
@@ -493,7 +509,7 @@ export default function TeamsContent({ companyId }: { companyId: string }) {
                                         task.status === TaskStatus.IN_PROGRESS
                                     ).length
                                   }{" "}
-                                  {team.tasks.length > 1 ? "tasks" : "task"}
+                                  {team.tasks.length > 1 ? t("tasks") : t("task")}
                                 </span>
                                 <span className="text-sm font-medium">
                                   {percentage.toFixed(1)}%
@@ -516,19 +532,4 @@ export default function TeamsContent({ companyId }: { companyId: string }) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-  const userSession = await getServerAuthSession({ req, res });
-
-  if (!userSession) {
-    return {
-      redirect: {
-        destination: "/sign-in",
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    props: {},
-  };
-};
+export const getServerSideProps: GetServerSideProps = requireAuthPage();

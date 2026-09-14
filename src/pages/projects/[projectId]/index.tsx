@@ -2,33 +2,56 @@ import {
   useProject,
   useProjects,
 } from "@/features/projects/hooks/use-projects";
+import { useState } from "react";
 import { useRouter } from "next/router";
+import Link from "next/link";
 import { AppLayout } from "@/components/layout/app-layout";
 import { Seo } from "@/components/seo";
+import { requireAuthPage } from "@/server/auth-guard";
+import { type GetServerSideProps } from "next";
 
 import { Button } from "@/components/ui/button";
 import { DataLoader } from "@/components/data-loader";
-import {
-  PageHeader,
-  PageSubDescription,
-  PageSubTitle,
-  Stack,
-} from "@/components/page-components";
-import { TaskCard } from "@/features/tasks/components/task-card";
+import { Stack } from "@/components/page-components";
+import { CompactPageHeader } from "@/components/common/page-header";
+import { Heading, Text } from "@/components/typography";
+import { Progress } from "@/components/ui/progress";
 import { CreateTask } from "@/components/views/project/tasks/forms/create-task";
 import { useSession } from "next-auth/react";
 import { CBadge } from "@/components/common/cbadge";
 import { ButtonLink } from "@/components/common/button-link";
+import { routes } from "@/lib/routes";
+import { api, type RouterOutputs } from "@/lib/api";
+import { cn } from "@/lib/cn";
+import { formatDistanceToNow } from "@/lib/date";
+import { formatDuration } from "@/lib/analytics/format";
+import { TaskStatusBadge } from "@/features/tasks/components/task-status-badge";
+import { AnalyticsKpiCard } from "@/features/analytics/components/analytics-kpi-card";
+import { AnalyticsSection } from "@/features/analytics/components/analytics-section";
+import { CompletionTrendChart } from "@/features/analytics/components/completion-trend-chart";
+import { TaskStatusChart } from "@/features/analytics/components/task-status-chart";
+import { ContributorTable } from "@/features/analytics/components/contributor-table";
+import { TaskFilterView } from "@/features/tasks/components/task-filter-view";
+import { useFormatter, useTranslations } from "next-intl";
+
+type Range = "7d" | "30d" | "90d" | "all";
+
+const RANGES: { value: Range; labelKey: "range7d" | "range30d" | "range90d" | "rangeAll" }[] = [
+  { value: "7d", labelKey: "range7d" },
+  { value: "30d", labelKey: "range30d" },
+  { value: "90d", labelKey: "range90d" },
+  { value: "all", labelKey: "rangeAll" },
+];
 
 export default function ProjectPage() {
   const { query } = useRouter();
+  const t = useTranslations("projects");
   const projectId = query.projectId as string;
   const { data: session } = useSession();
   const companyId = session?.user?.company.id;
 
   const { data: project, isLoading, error } = useProject(projectId);
-  const { data: projects, isLoading: isLoadingProjects } =
-    useProjects(companyId);
+  const { data: projects } = useProjects(companyId);
 
   return (
     <>
@@ -36,97 +59,57 @@ export default function ProjectPage() {
 
       <AppLayout>
         <Stack spacing="section">
-          <PageHeader
-            title={"Project: " + project?.name}
+          <CompactPageHeader
+            title={project?.name ?? t("title")}
             description={
-              project?.description || "No project description provided."
+              project?.description || t("noDescription")
             }
             actions={
               <>
                 <ButtonLink
-                  href={`/projects/${projectId}/edit`}
+                  href={routes.projects.tasks.index({ projectId })}
+                  size="sm"
+                >
+                  {t("openBoard")}
+                </ButtonLink>
+                <ButtonLink
+                  href={routes.projects.edit({ projectId })}
                   variant="outline"
                   size="sm"
                 >
-                  Edit Project
+                  {t("edit")}
                 </ButtonLink>
                 <CreateTask
                   projectId={projectId}
                   projects={projects}
-                  triggerButton={<Button size="sm">Add Task</Button>}
+                  triggerButton={
+                    <Button size="sm" variant="outline">
+                      {t("addTask")}
+                    </Button>
+                  }
                 />
               </>
             }
           />
 
-          <DataLoader data={project} isLoading={isLoading} error={null}>
+          <DataLoader data={project} isLoading={isLoading} error={error}>
             {(data) => (
               <Stack spacing="section">
-                {/* Header */}
-                <div>
-                  <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
-                    <div className="flex items-center gap-3"></div>
-                  </div>
-
-                  <div>
-                    <div className="grid gap-4 md:grid-cols-3">
-                      <div className="rounded-lg border bg-muted/40 p-4">
-                        <p className="text-sm text-muted-foreground">
-                          Project ID
-                        </p>
-
-                        <p className="mt-1 break-all text-sm font-medium">
-                          {data.id}
-                        </p>
-                      </div>
-
-                      <div className="rounded-lg border bg-muted/40 p-4">
-                        <p className="text-sm text-muted-foreground">Created</p>
-
-                        <p className="mt-1 text-sm font-medium">
-                          {formatDistanceToNow(data.createdAt)}
-                        </p>
-                      </div>
-
-                      <div className="rounded-lg border bg-muted/40 p-4">
-                        <p className="text-sm text-muted-foreground">Updated</p>
-
-                        <p className="mt-1 text-sm font-medium">
-                          {formatDistanceToNow(data.updatedAt)}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <ProjectAnalyticsPanel projectId={data.id} />
 
                 {/* Tasks */}
-                <section className="space-y-5">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div>
-                        <PageSubTitle className="inline-flex items-center gap-2">
-                          Tasks{" "}
-                          <CBadge color="gray" size="sm">
-                            {data?.tasks?.length}{" "}
-                            {data.tasks.length === 1 ? "Task" : "Tasks"}
-                          </CBadge>
-                        </PageSubTitle>
-                      </div>
-
-                      <PageSubDescription>
-                        Manage and track all project tasks.
-                      </PageSubDescription>
+                <section className="space-y-4">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <Heading level="subsection">{t("tasks")}</Heading>
+                      <CBadge color="gray" size="sm">
+                        {data?.tasks?.length}{" "}
+                        {t("taskCount", { count: data.tasks.length })}
+                      </CBadge>
                     </div>
-                    <div>
-                      <ButtonLink
-                        href={`/projects/${project.id}/tasks`}
-                        variant="outline"
-                        className="flex-1 lg:flex-initial"
-                        size="sm"
-                      >
-                        View All Tasks
-                      </ButtonLink>
-                    </div>
+                    <Text size="sm" tone="muted">
+                      {t("manageTasks")}
+                    </Text>
                   </div>
 
                   <ProjectDetailsTasksView data={data} />
@@ -140,73 +123,224 @@ export default function ProjectPage() {
   );
 }
 
-import { useMemo, useState } from "react";
-import { type RouterOutputs } from "@/lib/api";
-import { TaskStatus } from "@prisma/client";
-import { formatDistanceToNow } from "@/lib/date";
+function ProjectAnalyticsPanel({ projectId }: { projectId: string }) {
+  const [range, setRange] = useState<Range>("30d");
+  const tp = useTranslations("projects");
+  const tAnalytics = useTranslations("analytics");
+  const format = useFormatter();
+  const {
+    data: analytics,
+    isLoading,
+    error,
+  } = api.analytics.projectOverview.useQuery({ projectId, range });
+
+  return (
+    <DataLoader data={analytics} isLoading={isLoading} error={error}>
+      {(data) => (
+        <div className="flex flex-col gap-5">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <Heading level="subsection">{tp("health")}</Heading>
+            <div
+              role="group"
+              aria-label={tp("health")}
+              className="flex items-center rounded-md border p-0.5"
+            >
+              {RANGES.map((r) => (
+                <Button
+                  key={r.value}
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  aria-pressed={range === r.value}
+                  onClick={() => setRange(r.value)}
+                  className={cn(
+                    "h-7 px-2 text-xs",
+                    range === r.value && "bg-accent text-accent-foreground"
+                  )}
+                >
+                  {tp(r.labelKey)}
+                </Button>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            <AnalyticsKpiCard
+              title={tp("tasks")}
+              value={`${format.number(data.kpis.completedTasks)}/${format.number(data.kpis.totalTasks)}`}
+              hint={tp("tasksActive", { count: data.kpis.openTasks })}
+            />
+            <AnalyticsKpiCard
+              title={tp("completion")}
+              value={
+                data.kpis.completionRate == null
+                  ? "—"
+                  : tAnalytics("percentValue", {
+                      value: format.number(data.kpis.completionRate, {
+                        maximumFractionDigits: 1,
+                      }),
+                    })
+              }
+              hint={tAnalytics("completionSnapshotHint")}
+            />
+            <AnalyticsKpiCard
+              title={tAnalytics("remainingEffort")}
+              value={tAnalytics("points", { count: data.kpis.remainingEffort })}
+              hint={
+                data.kpis.unestimatedOpen > 0
+                  ? tAnalytics("openUnestimated", { count: data.kpis.unestimatedOpen })
+                  : tAnalytics("allEstimated")
+              }
+            />
+            <AnalyticsKpiCard
+              title={tAnalytics("avgCycleTime")}
+              value={formatDuration(data.kpis.avgCycleTimeMs)}
+              hint={
+                data.kpis.cycleTimeSampleSize > 0
+                  ? tAnalytics("cycleTimeHint", { count: data.kpis.cycleTimeSampleSize })
+                  : tAnalytics("noLifecycleData")
+              }
+            />
+          </div>
+
+          <div className="flex flex-col gap-2 rounded-lg border bg-muted/40 p-4">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+              <Text size="sm" weight="medium">
+                {tp("effortProgress", {
+                  done: data.kpis.completedEffort,
+                  total:
+                    data.kpis.completedEffort + data.kpis.remainingEffort,
+                })}
+              </Text>
+              <Text size="xs" tone="muted" className="ms-auto">
+                {data.lastActivityAt
+                  ? tp("lastActivity", {
+                      when: formatDistanceToNow(data.lastActivityAt),
+                    })
+                  : tp("noActivity")}
+              </Text>
+            </div>
+            <Progress
+              value={
+                data.kpis.completedEffort + data.kpis.remainingEffort === 0
+                  ? 0
+                  : Math.round(
+                      (data.kpis.completedEffort /
+                        (data.kpis.completedEffort + data.kpis.remainingEffort)) *
+                        100
+                    )
+              }
+              className="h-1.5"
+            />
+          </div>
+
+          <CompletionTrendChart
+            buckets={data.trend.buckets}
+            granularity={data.trend.granularity}
+            hasCompletions={data.kpis.completedTasks > 0}
+          />
+
+          <div className="grid gap-4 lg:grid-cols-2">
+            <TaskStatusChart data={data.status} />
+            <AnalyticsSection title="Contributors">
+              {data.contributors.length === 0 ? (
+                <Text size="sm" tone="muted" className="py-4 text-center">
+                  No contributor activity in this range.
+                </Text>
+              ) : (
+                <ContributorTable contributors={data.contributors} />
+              )}
+            </AnalyticsSection>
+          </div>
+
+          <div className="grid gap-4 lg:grid-cols-2">
+            <AnalyticsSection title="Remaining work">
+              {data.remaining.length === 0 ? (
+                <Text size="sm" tone="muted" className="py-4 text-center">
+                  Nothing open — nice work.
+                </Text>
+              ) : (
+                <ul className="flex flex-col gap-2">
+                  {data.remaining.map((t) => (
+                    <li
+                      key={t.id}
+                      className="flex items-center gap-2 rounded-md border px-3 py-2"
+                    >
+                      <div className="min-w-0 flex-1">
+                        <Link
+                          href={routes.projects.tasks.details({
+                            projectId,
+                            taskId: t.id,
+                          })}
+                          className="block truncate text-sm font-medium hover:underline"
+                        >
+                          {t.title}
+                        </Link>
+                        <Text size="xs" tone="muted">
+                          {t.assignee ? t.assignee.name : "Unassigned"}
+                          {t.dueDate
+                            ? ` · due ${formatDistanceToNow(t.dueDate)}`
+                            : ""}
+                          {t.effortPoints != null
+                            ? ` · ${t.effortPoints} pts`
+                            : ""}
+                        </Text>
+                      </div>
+                      <TaskStatusBadge status={t.status} size="sm" />
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </AnalyticsSection>
+
+            <AnalyticsSection title="Recent completions">
+              {data.recent.length === 0 ? (
+                <Text size="sm" tone="muted" className="py-4 text-center">
+                  No completions in this range.
+                </Text>
+              ) : (
+                <ul className="flex flex-col gap-2">
+                  {data.recent.map((t) => (
+                    <li
+                      key={t.id}
+                      className="flex items-center gap-2 rounded-md border px-3 py-2"
+                    >
+                      <div className="min-w-0 flex-1">
+                        <Link
+                          href={routes.projects.tasks.details({
+                            projectId,
+                            taskId: t.id,
+                          })}
+                          className="block truncate text-sm font-medium hover:underline"
+                        >
+                          {t.title}
+                        </Link>
+                        <Text size="xs" tone="muted">
+                          {t.assignee ? t.assignee.name : "Unassigned"}
+                          {t.completedAt
+                            ? ` · ${formatDistanceToNow(t.completedAt)}`
+                            : ""}
+                        </Text>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </AnalyticsSection>
+          </div>
+        </div>
+      )}
+    </DataLoader>
+  );
+}
 
 export function ProjectDetailsTasksView({
   data,
 }: {
   data: RouterOutputs["project"]["getProject"];
 }) {
-  const [filters, setFilters] = useState({
-    status: "all",
-    priority: "all",
-  });
-
-  const filteredTasks = useMemo(() => {
-    return data.tasks.filter((task: { status: string; priority: string }) => {
-      if (filters.status !== "all" && task.status !== filters.status) {
-        return false;
-      }
-
-      if (filters.priority !== "all" && task.priority !== filters.priority) {
-        return false;
-      }
-
-      return true;
-    });
-  }, [data.tasks, filters]);
-
-  return (
-    <Stack spacing="compact">
-      <div className="flex flex-wrap gap-2">
-        <Button
-          size="sm"
-          variant={filters.status === "all" ? "default" : "outline"}
-          onClick={() =>
-            setFilters((prev) => ({
-              ...prev,
-              status: "all",
-            }))
-          }
-        >
-          All
-        </Button>
-        {Object.values(TaskStatus).map((status) => (
-          <Button
-            key={status}
-            size="sm"
-            variant={filters.status === status ? "default" : "outline"}
-            onClick={() =>
-              setFilters((prev) => ({
-                ...prev,
-                status: status,
-              }))
-            }
-            className="capitalize"
-          >
-            {status.replace("_", " ").toLowerCase()}
-          </Button>
-        ))}
-      </div>
-
-      <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-        {filteredTasks?.map((task) => (
-          <TaskCard key={task.id} task={task} projectId={data.id} />
-        ))}
-      </div>
-    </Stack>
-  );
+  if (!data) return null;
+  return <TaskFilterView tasks={data.tasks} />;
 }
+
+export const getServerSideProps: GetServerSideProps = requireAuthPage();

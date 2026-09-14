@@ -2,7 +2,8 @@
 import { teamMembersColumns } from "@/components/views/team/teamMembersColumns";
 import Container from "@/components/views/landing-page/container";
 import { DataTable } from "@/components/views/teams/TeamMembers/data-table";
-import { getServerAuthSession } from "@/server/auth";
+import { requireAuthPage } from "@/server/auth-guard";
+import { safeUserSelect } from "@/server/db/selects";
 import { prisma } from "@/server/db";
 import { api } from "@/lib/api";
 import type { Team } from "@prisma/client";
@@ -44,47 +45,41 @@ export default function ProjectsPage({ team }: TeamSettingsPageProps) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({
-  req,
-  res,
-  params,
-}) => {
-  const userSession = await getServerAuthSession({ req, res });
+export const getServerSideProps: GetServerSideProps = requireAuthPage(
+  {},
+  async (ctx, session) => {
+    const teamId = ctx.params?.teamId as string;
 
-  if (!userSession) {
-    return {
-      redirect: {
-        destination: "/sign-in",
-        permanent: false,
+    if (!teamId) {
+      return {
+        redirect: { destination: "/teams", permanent: false },
+      };
+    }
+
+    const team = await prisma.team.findFirst({
+      where: {
+        id: teamId,
+        companyId: session.user.company.id,
       },
-    };
-  }
-
-  const teamId = params?.teamId as string;
-
-  if (!teamId) {
-    return {
-      redirect: {
-        destination: "/teams",
-        permanent: false,
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        companyId: true,
+        users: { select: safeUserSelect },
+        projects: true,
+        tasks: true,
       },
-    };
-  }
+    });
 
-  const team = await prisma.team.findUnique({
-    where: {
-      id: teamId,
-    },
-    include: {
-      users: true,
-      projects: true,
-      tasks: true,
-    },
-  });
+    if (!team) {
+      return {
+        notFound: true,
+      };
+    }
 
-  return {
-    props: {
+    return {
       team: JSON.parse(JSON.stringify(team)),
-    },
-  };
-};
+    };
+  }
+);

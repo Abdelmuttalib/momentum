@@ -11,15 +11,22 @@ export interface ButtonLinkProps
   asChild?: boolean;
   className?: string;
   children: React.ReactNode;
+  disabled?: boolean;
 }
 
 const ButtonLink = React.forwardRef<HTMLAnchorElement, ButtonLinkProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  (
+    { className, variant, size, asChild = false, disabled = false, ...props },
+    ref
+  ) => {
     const Comp = asChild ? Slot : Link;
 
     return (
       <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
+        className={cn(
+          buttonVariants({ variant, size, className }),
+          disabled && "pointer-events-none cursor-not-allowed opacity-50"
+        )}
         ref={ref}
         {...props}
       />

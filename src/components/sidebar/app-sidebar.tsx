@@ -1,15 +1,13 @@
 import {
   BarChart3,
-  Calendar,
-  CheckSquare,
   FolderOpen,
   Home,
   Settings,
-  Users,
   Zap,
   Plus,
   Building,
   List,
+  User,
 } from "lucide-react";
 
 import {
@@ -37,9 +35,16 @@ import { CreateTask } from "../views/project/tasks/forms/create-task";
 import { useRouter } from "next/router";
 import { ButtonLink } from "../common/button-link";
 import { routes } from "@/lib/routes";
+import { useTranslations } from "next-intl";
+import { locales } from "@/i18n/config";
+import Image from "next/image";
+import { getAvatarUrl } from "@/lib/avatar";
+import { Avatar, AvatarImage } from "../ui/avatar";
 
 export function AppSidebar() {
-  const { query } = useRouter();
+  const { asPath, query } = useRouter();
+
+  const t = useTranslations("navigation");
   const projectId = query.projectId as string;
 
   const { data: session } = useSession();
@@ -50,49 +55,77 @@ export function AppSidebar() {
 
   const { data: projects } = useProjects(companyId);
 
+  const normalizePath = (path: string) => {
+    const withoutQuery = path.split("?")[0]?.split("#")[0] ?? path;
+    for (const locale of locales) {
+      if (withoutQuery === `/${locale}`) return "/";
+      if (withoutQuery.startsWith(`/${locale}/`))
+        return withoutQuery.slice(locale.length + 1) || "/";
+    }
+    return withoutQuery;
+  };
+
+  const isActive = (url: string) => {
+    const normalized = normalizePath(asPath);
+    return url === "/"
+      ? normalized === url
+      : normalized === url || normalized.startsWith(`${url}/`);
+  };
+
+  const visibleProjects = (projects ?? []).slice(0, 5);
+  const hasMoreProjects = (projects ?? []).length > visibleProjects.length;
+
   const navigation = [
     {
-      title: "Overview",
+      key: "overview",
       url: routes.dashboard.index(),
       icon: Home,
     },
     {
-      title: "Projects",
-      url: routes.projects.index(),
-      icon: FolderOpen,
-      subItems:
-        projects?.map((project) => ({
-          title: project.name,
-          url: routes.projects.details({ projectId: project.id }),
-        })) ?? [],
+      key: "analytics",
+      url: routes.analytics.index(),
+      icon: BarChart3,
     },
     {
-      title: "Tasks",
+      key: "projects",
+      url: routes.projects.index(),
+      icon: FolderOpen,
+      subItems: visibleProjects.map((project) => ({
+        title: project.name,
+        url: routes.projects.details({ projectId: project.id }),
+      })),
+    },
+    {
+      key: "tasks",
       url: routes.tasks.index(),
       icon: List,
     },
     {
-      title: "Company",
+      key: "company",
       url: routes.company.index(),
       icon: Building,
     },
-    // {
-    //   title: "Teams",
-    //   url: "/teams",
-    //   icon: Users,
-    // },
+    {
+      key: "profile",
+      url: routes.profile.index(),
+      icon: User,
+    },
   ];
 
   return (
     <Sidebar>
       <SidebarHeader>
-        <div className="flex items-center gap-2 px-2 py-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <Zap className="h-4 w-4" />
+        <div className="flex items-center gap-2 px-2 py-1.5">
+          <div className="flex h-7 w-7 items-center justify-center rounded-md bg-primary text-primary-foreground">
+            <Zap className="h-3.5 w-3.5" />
           </div>
-          <div className="flex flex-col">
-            <span className="text-sm font-semibold">Momentum</span>
-            {/* <span className="text-sm text-muted-foreground">Acme INC</span> */}
+          <div className="flex min-w-0 flex-col leading-tight">
+            <span className="truncate text-[13px] font-semibold">Momentum</span>
+            {company?.name && (
+              <span className="truncate text-xs text-muted-foreground">
+                {company.name}
+              </span>
+            )}
           </div>
         </div>
       </SidebarHeader>
@@ -101,11 +134,15 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {navigation.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
+                <SidebarMenuItem key={item.key}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={isActive(item.url)}
+                    tooltip={t(item.key)}
+                  >
                     <Link href={item.url}>
                       <item.icon className="h-4 w-4" />
-                      <span>{item.title}</span>
+                      <span>{t(item.key)}</span>
                     </Link>
                   </SidebarMenuButton>
 
@@ -114,13 +151,37 @@ export function AppSidebar() {
                     <SidebarMenuSub>
                       {item.subItems.map((sub) => (
                         <SidebarMenuSubItem key={sub.url}>
-                          <SidebarMenuSubButton asChild>
+                          <SidebarMenuSubButton
+                            asChild
+                            isActive={normalizePath(asPath) === sub.url}
+                          >
                             <Link href={sub.url}>
+                              <Avatar className="me-0.5 h-5 w-5">
+                                <AvatarImage
+                                  src={getAvatarUrl(sub.title, {
+                                    size: 20,
+                                  })}
+                                  alt={`${sub.title} project`}
+                                  width={20}
+                                  height={20}
+                                />
+                              </Avatar>
                               <span>{sub.title}</span>
                             </Link>
                           </SidebarMenuSubButton>
                         </SidebarMenuSubItem>
                       ))}
+                      {item.key === "projects" && hasMoreProjects && (
+                        <SidebarMenuSubItem>
+                          <SidebarMenuSubButton asChild>
+                            <Link href={routes.projects.index()}>
+                              <span className="text-muted-foreground">
+                                {t("viewAllProjects")}
+                              </span>
+                            </Link>
+                          </SidebarMenuSubButton>
+                        </SidebarMenuSubItem>
+                      )}
                     </SidebarMenuSub>
                   )}
                 </SidebarMenuItem>
@@ -130,14 +191,14 @@ export function AppSidebar() {
         </SidebarGroup>
 
         <SidebarGroup>
-          <SidebarGroupLabel>Quick Actions</SidebarGroupLabel>
+          <SidebarGroupLabel>{t("quickActions")}</SidebarGroupLabel>
           <SidebarGroupContent>
-            <div className="space-y-2 px-2">
+            <div className="space-y-1.5 px-2">
               <CreateTask
                 triggerButton={
                   <Button size="sm" className="w-full justify-start">
-                    <Plus className="mr-2 h-4 w-4" />
-                    New Task
+                    <Plus className="me-2 h-4 w-4" />
+                    {t("newTask")}
                   </Button>
                 }
                 projectId={projectId}
@@ -150,8 +211,8 @@ export function AppSidebar() {
                 variant="outline"
                 className="w-full justify-start"
               >
-                <Plus className="mr-2 h-4 w-4" />
-                New Project
+                <Plus className="me-2 h-4 w-4" />
+                {t("newProject")}
               </ButtonLink>
             </div>
           </SidebarGroupContent>
@@ -160,10 +221,14 @@ export function AppSidebar() {
       <SidebarFooter className="border-t border-sidebar-border">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild>
+            <SidebarMenuButton
+              asChild
+              isActive={isActive(routes.settings.index())}
+              tooltip={t("settings")}
+            >
               <Link href={routes.settings.index()}>
                 <Settings className="h-4 w-4" />
-                <span>Settings</span>
+                <span>{t("settings")}</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

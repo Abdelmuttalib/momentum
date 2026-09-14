@@ -1,4 +1,5 @@
-// colors.ts
+// colors.ts — compatibility re-exports. Canonical mappings live in
+// `@/lib/status-colors`. New code should import from there directly.
 
 import {
   type Role,
@@ -8,55 +9,61 @@ import {
 } from "@prisma/client";
 import { Priority } from "./enums";
 import { type CBadgeColor } from "types";
+import {
+  getInviteStatusColor,
+  getTaskPriorityColor,
+  getTaskStatusColor,
+  getUserRoleColor,
+  inviteStatusColors,
+  taskPriorityColors,
+  taskStatusColors,
+  userRoleColors,
+} from "./status-colors";
 
 export const taskPriorityBadgeColor: Record<
   TaskPriority,
   { color: CBadgeColor }
 > = {
-  [Priority.HIGH]: { color: "red" },
-  [Priority.MEDIUM]: { color: "amber" },
-  [Priority.LOW]: { color: "teal" },
+  [Priority.HIGH]: { color: taskPriorityColors[Priority.HIGH] },
+  [Priority.MEDIUM]: { color: taskPriorityColors[Priority.MEDIUM] },
+  [Priority.LOW]: { color: taskPriorityColors[Priority.LOW] },
 };
 
 export function getTaskPriorityBadgeColor(priority: TaskPriority) {
-  return (
-    taskPriorityBadgeColor[priority] ?? {
-      color: "gray",
-    }
-  );
+  return {
+    color: getTaskPriorityColor(priority),
+  };
 }
 
 export const taskStatusBadgeColor: Record<TaskStatus, { color: CBadgeColor }> =
   {
-    [TaskStatus.BACKLOG]: { color: "gray" },
-    [TaskStatus.TO_DO]: { color: "blue" },
-    [TaskStatus.IN_PROGRESS]: { color: "yellow" },
-    [TaskStatus.COMPLETED]: { color: "green" },
-    [TaskStatus.CANCELED]: { color: "stone" },
+    [TaskStatus.BACKLOG]: { color: taskStatusColors[TaskStatus.BACKLOG] },
+    [TaskStatus.TO_DO]: { color: taskStatusColors[TaskStatus.TO_DO] },
+    [TaskStatus.IN_PROGRESS]: {
+      color: taskStatusColors[TaskStatus.IN_PROGRESS],
+    },
+    [TaskStatus.COMPLETED]: { color: taskStatusColors[TaskStatus.COMPLETED] },
+    [TaskStatus.CANCELED]: { color: taskStatusColors[TaskStatus.CANCELED] },
   };
 
 export function getTaskStatusBadgeColor(status: TaskStatus) {
-  return (
-    taskStatusBadgeColor[status] ?? {
-      color: "gray",
-    }
-  );
+  return {
+    color: getTaskStatusColor(status),
+  };
 }
 
 export const userRoleBadgeColor: Record<Role, CBadgeColor> = {
-  ADMIN: "blue",
-  MEMBER: "yellow",
+  ...userRoleColors,
 };
 
 export function getUserRoleBadgeColor(role: Role) {
-  return userRoleBadgeColor[role] ?? "gray";
+  return getUserRoleColor(role);
 }
 
 export const inviteStatusBadgeColor: Record<InvitationStatus, CBadgeColor> = {
-  INVITED: "blue",
-  REGISTERED: "green",
+  ...inviteStatusColors,
 };
 
 export function getInviteStatusBadgeColor(status: InvitationStatus) {
-  return inviteStatusBadgeColor[status] ?? "gray";
+  return getInviteStatusColor(status);
 }
