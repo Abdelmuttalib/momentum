@@ -28,7 +28,6 @@ export function useCreateProject({
 
   const mutation = api.project.createProject.useMutation({
     onSuccess: async () => {
-      // Handle the new team. For example, you could redirect to the team's page
       toast.success("New project created!");
       await apiContext.project.getAllProjectsByTeamId.invalidate({
         teamId: teamId,
