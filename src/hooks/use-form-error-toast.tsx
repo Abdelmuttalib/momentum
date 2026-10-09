@@ -16,7 +16,6 @@ export function useFormErrorToast<TFieldValues extends FieldValues>({
   const lastShown = useRef<Record<string, string | null>>({});
 
   useEffect(() => {
-    console.log("useFormErrorToast", { errors, touchedFields });
     Object.entries(errors).forEach(([fieldName, errorObj]) => {
       const errorMessage = errorObj?.message as string | undefined;
 
